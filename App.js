@@ -24,7 +24,7 @@ const App = createStackNavigator({
     },
 }, {
     headerMode: 'none',
-    initialRouteName: 'ClassDetail'
+    initialRouteName: 'Home'
 });
 
 export default App;

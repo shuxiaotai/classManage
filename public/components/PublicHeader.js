@@ -4,13 +4,19 @@ import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 class PublicHeader extends Component {
 
-    getLeftComponent = () => {
+    getTouchableComponent = (component) => {
         return(
-            <TouchableOpacity onPress={this.toBack} style={styles.backContainer}>
-                <Icon
-                    name='chevron-left'
-                    color='#fff' />
-                <Text style={styles.backText}>返回</Text>
+            <TouchableOpacity onPress={this.toBack}>
+                {
+                    component ? component :
+                        <View style={styles.backContainer}>
+                            <Icon
+                                name='chevron-left'
+                                color='#fff' />
+                            <Text style={styles.backText}>返回</Text>
+                        </View>
+                }
+
             </TouchableOpacity>
         );
     };
@@ -25,16 +31,16 @@ class PublicHeader extends Component {
                 {
                     (isLeft && isRight) ?
                         <Header
-                            leftComponent={leftComponent ? leftComponent : this.getLeftComponent()}
+                            leftComponent={leftComponent ? this.getTouchableComponent(leftComponent) : this.getTouchableComponent()}
                             centerComponent={{ text: title, style: { color: '#fff' } }}
-                            rightComponent={rightComponent}
+                            rightComponent={rightComponent ? this.getTouchableComponent(rightComponent) : this.getTouchableComponent()}
                         />
                         : null
                 }
                 {
                     (isLeft && !isRight) ?
                         <Header
-                            leftComponent={leftComponent ? leftComponent : this.getLeftComponent()}
+                            leftComponent={leftComponent ? leftComponent : this.getTouchableComponent()}
                             centerComponent={{ text: title, style: { color: '#fff' } }}
                         />
                         : null

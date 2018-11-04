@@ -1,22 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, TextInput, StyleSheet, Image } from 'react-native';
+import { View, Text, ScrollView, TextInput, StyleSheet, Image } from 'react-native';
 import PublicHeader from "../../public/components/PublicHeader";
+import listData from "../../public/mockData/listData";
 
-
-const studentList = [
-    {
-        key: 1,
-        studentName: 'sx'
-    },
-    {
-        key: 2,
-        studentName: '舒小天'
-    },
-    {
-        key: 3,
-        studentName: 'shisns'
-    }
-];
 class AddStudent extends Component{
     constructor() {
         super();
@@ -26,11 +12,9 @@ class AddStudent extends Component{
     }
     getHeaderTextComponent = (text) => {
         return(
-            <TouchableOpacity>
-                <Text style={{ color: '#fff' }}>
-                    {text}
-                </Text>
-            </TouchableOpacity>
+            <Text style={{ color: '#fff' }}>
+                {text}
+            </Text>
         );
     };
     getStudentName = () => {
@@ -39,7 +23,7 @@ class AddStudent extends Component{
     render() {
         const { navigation } = this.props;
         return(
-            <View>
+            <View style={{ marginBottom: 100 }}>
                 <PublicHeader
                     isLeft={true}
                     navigation={navigation}
@@ -62,9 +46,11 @@ class AddStudent extends Component{
                         添加
                     </Text>
                 </View>
-                <View style={styles.stuList}>
+                <ScrollView
+                    contentContainerStyle={styles.stuList}
+                >
                     {
-                        studentList.map((item) => (
+                        listData.addStuList.map((item) => (
                             <View style={styles.stuItem} key={item.key}>
                                 <Image
                                     source={require('../../public/img/test.png')}   //uri: item.avatarUrl
@@ -76,7 +62,7 @@ class AddStudent extends Component{
                             </View>
                         ))
                     }
-                </View>
+                </ScrollView>
             </View>
         )
     }
@@ -108,7 +94,8 @@ const styles = StyleSheet.create({
         borderRadius: 20
     },
     stuList: {
-        marginTop: 10
+        marginTop: 10,
+        paddingBottom: 20
     },
     stuItem: {
         display: 'flex',

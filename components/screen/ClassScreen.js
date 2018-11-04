@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Image, FlatList, TouchableWithoutFeedback } from 'react-native';
+import { Text, View, StyleSheet, Image, FlatList, TouchableWithoutFeedback, ScrollView } from 'react-native';
 import PublicHeader from "../../public/components/PublicHeader";
 import PublicTab from "../../public/components/PublicTab";
 import PublicNoContent from "../../public/components/PublicNoContent";
+import listData from '../../public/mockData/listData';
+import PublicRefreshList from "../../public/components/PublicRefreshList";
 
 
 const tabItem = [
@@ -15,47 +17,21 @@ const tabItem = [
     }
 ];
 
-const list1 = [
-    {
-        key: '1',
-        classText: '一年级二班',
-        stuText: '10个学生',
-        imgSrc: 'https://facebook.github.io/react/logo-og.png'
-    },
-    {
-        key: '2',
-        classText: '五年级二班',
-        stuText: '10个学生',
-        imgSrc: 'https://facebook.github.io/react/logo-og.png'
-    },
-    {
-        key: '3',
-        classText: '三年级二班',
-        stuText: '101个学生',
-        imgSrc: 'https://facebook.github.io/react/logo-og.png'
-    }
-];
-const list2 = [
-    {
-        key: '1',
-        classText: '一年级二班',
-        stuText: '10个学生',
-        imgSrc: 'https://facebook.github.io/react/logo-og.png'
-    }
-];
+let page = 1;
+let totalPage = 3;
 const list = [];
 
 class ClassScreen extends Component{
     constructor() {
         super();
         this.state = {
-            selectKey: 1
+            selectKey: 1,
+            dataArr: []
         }
     }
-
     onChangeSelectKey = (key) => {
         this.setState({
-            selectKey: key
+            selectKey: key,
         })
     };
     getClassDetail = (classText) => {
@@ -67,7 +43,7 @@ class ClassScreen extends Component{
             <TouchableWithoutFeedback onPress={() => this.getClassDetail(item.classText)}>
                 <View style={styles.mainItem}>
                     <Image
-                        source={{uri: item.imgSrc}}
+                        source={require('../../public/img/test.png')}  //{uri: item.imgSrc}
                         style={styles.mainImg}
                     />
                     <View style={styles.mainText}>
@@ -78,8 +54,29 @@ class ClassScreen extends Component{
             </TouchableWithoutFeedback>
         );
     };
+    //获取模拟数据
+    getList = (page) => {
+        switch (page) {
+            case 1:
+                this.setState({
+                    dataArr: listData.classList1
+                });
+                break;
+            case 2:
+                this.setState({
+                    dataArr: listData.classList1.concat(listData.classList2)
+                });
+                break;
+            case 3:
+                this.setState({
+                    dataArr: listData.classList1.concat(listData.classList2.concat(listData.classList3))
+                });
+                break;
+
+        }
+    };
     render() {
-        const { selectKey } = this.state;
+        const { selectKey, dataArr } = this.state;
         return(
             <View>
                 <PublicHeader title="课堂" />
@@ -87,16 +84,20 @@ class ClassScreen extends Component{
                 {
                     selectKey === 1 ?
                     <View style={styles.main}>
-                        <FlatList
-                            data={list1}
-                            renderItem={this.getRenderItem()}
-                            ListEmptyComponent={<PublicNoContent tips="暂无创建的班级"/>}
+                        <PublicRefreshList
+                            getRenderItem={this.getRenderItem}
+                            dataArr={dataArr}
+                            getList={this.getList}
+                            totalPage={totalPage}
+                            ListEmptyComponent={<PublicNoContent tips="暂无创建的班级" />}
                         />
                     </View> :
                     <View style={styles.main}>
-                        <FlatList
-                            data={list2}
-                            renderItem={this.getRenderItem()}
+                        <PublicRefreshList
+                            getRenderItem={this.getRenderItem}
+                            dataArr={dataArr}
+                            getList={this.getList}
+                            totalPage={totalPage}
                             ListEmptyComponent={<PublicNoContent tips="暂无管理的班级" />}
                         />
                     </View>
@@ -108,7 +109,8 @@ class ClassScreen extends Component{
 
 const styles = StyleSheet.create({
     main: {
-        marginTop: 8
+        marginTop: 8,
+        height: '100%',
     },
     mainItem: {
         height: 70,
