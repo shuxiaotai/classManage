@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Image, FlatList, Dimensions} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Image, Alert, ScrollView} from 'react-native';
 import { Icon } from 'react-native-elements';
 import PublicTab from "../../public/components/PublicTab";
+import PublicScrollView from "../../public/components/PublicScrollView";
+import listData from "../../public/mockData/listData";
 
 const tabItem = [
     {
@@ -15,67 +17,12 @@ const tabItem = [
         key: 3,
     }
 ];
-const list = [
-    {
-        title: '遵守纪律',
-        key: '1'
-    },
-    {
-        title: '遵守纪律',
-        key: '2'
-    },
-    {
-        title: '遵守纪律',
-        key: '3'
-    },
-    {
-        title: '遵守纪律',
-        key: '4'
-    },
-    {
-        title: '遵守纪律',
-        key: '5'
-    },
-    {
-        title: '遵守纪律',
-        key: '6'
-    },
-    {
-        title: '遵守纪律',
-        key: '11'
-    },
-    {
-        title: '遵守纪律',
-        key: '21'
-    },
-    {
-        title: '遵守纪律',
-        key: '31'
-    },
-    {
-        title: '遵守纪律',
-        key: '41'
-    },
-    {
-        title: '遵守纪律',
-        key: '51'
-    },
-    {
-        title: '遵守纪律',
-        key: '61'
-    }
-];
-const list1  = [
-    {
-        title: '遵守纪律',
-        key: '61'
-    }
-];
 class RemarkModalContent extends Component{
     constructor() {
         super();
         this.state = {
             selectKey: 1,
+            showSelectCourse: false
         }
     }
 
@@ -84,35 +31,90 @@ class RemarkModalContent extends Component{
             selectKey: key
         })
     };
-    renderRemarkList = ({ item }) => {
-        return (
-            <View style={styles.remarkItem}>
-                <View style={styles.scoreView}>
-                    <Text style={styles.scoreText}>+1</Text>
-                </View>
-                <Image
-                    source={require('../../public/img/test.png')}   //uri: item.avatarUrl
-                    style={styles.remarkImg}
-                />
-                <Text style={styles.remark}>
-                    {item.title}
-                </Text>
+    remarkTips = (isPraise) => {
+        let tips = isPraise ? '表扬成功' : '批评成功';
+        alert(tips);
+    };
+    renderRemarkList = (isPraise) => {
+        let list = isPraise ? listData.remarkPraiseList : listData.remarkCriticizeList;
+        return(
+            <View style={styles.remarkContainer}>
+                {
+                    list.map((item) => {
+                        return(
+                            <TouchableOpacity
+                                style={styles.remarkItem}
+                                key={item.key}
+                                onPress={() => this.remarkTips(isPraise)}
+                            >
+                                <View style={isPraise ? styles.scorePraiseView : styles.scoreCriticizeView}>
+                                    <Text style={styles.scoreText}>{isPraise ? '+1' : '-1'}</Text>
+                                </View>
+                                <Image
+                                    source={require('../../public/img/test.png')}   //uri: item.avatarUrl
+                                    style={styles.remarkImg}
+                                />
+                                <Text style={styles.remark}>
+                                    {item.title}
+                                </Text>
+                            </TouchableOpacity>
+                        )
+                    })
+                }
             </View>
-        );
+        )
+    };
+    getCourse = (key) => {
+        console.log(key);
+        this.setState({
+            showSelectCourse: false
+        })
+    };
+    renderCourse = () => {
+        return(
+            <View style={styles.courseContainer}>
+                {
+                    listData.courseList.map((item) => {
+                        return(
+                            <TouchableOpacity
+                                style={styles.courseItem}
+                                key={item.key}
+                                onPress={() => this.getCourse(item.key)}
+                            >
+                                <Image
+                                    source={require('../../public/img/test.png')}   //uri: item.avatarUrl
+                                    style={styles.remarkImg}
+                                />
+                                <Text style={styles.remark}>
+                                    {item.title}
+                                </Text>
+                            </TouchableOpacity>
+                        )
+                    })
+                }
+            </View>
+        )
+    };
+    changeSelectedProject = () => {
+        this.setState({
+            showSelectCourse: true
+        })
     };
     render() {
-        const { selectKey } = this.state;
+        const { selectKey, showSelectCourse } = this.state;
+        const { handleModal } = this.props;
         return(
-            <View
-                style={{ flex: 1 }}
-            >
+            <View style={{ flex: 1 }}>
                 <View
                     style={styles.remarkHeader}
                     // onStartShouldSetResponderCapture={(evt) => true}   //在冒泡之前的捕获期会触发的方法，返回true来阻止这个View来响应
                 >
                     <Text style={styles.headerLeft}>学生主页</Text>
                     <Text style={styles.remarkTitle}>点评朱叔叔</Text>
-                    <TouchableOpacity style={styles.headerRight}>
+                    <TouchableOpacity
+                        style={styles.headerRight}
+                        onPress={() => handleModal(false)}
+                    >
                         <Icon
                             name={'close'}
                             color='gray'
@@ -120,14 +122,38 @@ class RemarkModalContent extends Component{
                         />
                     </TouchableOpacity>
                 </View>
+                <TouchableOpacity onPress={this.changeSelectedProject}>
+                    <Text style={styles.selectCourse}>选择课程</Text>
+                </TouchableOpacity>
                 <PublicTab tabItem={tabItem} selectKey={selectKey} onChangeSelectKey={this.onChangeSelectKey} />
-                <View style={styles.remarkContainer}>
-                    <FlatList
-                        data={list}
-                        renderItem={this.renderRemarkList}
-                        numColumns={3}
-                    />
-                </View>
+                {
+                    selectKey === 1 ?
+                        ( showSelectCourse ?
+                            <PublicScrollView
+                                renderView={this.renderCourse()}
+                                setMarginBottom={100}
+                            /> :
+                            <PublicScrollView
+                                renderView={this.renderRemarkList(true)}
+                                setMarginBottom={100}
+                            />
+                        )
+                        : null
+                }
+                {
+                    selectKey === 2 ?
+                        ( showSelectCourse ?
+                            <PublicScrollView
+                                renderView={this.renderCourse()}
+                                setMarginBottom={100}
+                            /> :
+                            <PublicScrollView
+                                renderView={this.renderRemarkList(false)}
+                                setMarginBottom={100}
+                            />
+                        )
+                        : null
+                }
             </View>
         );
     }
@@ -140,7 +166,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 14,
-        marginBottom: 10
+        marginBottom: 10,
     },
     headerLeft: {
         position: 'absolute',
@@ -160,14 +186,15 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'flex-start',
-        marginTop: 10,
-        marginLeft: 30,
-        flex: 1
+        marginLeft: 15,
+        marginTop: 5,
+        height: 500,
     },
     remarkItem: {
         display: 'flex',
-        width: 95,
-        marginBottom: 10
+        width: 89,
+        alignItems: 'center',
+        marginBottom: 8
     },
     remarkImg: {
         width: 50,
@@ -177,7 +204,7 @@ const styles = StyleSheet.create({
     remark: {
         marginTop: 8
     },
-    scoreView: {
+    scorePraiseView: {
         width: 20,
         height: 20,
         borderRadius: 10,
@@ -187,12 +214,54 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         position: 'relative',
         top: 15,
-        right: -17,
-        zIndex: 10
+        right: -20,
+        zIndex: 10,
     },
     scoreText: {
         color: '#fff',
         fontSize: 13
+    },
+    modalContainer: {
+        width: 300,
+        height: 400,
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        zIndex: 100,
+        position: 'absolute'
+    },
+    scoreCriticizeView: {
+        width: 20,
+        height: 20,
+        borderRadius: 10,
+        backgroundColor: 'skyblue',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+        top: 15,
+        right: -20,
+        zIndex: 10,
+    },
+    selectCourse: {
+        color: '#0f7cda',
+        alignSelf: 'center',
+        marginTop: 2,
+        marginBottom: 2
+    },
+    courseContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'flex-start',
+        marginLeft: 15,
+        marginTop: 10,
+        height: 340,
+    },
+    courseItem: {
+        display: 'flex',
+        width: 89,
+        alignItems: 'center',
+        marginBottom: 15
     }
 });
 export default RemarkModalContent;

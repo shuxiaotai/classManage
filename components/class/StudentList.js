@@ -1,110 +1,111 @@
 import React, { Component } from 'react';
 import { Icon, Badge } from 'react-native-elements';
-import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, RefreshControl } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import AddStudent from "./AddStudent";
-import PublicModal from "../../public/components/PublicModal";
-import RemarkModalContent from "./RemarkModalContent";
 import listData from "../../public/mockData/listData";
+import PublicNoContent from "../../public/components/PublicNoContent";
+import PublicScrollView from "../../public/components/PublicScrollView";
 
 
 class StudentList extends Component{
-    constructor() {
-        super();
-        this.state = {
-            isVisible: false,
-            isHeaderRefreshing: false
-        }
-    }
+
     handleAddStu = () => {
         const { navigate } = this.props.navigation;
         navigate('AddStudent');
     };
-    handleModal = () => {
-        this.setState({
-            isVisible: !this.state.isVisible
-        })
-    };
-    headerRefreshing = () => {
-        this.setState({
-            isHeaderRefreshing: true
-        });
-        setTimeout(() => {
-            alert('刷新成功');
-            this.setState({
-                isHeaderRefreshing: false
-            });
-        }, 1000)
-    };
-    render() {
-        const { isVisible, isHeaderRefreshing } = this.state;
+    getRenderStudent = () => {
+        const { handleModal } = this.props;
         return(
-            <View style={{ marginBottom: 310 }}>
-                <ScrollView
-                    horizontal={false}
-                    contentContainerStyle={[styles.detailContainer]}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={isHeaderRefreshing}
-                            onRefresh={() => this.headerRefreshing()}
-                        />
-                    }
-                >
-                    <View style={styles.detailItem}>
-                        <Image
-                            source={require('../../public/img/test.png')}
-                            style={styles.stuAvatar}
-                        />
-                        <Badge
-                            value={0}
-                            textStyle={{ color: 'orange', fontSize: 13 }}
-                            containerStyle={styles.badgeText}
-                        />
-                        <Text style={styles.detailText}>
-                            全班
-                        </Text>
-                    </View>
-                    {
-                        listData.studentList.map((item) => (
-                            <TouchableOpacity style={styles.detailItem} key={item.key} onPress={this.handleModal}>
+            <View>
+                {
+                    listData.studentList.length !== 0 ?
+                        <View style={styles.detailContainer}>
+                            <View style={styles.detailItem}>
                                 <Image
-                                    source={require('../../public/img/test.png')}   //uri: item.avatarUrl
+                                    source={require('../../public/img/test.png')}
                                     style={styles.stuAvatar}
                                 />
                                 <Badge
-                                    value={item.score}
+                                    value={0}
                                     textStyle={{ color: 'orange', fontSize: 13 }}
                                     containerStyle={styles.badgeText}
                                 />
                                 <Text style={styles.detailText}>
-                                    {item.stuName}
+                                    全班
                                 </Text>
-                            </TouchableOpacity>
-                        ))
-                    }
-                    <View>
-                        <TouchableOpacity onPress={this.handleAddStu} style={styles.detailItem}>
-                            <View
-                                style={[styles.stuAvatar, styles.addStu]}
-                            >
-                                <Icon
-                                    name="add"
-                                    color="#00aced"
-                                    size={34}
-                                />
                             </View>
-                            <Text style={styles.detailText}>
-                                添加学生
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                </ScrollView>
-               <View>
-                   <PublicModal
-                       isVisible={isVisible}
-                       handleModal={this.handleModal}
-                       renderComponent={<RemarkModalContent />}
-                   />
-               </View>
+                            {
+                                listData.studentList.map((item) => (
+                                    <TouchableOpacity style={styles.detailItem} key={item.key} onPress={() => handleModal(true)}>
+                                        <Image
+                                            source={require('../../public/img/test.png')}   //uri: item.avatarUrl
+                                            style={styles.stuAvatar}
+                                        />
+                                        <Badge
+                                            value={item.score}
+                                            textStyle={{ color: 'orange', fontSize: 13 }}
+                                            containerStyle={styles.badgeText}
+                                        />
+                                        <Text style={styles.detailText}>
+                                            {item.stuName}
+                                        </Text>
+                                    </TouchableOpacity>
+                                ))
+                            }
+                            <View>
+                                <TouchableOpacity onPress={this.handleAddStu} style={styles.detailItem}>
+                                    <View
+                                        style={[styles.stuAvatar, styles.addStu]}
+                                    >
+                                        <Icon
+                                            name="add"
+                                            color="#00aced"
+                                            size={34}
+                                        />
+                                    </View>
+                                    <Text style={styles.detailText}>
+                                        添加学生
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                        :
+                        <PublicNoContent tips="暂无学生" />
+                }
+            </View>
+        )
+    };
+    render() {
+        const { handleModal, isVisible } = this.props;
+        return(
+            <View style={{ height: '100%'}}>
+                <PublicScrollView
+                    renderView={this.getRenderStudent()}
+                    setMarginBottom={250}
+                />
+                <View style={styles.bottomBtns}>
+                    <TouchableOpacity style={[styles.bottomBtn]}>
+                        <Icon
+                            name='event-available'
+                            color='#70768c'
+                        />
+                        <Text>考勤</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.bottomBtn]}>
+                        <Icon
+                            name='face'
+                            color='#70768c'
+                        />
+                        <Text>点评多人</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.bottomBtn]}>
+                        <Icon
+                            name='repeat'
+                            color='#70768c'
+                        />
+                        <Text>随机</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         );
     }
@@ -118,7 +119,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         marginTop: 15,
         marginLeft: 6,
-        paddingBottom: 30
+        paddingBottom: 10
     },
     stuAvatar: {
         width: 60,
@@ -148,6 +149,28 @@ const styles = StyleSheet.create({
         height: 20,
         position: 'relative',
         top: -7,
+    },
+    bottomBtns: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        position: 'absolute',
+        paddingVertical: 10,
+        bottom: 208
+    },
+    bottomBtn: {
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    showModalContainer: {
+        display: 'flex',
+        backgroundColor: 'skyblue',
+        position: 'absolute',
+        zIndex: 100
     },
 });
 export default StudentList;

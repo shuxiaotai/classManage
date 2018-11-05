@@ -3,15 +3,15 @@ import { createStackNavigator } from 'react-navigation';
 import HomeScreen from "./components/screen/HomeScreen";
 import Login from "./components/Login";
 import Register from "./components/Register";
-import ClassDetail from "./components/class/ClassDetail";
+import ClassDetailList from "./components/class/ClassDetailList";
 import AddStudent from "./components/class/AddStudent";
 
 const App = createStackNavigator({
     Home: {
         screen: HomeScreen,
     },
-    ClassDetail: {
-        screen: ClassDetail
+    ClassDetailList: {
+        screen: ClassDetailList
     },
     Login: {
         screen: Login

@@ -36,7 +36,7 @@ class ClassScreen extends Component{
     };
     getClassDetail = (classText) => {
         const { navigate } = this.props.navigation;
-        navigate('ClassDetail', { classText });
+        navigate('ClassDetailList', { classText });
     };
     getRenderItem = () => {
         return({item}) => (

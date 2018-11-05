@@ -1,42 +1,36 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {View, Modal, TouchableOpacity, StyleSheet, Dimensions} from 'react-native';
 
-const PublicModal = (props) => {
-    return(
-        <Modal
-            visible={props.isVisible}
-            animationType={'none'}
-            transparent = {true}
-        >
-            <TouchableOpacity
-                style={styles.maskContainer}
-                // onPress={props.handleModal}
-                activeOpacity={1}
+class PublicModal extends Component{
+    render() {
+        const { renderComponent, isVisible } = this.props;
+        return(
+            <View
+                style={{
+                    display: isVisible ? 'flex' : 'none',
+                    zIndex: 100,
+                }}
             >
                 <View
                     style={styles.modalContainer}
                 >
-                    {props.renderComponent}
+                    {renderComponent}
                 </View>
-            </TouchableOpacity>
-        </Modal>
-    );
-};
+            </View>
+        )
+    }
+}
 
 const styles = StyleSheet.create({
-    maskContainer: {
-        width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
     modalContainer: {
         width: 300,
-        height: 400,
+        height: 430,
         backgroundColor: '#fff',
-        borderRadius: 10
+        borderRadius: 10,
+        position: 'absolute',
+        left: Dimensions.get('window').width / 2 - 150,
+        top: Dimensions.get('window').height / 2 - 250,
+        zIndex: 100,
     }
 });
 

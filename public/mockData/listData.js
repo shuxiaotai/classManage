@@ -221,50 +221,7 @@ export default {
             stuName: 'zsy',
             avatarUrl: '',
             score: 2
-        },
-        {
-            key: 13,
-            stuName: 'zsy',
-            avatarUrl: '',
-            score: 2
-        },
-        {
-            key: 14,
-            stuName: 'zsy',
-            avatarUrl: '',
-            score: 3
-        },
-        {
-            key: 15,
-            stuName: 'zsy',
-            avatarUrl: '',
-            score: 1
-        },
-        {
-            key: 16,
-            stuName: 'zsy',
-            avatarUrl: '',
-            score: 1
-        },
-        {
-            key: 17,
-            stuName: 'zsy',
-            avatarUrl: '',
-            score: 2
-        },
-        {
-            key: 18,
-            stuName: 'zsy',
-            avatarUrl: '',
-            score: 2
-        },
-        {
-            key: 19,
-            stuName: 'zsy',
-            avatarUrl: '',
-            score: 3
-        },
-        {
+        }, {
             key: 20,
             stuName: 'zsy',
             avatarUrl: '',
@@ -341,5 +298,166 @@ export default {
             key: 17,
             studentName: 'shisns'
         }
+    ],
+    //小组列表  StudentGroupList.js
+    studentGroupList: [
+        {
+            key: 1,
+            imgUrl: '',
+            praiseScore: 1,
+            criticizeScore: 1,
+            groupNum: 20,
+            groupName: '第一小组'
+        },
+        {
+            key: 2,
+            imgUrl: '',
+            praiseScore: 1,
+            criticizeScore: 1,
+            groupNum: 20,
+            groupName: '第一小组'
+        },
+        {
+            key: 3,
+            imgUrl: '',
+            praiseScore: 1,
+            criticizeScore: 1,
+            groupNum: 20,
+            groupName: '第一小组'
+        },
+        {
+            key: 4,
+            imgUrl: '',
+            praiseScore: 1,
+            criticizeScore: 1,
+            groupNum: 20,
+            groupName: '第一小组'
+        }
+    ],
+
+    //表扬模板  RemarkModalContent.js
+    remarkPraiseList: [
+        {
+            title: '遵守纪律',
+            key: 1
+        },
+        {
+            title: '遵守纪律',
+            key: 2
+        },
+        {
+            title: '遵守纪律',
+            key: 3
+        },
+        {
+            title: '遵守纪律',
+            key: 4
+        },
+        {
+            title: '遵守纪律',
+            key: 5
+        },
+        {
+            title: '遵守纪律',
+            key: 6
+        },
+        {
+            title: '遵守纪律',
+            key: 11
+        },
+        {
+            title: '遵守纪律',
+            key: 21
+        },
+        {
+            title: '遵守纪律',
+            key: 31
+        },
+        {
+            title: '遵守纪律',
+            key: 41
+        },
+        {
+            title: '遵守纪律',
+            key: 51
+        },
+        {
+            title: '遵守纪律',
+            key: 61
+        },
+        {
+            title: '遵守纪律',
+            key: 22
+        },
+        {
+            title: '遵守纪律',
+            key: 23
+        },
+        {
+            title: '遵守纪律',
+            key: 24
+        }
+    ],
+    //批评模板列表
+    remarkCriticizeList: [
+        {
+            title: '上课开小差',
+            key: 1
+        },
+        {
+            title: '遵守纪律',
+            key: 2
+        },
+    ],
+    //课程列表
+    courseList: [
+        {
+            title: '语文课',
+            key: 1
+        },
+        {
+            title: '数学课',
+            key: 2
+        },
+        {
+            title: '语文课',
+            key: 3
+        },
+        {
+            title: '数学课',
+            key: 4
+        },
+        {
+            title: '语文课',
+            key: 5
+        },
+        {
+            title: '数学课',
+            key: 6
+        },
+        {
+            title: '语文课',
+            key: 7
+        },
+        {
+            title: '数学课',
+            key: 8
+        },
+        {
+            title: '语文课',
+            key: 9
+        },
+        {
+            title: '数学课',
+            key: 10
+        },
+        {
+            title: '语文课',
+            key: 11
+        },
+        {
+            title: '数学课',
+            key: 12
+        },
     ]
 }
