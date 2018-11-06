@@ -100,6 +100,10 @@ class RemarkModalContent extends Component{
             showSelectCourse: true
         })
     };
+    toStudentHomePage = () => {
+        const { navigate } = this.props.navigation;
+        navigate('StudentHomePage');
+    };
     render() {
         const { selectKey, showSelectCourse } = this.state;
         const { handleModal } = this.props;
@@ -109,7 +113,12 @@ class RemarkModalContent extends Component{
                     style={styles.remarkHeader}
                     // onStartShouldSetResponderCapture={(evt) => true}   //在冒泡之前的捕获期会触发的方法，返回true来阻止这个View来响应
                 >
-                    <Text style={styles.headerLeft}>学生主页</Text>
+                    <TouchableOpacity
+                        style={styles.headerLeft}
+                        onPress={this.toStudentHomePage}
+                    >
+                        <Text style={styles.headLeftText}>学生主页</Text>
+                    </TouchableOpacity>
                     <Text style={styles.remarkTitle}>点评朱叔叔</Text>
                     <TouchableOpacity
                         style={styles.headerRight}
@@ -171,6 +180,8 @@ const styles = StyleSheet.create({
     headerLeft: {
         position: 'absolute',
         left: 10,
+    },
+    headLeftText: {
         color: '#0f7cda',
         fontSize: 13
     },

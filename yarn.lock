@@ -4867,6 +4867,13 @@ react-native-elements@^1.0.0-beta:
     opencollective-postinstall "^2.0.0"
     prop-types "^15.5.8"
 
+react-native-percentage-circle@^1.0.7:
+  version "1.0.7"
+  resolved "http://registry.npm.taobao.org/react-native-percentage-circle/download/react-native-percentage-circle-1.0.7.tgz#5ae6b1fc0e288266a453a95543a437f5e4e81072"
+  integrity sha1-Wuax/A4ogmakU6lVQ6Q39eToEHI=
+  dependencies:
+    react "^16.3.2"
+
 react-native-safe-area-view@0.11.0:
   version "0.11.0"
   resolved "http://registry.npm.taobao.org/react-native-safe-area-view/download/react-native-safe-area-view-0.11.0.tgz#4f3dda43c2bace37965e7c6aef5fc83d4f19d174"
@@ -5047,6 +5054,16 @@ react@16.6.0-alpha.8af6728:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
     scheduler "^0.10.0-alpha.8af6728"
+
+react@^16.3.2:
+  version "16.6.0"
+  resolved "http://registry.npm.taobao.org/react/download/react-16.6.0.tgz#b34761cfaf3e30f5508bc732fb4736730b7da246"
+  integrity sha1-s0dhz68+MPVQi8cy+0c2cwt9okY=
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
+    scheduler "^0.10.0"
 
 read-pkg-up@^1.0.1:
   version "1.0.1"
@@ -5365,7 +5382,7 @@ sax@~1.1.1:
   resolved "http://registry.npm.taobao.org/sax/download/sax-1.1.6.tgz#5d616be8a5e607d54e114afae55b7eaf2fcc3240"
   integrity sha1-XWFr6KXmB9VOEUr65Vt+ry/MMkA=
 
-scheduler@^0.10.0-alpha.8af6728:
+scheduler@^0.10.0, scheduler@^0.10.0-alpha.8af6728:
   version "0.10.0"
   resolved "http://registry.npm.taobao.org/scheduler/download/scheduler-0.10.0.tgz#7988de90fe7edccc774ea175a783e69c40c521e1"
   integrity sha1-eYjekP5+3Mx3TqF1p4PmnEDFIeE=

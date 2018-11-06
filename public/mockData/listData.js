@@ -459,5 +459,152 @@ export default {
             title: '数学课',
             key: 12
         },
+    ],
+    //时间选择列表    StudentHomePage.js
+    selectTimeList: [
+        {
+            key: 1,
+            timeName: '今天'
+        },
+        {
+            key: 2,
+            timeName: '本周'
+        },
+        {
+            key: 3,
+            timeName: '上周'
+        },
+        {
+            key: 4,
+            timeName: '本月'
+        },
+        {
+            key: 5,
+            timeName: '近一年'
+        }
+    ],
+    //个人评价列表   StudentHomePage.js
+    studentRemarkList1: [
+        {
+            key: '1',
+            score: 1,
+            isPraise: 0,   //0表示表扬, 1表示批评
+            isPerson: 1,    //0表示个人评价，1表示小组评价
+            projectName: '举手问答1',
+            time: '2018-10-10 10:10',
+            teacher: 'sxt',
+            groupName: '第一小组'
+        },
+        {
+            key: '2',
+            score: 1,
+            isPraise: 0,   //0表示表扬, 1表示批评
+            isPerson: 0,    //0表示个人评价，1表示小组评价
+            projectName: '举手问答1',
+            time: '2018-10-10 10:10',
+            teacher: 'sxt',
+            groupName: '第一小组'
+        },
+        {
+            key: '3',
+            score: 1,
+            isPraise: 0,   //0表示表扬, 1表示批评
+            isPerson: 0,    //0表示个人评价，1表示小组评价
+            projectName: '举手问答1',
+            time: '2018-10-10 10:10',
+            teacher: 'sxt',
+            groupName: '第一小组'
+        },{
+            key: '4',
+            score: 1,
+            isPraise: 0,   //0表示表扬, 1表示批评
+            isPerson: 0,    //0表示个人评价，1表示小组评价
+            projectName: '举手问答1',
+            time: '2018-10-10 10:10',
+            teacher: 'sxt',
+            groupName: '第一小组'
+        }
+    ],
+    studentRemarkList2: [
+        {
+            key: '5',
+            score: 1,
+            isPraise: 0,   //0表示表扬, 1表示批评
+            isPerson: 0,    //0表示个人评价，1表示小组评价
+            projectName: '举手问答22',
+            time: '2018-10-10 10:10',
+            teacher: 'sxt',
+            groupName: '第一小组'
+        },
+        {
+            key: '6',
+            score: 1,
+            isPraise: 0,   //0表示表扬, 1表示批评
+            isPerson: 0,    //0表示个人评价，1表示小组评价
+            projectName: '举手问答22',
+            time: '2018-10-10 10:10',
+            teacher: 'sxt',
+            groupName: '第一小组'
+        },
+        {
+            key: '7',
+            score: 1,
+            isPraise: 0,   //0表示表扬, 1表示批评
+            isPerson: 0,    //0表示个人评价，1表示小组评价
+            projectName: '举手问答22',
+            time: '2018-10-10 10:10',
+            teacher: 'sxt',
+            groupName: '第一小组'
+        },{
+            key: '8',
+            score: 1,
+            isPraise: 0,   //0表示表扬, 1表示批评
+            isPerson: 0,    //0表示个人评价，1表示小组评价
+            projectName: '举手问答22',
+            time: '2018-10-10 10:10',
+            teacher: 'sxt',
+            groupName: '第一小组'
+        }
+    ],
+    studentRemarkList3: [
+        {
+            key: '9',
+            score: 1,
+            isPraise: 0,   //0表示表扬, 1表示批评
+            isPerson: 1,    //0表示个人评价，1表示小组评价
+            projectName: '举手问答33',
+            time: '2018-10-10 10:10',
+            teacher: 'sxt',
+            groupName: '第一小组'
+        },
+        {
+            key: '10',
+            score: 1,
+            isPraise: 0,   //0表示表扬, 1表示批评
+            isPerson: 0,    //0表示个人评价，1表示小组评价
+            projectName: '举手问答333',
+            time: '2018-10-10 10:10',
+            teacher: 'sxt',
+            groupName: '第一小组'
+        },
+        {
+            key: '11',
+            score: 1,
+            isPraise: 0,   //0表示表扬, 1表示批评
+            isPerson: 0,    //0表示个人评价，1表示小组评价
+            projectName: '举手问答333',
+            time: '2018-10-10 10:10',
+            teacher: 'sxt',
+            groupName: '第一小组'
+        },{
+            key: '12',
+            score: 1,
+            isPraise: 0,   //0表示表扬, 1表示批评
+            isPerson: 0,    //0表示个人评价，1表示小组评价
+            projectName: '举手问答333',
+            time: '2018-10-10 10:10',
+            teacher: 'sxt',
+            groupName: '第一小组'
+        }
     ]
 }

@@ -55,7 +55,7 @@ class ClassDetailList extends Component{
                 <PublicModal
                     isVisible={isVisible}
                     handleModal={this.handleModal}
-                    renderComponent={<RemarkModalContent handleModal={this.handleModal} />}
+                    renderComponent={<RemarkModalContent handleModal={this.handleModal} navigation={navigation} />}
                 />
                 <PublicHeader title="sssss" isLeft={true} navigation={navigation} />
                 <PublicTab tabItem={tabItem} selectKey={selectKey} onChangeSelectKey={this.onChangeSelectKey} />

@@ -4,17 +4,18 @@ import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 class PublicHeader extends Component {
 
-    getTouchableComponent = (component) => {
+    getTouchableComponent = (isLeft, component) => {
+        const { rightPressFun } = this.props;
         return(
-            <TouchableOpacity onPress={this.toBack}>
+            <TouchableOpacity onPress={isLeft ? this.toBack : (rightPressFun ? rightPressFun : this.toBack)}>
                 {
-                    component ? component :
+                    isLeft ? (component ? component :
                         <View style={styles.backContainer}>
                             <Icon
                                 name='chevron-left'
                                 color='#fff' />
                             <Text style={styles.backText}>返回</Text>
-                        </View>
+                        </View>) : component
                 }
 
             </TouchableOpacity>
@@ -31,16 +32,16 @@ class PublicHeader extends Component {
                 {
                     (isLeft && isRight) ?
                         <Header
-                            leftComponent={leftComponent ? this.getTouchableComponent(leftComponent) : this.getTouchableComponent()}
+                            leftComponent={leftComponent ? this.getTouchableComponent(true, leftComponent) : this.getTouchableComponent(true)}
                             centerComponent={{ text: title, style: { color: '#fff' } }}
-                            rightComponent={rightComponent ? this.getTouchableComponent(rightComponent) : this.getTouchableComponent()}
+                            rightComponent={rightComponent ? this.getTouchableComponent(false, rightComponent) : null}
                         />
                         : null
                 }
                 {
                     (isLeft && !isRight) ?
                         <Header
-                            leftComponent={leftComponent ? leftComponent : this.getTouchableComponent()}
+                            leftComponent={leftComponent ? this.getTouchableComponent(true, leftComponent) : this.getTouchableComponent(true)}
                             centerComponent={{ text: title, style: { color: '#fff' } }}
                         />
                         : null

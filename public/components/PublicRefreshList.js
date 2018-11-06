@@ -81,7 +81,7 @@ class PublicRefreshList extends Component{
 
     render() {
         const { isHeaderRefreshing } = this.state;
-        const { getRenderItem, dataArr, ListEmptyComponent } = this.props;
+        const { getRenderItem, dataArr, ListEmptyComponent, ListHeaderComponent } = this.props;
         return(
             <FlatList
                 data={dataArr}
@@ -91,6 +91,7 @@ class PublicRefreshList extends Component{
                 onEndReachedThreshold={0.1}
                 onEndReached={() => this.beginFooterRefresh()}
                 ListFooterComponent={this.renderFooter}
+                ListHeaderComponent={ListHeaderComponent}
                 ListEmptyComponent={ListEmptyComponent}
             />
         );
