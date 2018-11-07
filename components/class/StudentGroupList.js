@@ -6,7 +6,24 @@ import PublicScrollView from "../../public/components/PublicScrollView";
 import PublicNoContent from "../../public/components/PublicNoContent";
 
 class StudentGroupList extends Component{
+
+    toNextStep = () => {
+        const { navigate } = this.props.navigation;
+        navigate('GroupAddStudent');
+    };
+    toCreateGroup = () => {
+        const { navigate } = this.props.navigation;
+        navigate('EditOrCreateName', {
+            title : '小组命名',
+            leftText: '取消',
+            rightText: '下一步',
+            leftName: '',
+            placeholder: '请输入小组名称(16字符内)',
+            rightPressFun: this.toNextStep
+        })
+    };
     getRenderStudentGroup = () => {
+        const { handleModal } = this.props;
         return(
             <View>
                 {
@@ -16,7 +33,7 @@ class StudentGroupList extends Component{
                                 <View style={styles.stuGroupHeader}>
                                     <Text style={styles.stuGroupHeaderText}>{item.groupName}</Text>
                                 </View>
-                                <View style={styles.stuGroupContentContainer}>
+                                <TouchableOpacity style={styles.stuGroupContentContainer} onPress={() => handleModal(true)}>
                                     <Image
                                         source={require('../../public/img/test.png')}
                                         style={styles.stuGroupAvatar}
@@ -30,12 +47,15 @@ class StudentGroupList extends Component{
                                         </Text>
                                     </View>
                                     <Text style={styles.groupNums}>{item.groupNum}人</Text>
-                                </View>
+                                </TouchableOpacity>
                             </View>
                         );
                     })
                 }
-                <TouchableOpacity style={styles.addGroup}>
+                <TouchableOpacity
+                    style={styles.addGroup}
+                    onPress={this.toCreateGroup}
+                >
                     <Icon
                         name="add"
                         color="#00aced"

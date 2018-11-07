@@ -6,6 +6,8 @@ import PercentageCircle from 'react-native-percentage-circle';
 import listData from "../../public/mockData/listData";
 import PublicRefreshList from "../../public/components/PublicRefreshList";
 import PublicNoContent from "../../public/components/PublicNoContent";
+import PublicMask from "../../public/components/PublicMask";
+
 
 class StudentHomePage extends Component{
     constructor() {
@@ -156,8 +158,12 @@ class StudentHomePage extends Component{
                         </Text>
                     </TouchableOpacity>
                 </View>
-                <View style={showSelectTime ? styles.maskContainer : styles.maskHiddenContainer}>
-                </View>
+                <PublicMask
+                    isVisible={showSelectTime}
+                    width={'100%'}
+                    height={Dimensions.get('window').height - 104}
+                    top={104}
+                />
                 <View style={showSelectTime ? styles.selectContainer : styles.selectHiddenContainer}>
                     {
                         listData.selectTimeList.map((item) => {
@@ -276,9 +282,6 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     stuRemarkListContainer: {
-        // backgroundColor: '#fff',
-        // marginTop: 10,
-        // paddingLeft: 10,
         paddingTop: 8,
         paddingBottom: 120
     },

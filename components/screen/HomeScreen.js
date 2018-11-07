@@ -7,6 +7,7 @@ import MeScreen from './MeScreen';
 import ClassScreen from "./ClassScreen";
 
 //#3498db
+//MaterialIcons
 const HomeScreen = createBottomTabNavigator({
     Class: {
         screen: ClassScreen,

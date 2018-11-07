@@ -3,41 +3,45 @@ import { View, Text, TextInput, StyleSheet } from 'react-native';
 import PublicHeader from "../../public/components/PublicHeader";
 
 
-class EditStudentName extends Component{
-    constructor() {
-        super();
+class EditOrCreateName extends Component{
+
+    constructor(props) {
+        super(props);
         this.state = {
-            studentName: '舒小台',
+            LeftName: props.navigation.state.params.leftName,
         }
     }
     componentDidMount() {
         let studentInput = this.studentInput;
         studentInput.focus();
     }
-    getLeftComponent = () => (
-        <Text style={{ color: '#fff' }}>取消</Text>
-    );
-    getRightComponent = () => (
-        <Text style={{ color: '#fff' }}>保存</Text>
-    );
+    getComponent = (isLeft) => {
+        const { leftText, rightText } = this.props.navigation.state.params;
+        return (
+            <Text style={{ color: '#fff' }}>{isLeft ? leftText : rightText}</Text>
+        );
+    };
     render() {
         const { navigation } = this.props;
-        const { studentName } = this.state;
+        const { title, placeholder, rightPressFun } = navigation.state.params;
+        const { LeftName } = this.state;
         return(
             <View>
                 <PublicHeader
-                    title="学生姓名"
+                    title={title}
                     isLeft={true}
-                    leftComponent={this.getLeftComponent()}
+                    leftComponent={this.getComponent(true)}
                     navigation={navigation}
                     isRight={true}
-                    rightComponent={this.getRightComponent()}
+                    rightComponent={this.getComponent(false)}
+                    rightPressFun={rightPressFun ? rightPressFun : null}
                 />
                 <TextInput
                     ref={(studentInput) => this.studentInput = studentInput}
                     style={styles.changeStuName}
-                    onChangeText={(studentName) => this.setState({studentName})}
-                    value={studentName}
+                    onChangeText={(LeftName) => this.setState({LeftName})}
+                    placeholder={placeholder ? placeholder : ''}
+                    value={LeftName}
                 />
             </View>
         );
@@ -53,4 +57,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default EditStudentName;
+export default EditOrCreateName;

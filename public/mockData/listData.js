@@ -606,5 +606,36 @@ export default {
             teacher: 'sxt',
             groupName: '第一小组'
         }
+    ],
+    //选择小组学生列表   GroupModalContent.js
+    selectGroupStuList: [
+        {
+            key: 1,
+            name: 'sxt'
+        },
+        {
+            key: 2,
+            name: 'sss'
+        }
+    ],
+    //创建小组选择学生列表  GroupAddStudent.js
+    selectStudentList: [
+        {
+            key: 1,
+            name: 'sxt'
+        },
+        {
+            key: 2,
+            name: 'sxt'
+        },
+        {
+            key: 3,
+            name: 'sxt'
+        },
+        {
+            key: 4,
+            name: 'sxt'
+        }
     ]
+
 }

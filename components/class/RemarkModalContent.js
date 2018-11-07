@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Image, Alert, ScrollView} from 'react-native';
 import { Icon } from 'react-native-elements';
 import PublicTab from "../../public/components/PublicTab";
+import PublicCircleItem from "../../public/components/PublicCircleItem";
 import PublicScrollView from "../../public/components/PublicScrollView";
 import listData from "../../public/mockData/listData";
 
@@ -22,7 +23,7 @@ class RemarkModalContent extends Component{
         super();
         this.state = {
             selectKey: 1,
-            showSelectCourse: false
+            showSelectCourse: true
         }
     }
 
@@ -76,19 +77,11 @@ class RemarkModalContent extends Component{
                 {
                     listData.courseList.map((item) => {
                         return(
-                            <TouchableOpacity
-                                style={styles.courseItem}
+                            <PublicCircleItem
+                                item={item}
+                                pressFun={this.getCourse}
                                 key={item.key}
-                                onPress={() => this.getCourse(item.key)}
-                            >
-                                <Image
-                                    source={require('../../public/img/test.png')}   //uri: item.avatarUrl
-                                    style={styles.remarkImg}
-                                />
-                                <Text style={styles.remark}>
-                                    {item.title}
-                                </Text>
-                            </TouchableOpacity>
+                            />
                         )
                     })
                 }
@@ -100,37 +93,10 @@ class RemarkModalContent extends Component{
             showSelectCourse: true
         })
     };
-    toStudentHomePage = () => {
-        const { navigate } = this.props.navigation;
-        navigate('StudentHomePage');
-    };
     render() {
         const { selectKey, showSelectCourse } = this.state;
-        const { handleModal } = this.props;
         return(
             <View style={{ flex: 1 }}>
-                <View
-                    style={styles.remarkHeader}
-                    // onStartShouldSetResponderCapture={(evt) => true}   //在冒泡之前的捕获期会触发的方法，返回true来阻止这个View来响应
-                >
-                    <TouchableOpacity
-                        style={styles.headerLeft}
-                        onPress={this.toStudentHomePage}
-                    >
-                        <Text style={styles.headLeftText}>学生主页</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.remarkTitle}>点评朱叔叔</Text>
-                    <TouchableOpacity
-                        style={styles.headerRight}
-                        onPress={() => handleModal(false)}
-                    >
-                        <Icon
-                            name={'close'}
-                            color='gray'
-                            size={19}
-                        />
-                    </TouchableOpacity>
-                </View>
                 <TouchableOpacity onPress={this.changeSelectedProject}>
                     <Text style={styles.selectCourse}>选择课程</Text>
                 </TouchableOpacity>
@@ -140,11 +106,11 @@ class RemarkModalContent extends Component{
                         ( showSelectCourse ?
                             <PublicScrollView
                                 renderView={this.renderCourse()}
-                                setMarginBottom={100}
+                                setMarginBottom={80}
                             /> :
                             <PublicScrollView
                                 renderView={this.renderRemarkList(true)}
-                                setMarginBottom={100}
+                                setMarginBottom={80}
                             />
                         )
                         : null
@@ -154,11 +120,11 @@ class RemarkModalContent extends Component{
                         ( showSelectCourse ?
                             <PublicScrollView
                                 renderView={this.renderCourse()}
-                                setMarginBottom={100}
+                                setMarginBottom={80}
                             /> :
                             <PublicScrollView
                                 renderView={this.renderRemarkList(false)}
-                                setMarginBottom={100}
+                                setMarginBottom={80}
                             />
                         )
                         : null
@@ -169,29 +135,6 @@ class RemarkModalContent extends Component{
 }
 
 const styles = StyleSheet.create({
-    remarkHeader: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 14,
-        marginBottom: 10,
-    },
-    headerLeft: {
-        position: 'absolute',
-        left: 10,
-    },
-    headLeftText: {
-        color: '#0f7cda',
-        fontSize: 13
-    },
-    remarkTitle: {
-        fontSize: 15
-    },
-    headerRight: {
-        position: 'absolute',
-        right: 10
-    },
     remarkContainer: {
         display: 'flex',
         flexDirection: 'row',
@@ -268,11 +211,6 @@ const styles = StyleSheet.create({
         marginTop: 10,
         height: 340,
     },
-    courseItem: {
-        display: 'flex',
-        width: 89,
-        alignItems: 'center',
-        marginBottom: 15
-    }
+
 });
 export default RemarkModalContent;

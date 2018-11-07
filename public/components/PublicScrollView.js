@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, ScrollView, RefreshControl } from 'react-native';
 
+//下拉刷新
 class PublicScrollView extends Component{
     constructor() {
         super();

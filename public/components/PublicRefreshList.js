@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { FlatList, View, Text, StyleSheet } from 'react-native';
 
+//上拉加载，下拉刷新
 const refreshState = {
     Init: 'Init',               // 初始状态
     CanLoadMore: 'CanLoadMore', // 可以加载更多

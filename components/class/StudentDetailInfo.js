@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
 import { View, Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { Icon } from 'react-native-elements';
 import PublicHeader from "../../public/components/PublicHeader";
-import EditStudentName from "./EditStudentName";
+import PublicBtn from "../../public/components/PublicBtn";
+import PublicHorizontalItem from "../../public/components/PublicHorizontalItem";
+import EditOrCreateName from "./EditOrCreateName";
 
 class StudentDetailInfo extends Component{
 
     toEditStudentName = () => {
         const { navigate } = this.props.navigation;
-        navigate('EditStudentName');
+        navigate('EditOrCreateName', ({
+            title : '学生姓名',
+            leftText: '取消',
+            rightText: '保存',
+            leftName: '舒小台'
+        }));
     };
     render() {
         const { navigation } = this.props;
@@ -24,26 +30,14 @@ class StudentDetailInfo extends Component{
                         source={require('../../public/img/test.png')}
                         style={styles.stuDetailInfo}
                     />
-                    <TouchableOpacity
-                        style={styles.stuNameContainer}
-                        activeOpacity={0.5}
-                        onPress={this.toEditStudentName}
-                    >
-                        <Text style={styles.leftText}>学生姓名</Text>
-                        <View style={styles.rightTextWrapper}>
-                            <Text style={styles.rightText}>舒小台</Text>
-                            <Icon
-                                name="chevron-right"
-                                color="gray"
-                            />
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.deleteStuBtn}
-                        activeOpacity={0.5}
-                    >
-                        <Text style={styles.btnText}>从班级中删除</Text>
-                    </TouchableOpacity>
+                    <PublicHorizontalItem
+                        toTargetFun={this.toEditStudentName}
+                        leftText="学生姓名"
+                        rightText="舒小台"
+                    />
+                   <PublicBtn
+                        tips="从班级中删除"
+                   />
                 </View>
             </View>
         )
@@ -63,37 +57,5 @@ const styles = StyleSheet.create({
         height: 100,
         borderRadius: 50
     },
-    stuNameContainer: {
-        height: 40,
-        width: '100%',
-        backgroundColor: '#fff',
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginTop: 15
-    },
-    leftText: {
-        paddingLeft: 10
-    },
-    rightTextWrapper: {
-        position: 'absolute',
-        right: 10,
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
-    rightText: {
-        color: 'gray'
-    },
-    deleteStuBtn: {
-        width: '90%',
-        height: 40,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'skyblue',
-        borderRadius: 5,
-        marginTop: 25
-    },
-    btnText: {
-        color: '#fff'
-    }
 });
 export default StudentDetailInfo;

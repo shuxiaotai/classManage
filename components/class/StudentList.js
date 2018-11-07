@@ -76,7 +76,6 @@ class StudentList extends Component{
         )
     };
     render() {
-        const { handleModal, isVisible } = this.props;
         return(
             <View style={{ height: '100%'}}>
                 <PublicScrollView

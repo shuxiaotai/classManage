@@ -7,7 +7,9 @@ import ClassDetailList from "./components/class/ClassDetailList";
 import AddStudent from "./components/class/AddStudent";
 import StudentHomePage from "./components/class/StudentHomePage";
 import StudentDetailInfo from "./components/class/StudentDetailInfo";
-import EditStudentName from "./components/class/EditStudentName";
+import EditOrCreateName from "./components/class/EditOrCreateName";
+import EditGroupInfo from "./components/class/EditGroupInfo";
+import GroupAddStudent from "./components/class/GroupAddStudent";
 
 const App = createStackNavigator({
     Home: {
@@ -31,8 +33,14 @@ const App = createStackNavigator({
     StudentDetailInfo: {
         screen: StudentDetailInfo
     },
-    EditStudentName: {
-        screen: EditStudentName
+    EditOrCreateName: {
+        screen: EditOrCreateName
+    },
+    EditGroupInfo: {
+        screen: EditGroupInfo
+    },
+    GroupAddStudent: {
+        screen: GroupAddStudent
     }
 }, {
     headerMode: 'none',
