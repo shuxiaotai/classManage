@@ -636,6 +636,44 @@ export default {
             key: 4,
             name: 'sxt'
         }
+    ],
+    //家长列表
+    parentList: [
+        {
+            key: 1,
+            title: '朱xx家长'
+        },
+        {
+            key: 2,
+            title: '朱xx家长'
+        },
+        {
+            key: 3,
+            title: '朱xx家长'
+        },
+        {
+            key: 4,
+            title: '朱xx家长'
+        },
+        {
+            key: 5,
+            title: '朱xx家长'
+        },
+        {
+            key: 6,
+            title: '朱xx家长'
+        },
+        {
+            key: 7,
+            title: '朱xx家长'
+        },
+        {
+            key: 8,
+            title: '朱xx家长'
+        },
+        {
+            key: 9,
+            title: '朱xx家长'
+        }
     ]
-
 }

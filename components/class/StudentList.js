@@ -5,6 +5,8 @@ import AddStudent from "./AddStudent";
 import listData from "../../public/mockData/listData";
 import PublicNoContent from "../../public/components/PublicNoContent";
 import PublicScrollView from "../../public/components/PublicScrollView";
+import PublicMask from "../../public/components/PublicMask";
+import PublicModal from "../../public/components/PublicModal";
 
 
 class StudentList extends Component{
@@ -75,6 +77,10 @@ class StudentList extends Component{
             </View>
         )
     };
+    showRandom = () => {
+        const { handleRandomModal } = this.props;
+        handleRandomModal(true);
+    };
     render() {
         return(
             <View style={{ height: '100%'}}>
@@ -90,14 +96,10 @@ class StudentList extends Component{
                         />
                         <Text>考勤</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.bottomBtn]}>
-                        <Icon
-                            name='face'
-                            color='#70768c'
-                        />
-                        <Text>点评多人</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={[styles.bottomBtn]}>
+                    <TouchableOpacity
+                        style={[styles.bottomBtn]}
+                        onPress={this.showRandom}
+                    >
                         <Icon
                             name='repeat'
                             color='#70768c'

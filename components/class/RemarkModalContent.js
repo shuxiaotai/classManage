@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Image, Alert, ScrollView} from 'react-native';
-import { Icon } from 'react-native-elements';
+import {View, Text, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView} from 'react-native';
 import PublicTab from "../../public/components/PublicTab";
 import PublicCircleItem from "../../public/components/PublicCircleItem";
 import PublicScrollView from "../../public/components/PublicScrollView";
 import listData from "../../public/mockData/listData";
+import PublicBtn from "../../public/components/PublicBtn";
 
 const tabItem = [
     {
@@ -22,7 +22,7 @@ class RemarkModalContent extends Component{
     constructor() {
         super();
         this.state = {
-            selectKey: 1,
+            selectKey: 3,
             showSelectCourse: true
         }
     }
@@ -129,6 +129,20 @@ class RemarkModalContent extends Component{
                         )
                         : null
                 }
+                {
+                    selectKey === 3 ?
+                        <View>
+                            <TextInput
+                                placeholder="请输入您的点评"
+                                style={styles.customInput}
+                                multiline={true}
+                            />
+                            <View style={styles.btnWrapper}>
+                                <PublicBtn tips="确认点评" />
+                            </View>
+                        </View>
+                        : null
+                }
             </View>
         );
     }
@@ -211,6 +225,17 @@ const styles = StyleSheet.create({
         marginTop: 10,
         height: 340,
     },
-
+    customInput: {
+        height: 100,
+        marginTop: 30,
+        borderStyle: 'solid',
+        borderWidth: 1,
+        borderColor: '#f1f1f1',
+        marginHorizontal: 15
+    },
+    btnWrapper: {
+        alignItems: 'center',
+        marginTop: 10
+    }
 });
 export default RemarkModalContent;

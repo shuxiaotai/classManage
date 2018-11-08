@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: 'skyblue',
         borderRadius: 5,
-        marginTop: 25
+        marginTop: 25,
     },
     btnText: {
         color: '#fff'

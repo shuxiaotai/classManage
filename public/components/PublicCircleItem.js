@@ -2,7 +2,7 @@ import React from 'react';
 import { TouchableOpacity, Text, Image, StyleSheet } from 'react-native';
 
 const PublicCircleItem = (props) => {
-    const { item, pressFun, activeOpacity } = props;
+    const { item, pressFun, activeOpacity, ImgWidth, ImgHeight, ImgRadius } = props;
     return(
         <TouchableOpacity
             style={styles.courseItem}
@@ -11,7 +11,11 @@ const PublicCircleItem = (props) => {
         >
             <Image
                 source={require('../../public/img/test.png')}   //uri: item.avatarUrl
-                style={styles.courseImg}
+                style={{
+                    width: ImgWidth ? ImgWidth : 50,
+                    height: ImgHeight ? ImgHeight : 50,
+                    borderRadius: ImgRadius ? ImgRadius : 25
+                }}
             />
             <Text style={styles.remark}>
                 {item.title}
@@ -26,11 +30,6 @@ const styles = StyleSheet.create({
         width: 89,
         alignItems: 'center',
         marginBottom: 15
-    },
-    courseImg: {
-        width: 50,
-        height: 50,
-        borderRadius: 25
     },
     remark: {
         marginTop: 8
