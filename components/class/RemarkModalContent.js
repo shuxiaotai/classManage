@@ -137,9 +137,7 @@ class RemarkModalContent extends Component{
                                 style={styles.customInput}
                                 multiline={true}
                             />
-                            <View style={styles.btnWrapper}>
-                                <PublicBtn tips="确认点评" />
-                            </View>
+                            <PublicBtn tips="确认点评" />
                         </View>
                         : null
                 }
@@ -232,10 +230,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#f1f1f1',
         marginHorizontal: 15
-    },
-    btnWrapper: {
-        alignItems: 'center',
-        marginTop: 10
     }
 });
 export default RemarkModalContent;

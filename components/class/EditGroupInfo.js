@@ -54,11 +54,9 @@ class EditGroupInfo extends Component{
                         }
                     </View>
                 </TouchableOpacity>
-                <View style={styles.btnWrapper}>
-                    <PublicBtn
-                        tips="解散小组"
-                    />
-                </View>
+                <PublicBtn
+                    tips="解散小组"
+                />
             </View>
         )
     }
@@ -87,9 +85,6 @@ const styles = StyleSheet.create({
         right: 10,
         fontSize: 13,
         color: 'gray'
-    },
-    btnWrapper: {
-        alignItems: 'center'
     }
 });
 export default EditGroupInfo;

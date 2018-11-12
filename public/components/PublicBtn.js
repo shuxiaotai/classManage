@@ -1,16 +1,23 @@
 import React  from 'react';
-import { TouchableOpacity, StyleSheet, Text } from 'react-native';
+import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
 
 const PublicBtn = (props) => (
-    <TouchableOpacity
-        style={styles.deleteStuBtn}
-        activeOpacity={0.5}
-    >
-        <Text style={styles.btnText}>{props.tips}</Text>
-    </TouchableOpacity>
+    <View style={styles.btnContainer}>
+        <TouchableOpacity
+            style={styles.deleteStuBtn}
+            activeOpacity={0.5}
+            onPress={props.onPress ? props.onPress : null}
+        >
+            <Text style={styles.btnText}>{props.tips}</Text>
+        </TouchableOpacity>
+    </View>
 );
 
 const styles = StyleSheet.create({
+    btnContainer: {
+        display: 'flex',
+        alignItems: 'center'
+    },
     deleteStuBtn: {
         width: '90%',
         height: 40,

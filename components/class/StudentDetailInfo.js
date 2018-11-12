@@ -35,10 +35,10 @@ class StudentDetailInfo extends Component{
                         leftText="学生姓名"
                         rightText="舒小台"
                     />
-                   <PublicBtn
-                        tips="从班级中删除"
-                   />
                 </View>
+                <PublicBtn
+                    tips="从班级中删除"
+                />
             </View>
         )
     }
