@@ -1,4 +1,3 @@
-
 import { createStackNavigator } from 'react-navigation';
 import HomeScreen from "./components/screen/HomeScreen";
 import LoginEntry from "./components/loginAndRegister/LoginEntry";
@@ -48,7 +47,7 @@ const App = createStackNavigator({
     }
 }, {
     headerMode: 'none',
-    initialRouteName: 'LoginEntry'
+    initialRouteName: 'LoginOrRegister'
 });
 
 export default App;

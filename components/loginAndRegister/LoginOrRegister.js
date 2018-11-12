@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, TextInput } from 'react-native';
+import { connect } from 'react-redux';
 import { Icon } from 'react-native-elements';
 import LoginLogo from './LoginLogo';
 import PublicBtn from "../../public/components/PublicBtn";
@@ -19,8 +20,8 @@ class LoginOrRegister extends Component{
         navigate('Home');
     };
     render() {
-        const { isLogin } = this.props.navigation.state.params;
-        // const isLogin = true;
+        const { isLogin } = this.props;
+        console.log(isLogin);
         return(
             <View style={styles.loginOrRegisterContainer}>
                 <TouchableOpacity
@@ -86,5 +87,9 @@ const styles = StyleSheet.create({
         paddingLeft: 10
     },
 });
-
-export default LoginOrRegister
+const mapStateToProps = (state) => {
+    return {
+        isLogin: state.LoginReducer.isLogin
+    }
+};
+export default connect(mapStateToProps, null)(LoginOrRegister);

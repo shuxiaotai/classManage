@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TextInput } from 'react-native';
 import PublicBtn from "../../public/components/PublicBtn";
 import LoginLogo from './LoginLogo';
 
@@ -7,9 +7,7 @@ class LoginEntry extends Component{
 
     toLoginOrRegister = () => {
         const { navigate } = this.props.navigation;
-        navigate('LoginOrRegister', {
-            isLogin: true
-        })
+        navigate('LoginOrRegister')
     };
     render() {
         return(
