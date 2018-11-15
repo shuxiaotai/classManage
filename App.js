@@ -1,6 +1,5 @@
 import { createStackNavigator } from 'react-navigation';
 import HomeScreen from "./components/screen/HomeScreen";
-import LoginEntry from "./components/loginAndRegister/LoginEntry";
 import ClassDetailList from "./components/class/ClassDetailList";
 import AddStudent from "./components/class/AddStudent";
 import StudentHomePage from "./components/class/StudentHomePage";
@@ -17,9 +16,6 @@ const App = createStackNavigator({
     },
     ClassDetailList: {
         screen: ClassDetailList
-    },
-    LoginEntry: {
-        screen: LoginEntry
     },
     AddStudent: {
         screen: AddStudent
@@ -47,7 +43,7 @@ const App = createStackNavigator({
     }
 }, {
     headerMode: 'none',
-    initialRouteName: 'LoginOrRegister'
+    initialRouteName: 'ChooseIdentity'
 });
 
 export default App;

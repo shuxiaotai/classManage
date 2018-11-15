@@ -1,11 +1,20 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, TextInput } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { connect } from 'react-redux';
+import app from "../../app.json";
 import { Icon } from 'react-native-elements';
 import LoginLogo from './LoginLogo';
 import PublicBtn from "../../public/components/PublicBtn";
+import fetchData from "../../public/utils/fetchData";
 
 class LoginOrRegister extends Component{
+
+    constructor() {
+        super();
+        this.state = {
+            password: ''
+        }
+    }
 
     toFront = () => {
         const { navigation } = this.props;
@@ -13,15 +22,35 @@ class LoginOrRegister extends Component{
     };
     toRegister = () => {
         const { navigate } = this.props.navigation;
-        navigate('ChooseIdentity');
+        // navigate('ChooseIdentity');
     };
-    toHome = () => {
+    toLogin = () => {
         const { navigate } = this.props.navigation;
-        navigate('Home');
+        const { username, selectIdentity } = this.props;
+        const { password } = this.state;
+        fetchData.postData(app.host + app.port + '/login',
+            {
+                username: username,
+                password: password,
+                selectIdentity: selectIdentity
+            }
+        ).then((val) => {
+            if (val.data === '登录成功') {
+                Alert.alert(
+                    'Alert',
+                    val.data,
+                    [
+                        {text: 'OK', onPress: () => navigate('Home')},
+                    ],
+                    { cancelable: false }
+                );
+            }else {
+                alert(val.data);
+            }
+        });
     };
     render() {
-        const { isLogin } = this.props;
-        console.log(isLogin);
+        const { hasRegister, username } = this.props;
         return(
             <View style={styles.loginOrRegisterContainer}>
                 <TouchableOpacity
@@ -35,27 +64,28 @@ class LoginOrRegister extends Component{
                 </TouchableOpacity>
                 <LoginLogo />
                 {
-                    !isLogin ?
+                    hasRegister ?
+                        <Text style={styles.loginTips}>您正在以 {username} 登录</Text> :
                         <View style={styles.loginInputContainer}>
                             <Text>注册新账号</Text>
                             <TextInput
                                 style={styles.loginInput}
-                                value="122234"
+                                value={username}
                             />
-                        </View> :
-                        <Text style={styles.loginTips}>您正在以 sxt 登录</Text>
+                        </View>
                 }
 
                 <View style={styles.loginInputContainer}>
-                    <Text>{isLogin ? '密码' : '设置密码'}</Text>
+                    <Text>{hasRegister ? '密码' : '设置密码'}</Text>
                     <TextInput
                         placeholder="6-16位英文或数字"
                         style={styles.loginInput}
+                        onChangeText={(password) => this.setState({password})}
                     />
                 </View>
                 <PublicBtn
-                    tips={isLogin ? '登录': '注册'}
-                    onPress={!isLogin ? this.toRegister : this.toHome}
+                    tips={hasRegister ? '登录': '注册'}
+                    onPress={!hasRegister ? this.toRegister : this.toLogin}
                 />
             </View>
         )
@@ -89,7 +119,9 @@ const styles = StyleSheet.create({
 });
 const mapStateToProps = (state) => {
     return {
-        isLogin: state.LoginReducer.isLogin
+        hasRegister: state.LoginReducer.hasRegister,
+        username: state.LoginReducer.username,
+        selectIdentity: state.LoginReducer.selectIdentity
     }
 };
 export default connect(mapStateToProps, null)(LoginOrRegister);

@@ -1,8 +1,20 @@
 import * as Types from '../Types/LoginType';
 
-export default function isLoginFunc(isLogin) {
+export const setHasRegister = (hasRegister) => {
     return {
-        type: Types.IS_LOGIN,
-        isLogin: isLogin
+        type: Types.HAS_REGISTER,
+        hasRegister: hasRegister
     }
-}
+};
+export const setUsername = (username) => {
+    return {
+        type: Types.USER_NAME,
+        username: username
+    }
+};
+export const setSelectIdentity = (selectIdentity) => {
+    return {
+        type: Types.SELECT_IDENTITY,
+        selectIdentity: selectIdentity
+    }
+};

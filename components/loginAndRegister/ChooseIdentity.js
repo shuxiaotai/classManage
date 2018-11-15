@@ -1,13 +1,18 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, Image, TextInput, TouchableOpacity } from 'react-native';
+import { connect } from 'react-redux';
 import PublicBtn from "../../public/components/PublicBtn";
 import { Icon } from 'react-native-elements';
+import fetchData from "../../public/utils/fetchData";
+import app from "../../app.json";
+import * as loginActions from './Actions/LoginAction';
 
 class ChooseIdentity extends Component{
     constructor() {
         super();
         this.state = {
-            selectIdentity: 1
+            selectIdentity: 0, //0是老师，1是家长
+            username: ''
         }
     }
     changeSelectIdentity = (id) => {
@@ -15,12 +20,28 @@ class ChooseIdentity extends Component{
             selectIdentity: id
         })
     };
-    toHome = () => {
+    gotoNextStep = () => {
         const { navigate } = this.props.navigation;
-        navigate('Home');
+        const { username, selectIdentity } = this.state;
+        const { setHasRegister, setUsername, setSelectIdentity } = this.props;
+        if(username === '') {
+            alert('名字不能为空');
+        }else {
+            fetchData.postData(app.host + app.port + '/selectIdentity',
+                {
+                    username: username,
+                    selectIdentity: selectIdentity
+                }
+            ).then((val) => {
+                setHasRegister(val.hasRegister);
+                setUsername(username);
+                setSelectIdentity(selectIdentity);
+                navigate('LoginOrRegister');
+            });
+        }
     };
     render() {
-        const { selectIdentity } = this.state;
+        const { selectIdentity, username } = this.state;
         return(
            <View>
                <View style={styles.chooseIdentity}>
@@ -33,6 +54,21 @@ class ChooseIdentity extends Component{
                    <View style={styles.chooseContainer}>
                        <TouchableOpacity
                            style={styles.chooseImgContainer}
+                           onPress={() => this.changeSelectIdentity(0)}
+                       >
+                           <Image
+                               source={require('../../public/img/test.png')}
+                               style={styles.chooseImg}
+                           />
+                           <View style={styles.checkIcon}>
+                               <Icon
+                                   name="check-circle"
+                                   color={selectIdentity === 0 ? '#3498db' : 'gray'}
+                               />
+                           </View>
+                           <Text style={styles.identityText}>老师</Text>
+                       </TouchableOpacity>
+                       <TouchableOpacity
                            onPress={() => this.changeSelectIdentity(1)}
                        >
                            <Image
@@ -45,20 +81,7 @@ class ChooseIdentity extends Component{
                                    color={selectIdentity === 1 ? '#3498db' : 'gray'}
                                />
                            </View>
-                       </TouchableOpacity>
-                       <TouchableOpacity
-                           onPress={() => this.changeSelectIdentity(2)}
-                       >
-                           <Image
-                               source={require('../../public/img/test.png')}
-                               style={styles.chooseImg}
-                           />
-                           <View style={styles.checkIcon}>
-                               <Icon
-                                   name="check-circle"
-                                   color={selectIdentity === 2 ? '#3498db' : 'gray'}
-                               />
-                           </View>
+                           <Text style={styles.identityText}>家长</Text>
                        </TouchableOpacity>
                    </View>
                </View>
@@ -67,11 +90,14 @@ class ChooseIdentity extends Component{
                    <TextInput
                        placeholder="不超过16位字符"
                        style={styles.loginInput}
+                       onChangeText={(username) => this.setState({username})}
+                       // value={username}
+                       autoCapitalize="none"
                    />
                </View>
                <PublicBtn
-                   tips="完成注册"
-                   onPress={this.toHome}
+                   tips="下一步"
+                   onPress={this.gotoNextStep}
                />
            </View>
        )
@@ -102,7 +128,7 @@ const styles = StyleSheet.create({
         marginTop: 40
     },
     chooseImgContainer: {
-        marginRight: 40
+        marginRight: 60
     },
     loginInputContainer: {
         flexDirection: 'row',
@@ -112,13 +138,32 @@ const styles = StyleSheet.create({
         paddingLeft: 20
     },
     loginInput: {
-        paddingLeft: 10
+        marginLeft: 10,
+        zIndex: 10,
+        width: 200
     },
     checkIcon: {
         position: 'relative',
         top: -20,
         right: -33,
         zIndex: 40
+    },
+    identityText: {
+        alignSelf: 'center',
+        marginTop: -10
     }
 });
-export default ChooseIdentity;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setHasRegister: (hasRegister) => {
+            dispatch(loginActions.setHasRegister(hasRegister));
+        },
+        setUsername: (username) => {
+            dispatch(loginActions.setUsername(username));
+        },
+        setSelectIdentity: (selectIdentity) => {
+            dispatch(loginActions.setSelectIdentity(selectIdentity));
+        }
+    }
+};
+export default connect(null, mapDispatchToProps)(ChooseIdentity);
