@@ -1,19 +1,51 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, Image, TextInput, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, Image, TextInput, TouchableOpacity, AsyncStorage, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import PublicBtn from "../../public/components/PublicBtn";
 import { Icon } from 'react-native-elements';
 import fetchData from "../../public/utils/fetchData";
 import app from "../../app.json";
 import * as loginActions from './Actions/LoginAction';
+import { Button } from 'react-native-elements';
 
 class ChooseIdentity extends Component{
     constructor() {
         super();
         this.state = {
             selectIdentity: 0, //0是老师，1是家长
-            username: ''
+            username: '',
+            showAutoLoginTips: false
         }
+    }
+    componentDidMount() {
+        let that = this;
+        const { navigate } = this.props.navigation;
+        AsyncStorage.getItem('token', function (error, result) {
+            if (error) {
+                console.log('失败');
+            }else {
+                fetchData.postData(app.host + app.port + '/checkLogin',
+                    {
+                        token: result
+                    }
+                ).then((val) => {
+                    if(val.autoLogin) {
+                        that.setState({
+                            showAutoLoginTips: true
+                        });
+                        setTimeout(() => {
+                            that.setState({
+                                showAutoLoginTips: false
+                            });
+                            navigate('Home');
+                        }, 1000);
+                    }else {
+                        alert('身份已过期，请重新登录');
+                    }
+                });
+            }
+        });
+
     }
     changeSelectIdentity = (id) => {
         this.setState({
@@ -41,9 +73,30 @@ class ChooseIdentity extends Component{
         }
     };
     render() {
-        const { selectIdentity, username } = this.state;
+        const { selectIdentity, showAutoLoginTips } = this.state;
         return(
            <View>
+               <View style={showAutoLoginTips ? styles.loadContainer: styles.hiddenAutoLogin}>
+                   <Button
+                       title=""
+                       loading
+                       loadingProps={{ size: "large", color: "gray" }}
+                       titleStyle={{ fontWeight: "700" }}
+                       buttonStyle={{
+                           backgroundColor: "#fff",
+                           width: 300,
+                           height: 100,
+                           borderColor: "transparent",
+                           borderRadius: 0,
+                           borderTopLeftRadius: 5,
+                           borderTopRightRadius: 5
+                       }}
+                       containerStyle={{ marginTop: 20 }}
+                   />
+                   <View style={styles.autoLoginTips}>
+                       <Text style={{color: 'gray'}}>自动登录中...</Text>
+                   </View>
+               </View>
                <View style={styles.chooseIdentity}>
                    <Text style={styles.topText}>
                        选择身份
@@ -151,6 +204,27 @@ const styles = StyleSheet.create({
     identityText: {
         alignSelf: 'center',
         marginTop: -10
+    },
+    loadContainer: {
+        position: 'absolute',
+        flexDirection: 'column',
+        alignItems: 'center',
+        left: Dimensions.get('window').width / 2 - 150,
+        top: 200,
+        zIndex: 30
+    },
+    autoLoginTips: {
+        width: 300,
+        backgroundColor: '#fff',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        paddingBottom: 30,
+        borderBottomLeftRadius: 5,
+        borderBottomRightRadius: 5
+    },
+    hiddenAutoLogin: {
+        display: 'none'
     }
 });
 const mapDispatchToProps = (dispatch) => {
