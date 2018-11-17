@@ -22,7 +22,7 @@ class PublicRefreshList extends Component{
     componentDidMount() {
         //请求数据
         const { getList } = this.props;
-        getList(page);
+        // getList(page);
     }
     //下拉刷新
     beginHeaderRefresh = () => {
@@ -79,22 +79,34 @@ class PublicRefreshList extends Component{
             </View>
         )
     };
-
+    _keyExtractor = (item) => item.id.toString();
     render() {
         const { isHeaderRefreshing } = this.state;
-        const { getRenderItem, dataArr, ListEmptyComponent, ListHeaderComponent } = this.props;
+        const { getRenderItem, dataArr, ListEmptyComponent, ListHeaderComponent, totalPage } = this.props;
         return(
-            <FlatList
-                data={dataArr}
-                onRefresh={() => this.beginHeaderRefresh()}
-                refreshing={isHeaderRefreshing}
-                renderItem={getRenderItem()}
-                onEndReachedThreshold={0.1}
-                onEndReached={() => this.beginFooterRefresh()}
-                ListFooterComponent={this.renderFooter}
-                ListHeaderComponent={ListHeaderComponent}
-                ListEmptyComponent={ListEmptyComponent}
-            />
+            <View>
+                {
+                    totalPage < 8 ?
+                        <FlatList
+                            data={dataArr}
+                            renderItem={getRenderItem()}
+                            ListEmptyComponent={ListEmptyComponent}
+                            keyExtractor={this._keyExtractor}
+                        /> :
+                        <FlatList
+                            data={dataArr}
+                            onRefresh={() => this.beginHeaderRefresh()}
+                            refreshing={isHeaderRefreshing}
+                            renderItem={getRenderItem()}
+                            onEndReachedThreshold={0.1}
+                            onEndReached={() => this.beginFooterRefresh()}
+                            ListFooterComponent={this.renderFooter}
+                            ListHeaderComponent={ListHeaderComponent}
+                            ListEmptyComponent={ListEmptyComponent}
+                            keyExtractor={this._keyExtractor}
+                        />
+                }
+            </View>
         );
     }
 }

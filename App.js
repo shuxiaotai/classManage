@@ -43,7 +43,7 @@ const App = createStackNavigator({
     }
 }, {
     headerMode: 'none',
-    initialRouteName: 'ChooseIdentity'
+    initialRouteName: 'Home'
 });
 
 export default App;

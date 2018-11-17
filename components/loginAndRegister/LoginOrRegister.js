@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, TextInput, Alert, AsyncStorage } from 'react-native';
 import { connect } from 'react-redux';
-import app from "../../app.json";
 import { Icon } from 'react-native-elements';
 import LoginLogo from './LoginLogo';
 import PublicBtn from "../../public/components/PublicBtn";
@@ -33,7 +32,7 @@ class LoginOrRegister extends Component{
         }else if(password === '') {
             alert('密码不能为空');
         }else {
-            fetchData.postData(app.host + app.port + '/register',
+            fetchData.postData('/register',
                 {
                     username: username,
                     password: password,
@@ -63,7 +62,7 @@ class LoginOrRegister extends Component{
         if (password === '') {
             alert('密码不能为空');
         } else {
-            fetchData.postData(app.host + app.port + '/login',
+            fetchData.postData('/login',
                 {
                     username: username,
                     password: password,

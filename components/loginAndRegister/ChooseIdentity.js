@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import PublicBtn from "../../public/components/PublicBtn";
 import { Icon } from 'react-native-elements';
 import fetchData from "../../public/utils/fetchData";
-import app from "../../app.json";
 import * as loginActions from './Actions/LoginAction';
 import { Button } from 'react-native-elements';
 
@@ -24,12 +23,12 @@ class ChooseIdentity extends Component{
             if (error) {
                 console.log('失败');
             }else {
-                fetchData.postData(app.host + app.port + '/checkLogin',
+                fetchData.postData('/checkLogin',
                     {
                         token: result
                     }
                 ).then((val) => {
-                    if(val.autoLogin) {
+                    if(val.checkResult) {
                         that.setState({
                             showAutoLoginTips: true
                         });
@@ -59,7 +58,7 @@ class ChooseIdentity extends Component{
         if(username === '') {
             alert('名字不能为空');
         }else {
-            fetchData.postData(app.host + app.port + '/selectIdentity',
+            fetchData.postData('/selectIdentity',
                 {
                     username: username,
                     selectIdentity: selectIdentity

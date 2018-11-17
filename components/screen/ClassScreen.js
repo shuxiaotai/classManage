@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Image, FlatList, TouchableWithoutFeedback, ScrollView } from 'react-native';
+import { Text, View, StyleSheet, Image, TouchableWithoutFeedback } from 'react-native';
+import { connect } from 'react-redux';
 import PublicHeader from "../../public/components/PublicHeader";
 import PublicTab from "../../public/components/PublicTab";
 import PublicNoContent from "../../public/components/PublicNoContent";
 import listData from '../../public/mockData/listData';
 import PublicRefreshList from "../../public/components/PublicRefreshList";
-
+import fetchData from "../../public/utils/fetchData";
+import { checkUser, getTokenInfo } from '../../public/utils/checkUser';
+import * as classActions from '../class/Actions/classAction';
 
 const tabItem = [
     {
@@ -17,10 +20,6 @@ const tabItem = [
     }
 ];
 
-let page = 1;
-let totalPage = 3;
-const list = [];
-
 class ClassScreen extends Component{
     constructor() {
         super();
@@ -29,10 +28,33 @@ class ClassScreen extends Component{
             dataArr: []
         }
     }
+    componentDidMount() {
+        this.getClassList();
+    }
+    getClassList = (key) => {
+        const { navigate } = this.props.navigation;
+        const { setClassList } = this.props;
+        const { selectKey } = this.state;
+        checkUser(() => {
+            getTokenInfo().then((value) => {
+                fetchData.postData('/classList',
+                    {
+                        username: value.username,
+                        selectIdentity: value.selectIdentity,
+                        token: value.token,
+                        isCreateByMe: key ? key : selectKey
+                    }
+                ).then((val) => {
+                    setClassList(val.classList);
+                });
+            });
+        }, navigate);
+    };
     onChangeSelectKey = (key) => {
         this.setState({
             selectKey: key,
-        })
+        });
+        this.getClassList(key)
     };
     getClassDetail = (classText) => {
         const { navigate } = this.props.navigation;
@@ -47,8 +69,8 @@ class ClassScreen extends Component{
                         style={styles.mainImg}
                     />
                     <View style={styles.mainText}>
-                        <Text>{item.classText}</Text>
-                        <Text style={styles.stu}>{item.stuText}</Text>
+                        <Text>{item.grade}{item.name}</Text>
+                        <Text style={styles.stu}>{item['student_count']}个学生</Text>
                     </View>
                 </View>
             </TouchableWithoutFeedback>
@@ -77,6 +99,7 @@ class ClassScreen extends Component{
     };
     render() {
         const { selectKey, dataArr } = this.state;
+        const { classList } = this.props;
         return(
             <View>
                 <PublicHeader title="课堂" />
@@ -86,18 +109,18 @@ class ClassScreen extends Component{
                     <View style={styles.main}>
                         <PublicRefreshList
                             getRenderItem={this.getRenderItem}
-                            dataArr={dataArr}
+                            dataArr={classList}
                             getList={this.getList}
-                            totalPage={totalPage}
+                            totalPage={1}
                             ListEmptyComponent={<PublicNoContent tips="暂无创建的班级" />}
                         />
                     </View> :
                     <View style={styles.main}>
                         <PublicRefreshList
                             getRenderItem={this.getRenderItem}
-                            dataArr={dataArr}
+                            dataArr={classList}
                             getList={this.getList}
-                            totalPage={totalPage}
+                            totalPage={1}
                             ListEmptyComponent={<PublicNoContent tips="暂无管理的班级" />}
                         />
                     </View>
@@ -138,4 +161,16 @@ const styles = StyleSheet.create({
         color: 'gray'
     },
 });
-export default ClassScreen;
+const mapStateToProps = (state) => {
+    return {
+        classList: state.classReducer.classList,
+    }
+};
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setClassList: (classList) => {
+            dispatch(classActions.setClassList(classList));
+        }
+    }
+};
+export default connect(mapStateToProps, mapDispatchToProps)(ClassScreen);
