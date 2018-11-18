@@ -12,11 +12,12 @@ import * as classActions from '../class/Actions/classAction';
 
 const tabItem = [
     {
-        name: '我创建的班级',
+        name: '我是任课老师',
+        key: 0,
+    },
+    {
+        name: '我是班主任',
         key: 1,
-    }, {
-        name: '我管理的班级',
-        key: 2,
     }
 ];
 
@@ -24,25 +25,23 @@ class ClassScreen extends Component{
     constructor() {
         super();
         this.state = {
-            selectKey: 1,
+            selectKey: 0,
             dataArr: []
         }
     }
     componentDidMount() {
-        this.getClassList();
+        this.getClassList(0);
     }
     getClassList = (key) => {
         const { navigate } = this.props.navigation;
         const { setClassList } = this.props;
-        const { selectKey } = this.state;
         checkUser(() => {
             getTokenInfo().then((value) => {
                 fetchData.postData('/classList',
                     {
                         username: value.username,
                         selectIdentity: value.selectIdentity,
-                        token: value.token,
-                        isCreateByMe: key ? key : selectKey
+                        isCreateByMe: key
                     }
                 ).then((val) => {
                     setClassList(val.classList);
@@ -56,13 +55,16 @@ class ClassScreen extends Component{
         });
         this.getClassList(key)
     };
-    getClassDetail = (classText) => {
+    getClassDetail = (id, grade, name, isMaster) => {
         const { navigate } = this.props.navigation;
-        navigate('ClassDetailList', { classText });
+        const { setCurrentClassId } = this.props;
+        navigate('ClassDetailList', { grade, name, isMaster });
+        setCurrentClassId(id);
     };
     getRenderItem = () => {
+        const { selectKey } = this.state;  //区分任课老师还是班主任
         return({item}) => (
-            <TouchableWithoutFeedback onPress={() => this.getClassDetail(item.classText)}>
+            <TouchableWithoutFeedback onPress={() => this.getClassDetail(item.id, item.grade, item.name, selectKey)}>
                 <View style={styles.mainItem}>
                     <Image
                         source={require('../../public/img/test.png')}  //{uri: item.imgSrc}
@@ -170,6 +172,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         setClassList: (classList) => {
             dispatch(classActions.setClassList(classList));
+        },
+        setCurrentClassId: (currentClassId) => {
+            dispatch(classActions.setCurrentClassId(currentClassId));
         }
     }
 };

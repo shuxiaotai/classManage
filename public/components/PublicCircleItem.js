@@ -6,7 +6,7 @@ const PublicCircleItem = (props) => {
     return(
         <TouchableOpacity
             style={styles.courseItem}
-            onPress={pressFun ? () => pressFun(item.key) : null}
+            onPress={pressFun ? () => pressFun(item.id) : null}
             activeOpacity={activeOpacity ? activeOpacity : 0.4}
         >
             <Image
@@ -18,7 +18,7 @@ const PublicCircleItem = (props) => {
                 }}
             />
             <Text style={styles.remark}>
-                {item.title}
+                {item.name}
             </Text>
         </TouchableOpacity>
     )

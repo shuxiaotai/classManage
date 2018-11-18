@@ -11,7 +11,13 @@ import GroupModalContent from "./GroupModalContent";
 import ParentList from "./ParentList";
 import PublicScrollView from "../../public/components/PublicScrollView";
 import RandomModalContent from "./RandomModalContent";
-
+import {checkUser, getTokenInfo} from "../../public/utils/checkUser";
+import fetchData from "../../public/utils/fetchData";
+import { connect } from 'react-redux';
+import * as studentActions from './Actions/studentAction';
+import * as parentActions from './Actions/parentAction';
+import * as groupActions from './Actions/groupAction';
+import PublicNoContent from "../../public/components/PublicNoContent";
 
 const tabItem = [
     {
@@ -25,7 +31,18 @@ const tabItem = [
         key: 3,
     }
 ];
-
+const tabItemIsMaster = [
+    {
+        name: '学生',
+        key: 1,
+    }, {
+        name: '考勤',
+        key: 2,
+    }, {
+        name: '家长',
+        key: 3,
+    }
+];
 class ClassDetailList extends Component{
     constructor() {
         super();
@@ -36,11 +53,62 @@ class ClassDetailList extends Component{
             isRandomVisible: false,
         }
     }
-
+    componentDidMount() {
+        this.getStudentList();
+    }
+    getStudentList = () => {
+        const { navigate } = this.props.navigation;
+        const { currentClassId, setStudentList } = this.props;
+        checkUser(() => {
+            fetchData.postData('/studentList',
+                {
+                    currentClassId: currentClassId,
+                }
+            ).then((val) => {
+                setStudentList(val.studentList);
+            });
+        }, navigate);
+    };
     onChangeSelectKey = (key) => {
         this.setState({
             selectKey: key
-        })
+        });
+        if (key === 1) {
+            this.getStudentList();
+        }else if(key === 2) {
+            this.getGroupList();
+        }else if(key === 3) {
+            this.getParentList();
+        }
+    };
+    getGroupList = () => {
+        const { navigate } = this.props.navigation;
+        const { currentClassId, setGroupList } = this.props;
+        checkUser(() => {
+            getTokenInfo().then((value) => {
+                fetchData.postData('/groupList',
+                    {
+                        username: value.username,
+                        currentClassId: currentClassId,
+                    }
+                ).then((val) => {
+                    setGroupList(val.groupList);
+                });
+            });
+        }, navigate);
+    };
+    getParentList = () => {
+        const { navigate } = this.props.navigation;
+        const { currentClassId, setParentList } = this.props;
+        checkUser(() => {
+            fetchData.postData('/parentList',
+                {
+                    currentClassId: currentClassId,
+                }
+            ).then((val) => {
+                setParentList(val.parentList);
+            });
+        }, navigate);
     };
     handleStudentListModal = (visible) => {
         this.setState({
@@ -66,8 +134,8 @@ class ClassDetailList extends Component{
         })
     };
     render() {
-        const { navigation } = this.props;
-        // const { classText } = navigation.state.params;   //为了方便写界面，暂时注释
+        const { navigation, studentList, parentList, groupList } = this.props;
+        const { grade, name, isMaster } = navigation.state.params;   //isMaster：0是任课老师，1是班主任
         const { selectKey, isStudentVisible, isGroupVisible, isRandomVisible } = this.state;
         return(
             <View>
@@ -99,29 +167,32 @@ class ClassDetailList extends Component{
                             )
                     }
                 />
-                <PublicHeader title="sssss" isLeft={true} navigation={navigation} />
-                <PublicTab tabItem={tabItem} selectKey={selectKey} onChangeSelectKey={this.onChangeSelectKey} />
+                <PublicHeader title={`${grade}${name}`} isLeft={true} navigation={navigation} />
+                <PublicTab tabItem={isMaster === 1 ? tabItemIsMaster : tabItem} selectKey={selectKey} onChangeSelectKey={this.onChangeSelectKey} />
                 {
                     selectKey === 1 ?
                         <StudentList
                             navigation={navigation}
-                            // isVisible={isStudentVisible}
+                            studentList={studentList}
                             handleModal={this.handleStudentListModal}
                             handleRandomModal={this.handleRandomModal}
+                            isMaster={isMaster}
                         /> : null
                 }
                 {
                     selectKey === 2 ?
-                        <StudentGroupList
-                            navigation={navigation}
-                            // isVisible={isGroupVisible}
-                            handleModal={this.handleGroupListModal}
-                        /> : null
+                        (isMaster === 0 ?
+                            <StudentGroupList
+                                navigation={navigation}
+                                groupList={groupList}
+                                handleModal={this.handleGroupListModal}
+                            /> : null
+                        ) : null
                 }
                 {
                     selectKey === 3 ?
                         <PublicScrollView
-                            renderView={<ParentList /> }
+                            renderView={parentList.length === 0 ? <PublicNoContent tips="暂无家长" /> : <ParentList parentList={parentList} /> }
                         /> :
                         null
                 }
@@ -131,7 +202,28 @@ class ClassDetailList extends Component{
     }
 }
 
-export default ClassDetailList;
+const mapStateToProps = (state) => {
+    return {
+        currentClassId: state.classReducer.currentClassId,
+        studentList: state.studentReducer.studentList,
+        parentList: state.parentReducer.parentList,
+        groupList: state.groupReducer.groupList
+    }
+};
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setStudentList: (studentList) => {
+            dispatch(studentActions.setStudentList(studentList));
+        },
+        setParentList: (parentList) => {
+            dispatch(parentActions.setParentList(parentList));
+        },
+        setGroupList: (groupList) => {
+            dispatch(groupActions.setGroupList(groupList))
+        }
+    }
+};
+export default connect(mapStateToProps, mapDispatchToProps)(ClassDetailList);
 
 
 

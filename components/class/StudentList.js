@@ -16,11 +16,11 @@ class StudentList extends Component{
         navigate('AddStudent');
     };
     getRenderStudent = () => {
-        const { handleModal } = this.props;
+        const { handleModal, studentList } = this.props;
         return(
             <View>
                 {
-                    listData.studentList.length !== 0 ?
+                    studentList.length !== 0 ?
                         <View style={styles.detailContainer}>
                             <View style={styles.detailItem}>
                                 <Image
@@ -28,7 +28,7 @@ class StudentList extends Component{
                                     style={styles.stuAvatar}
                                 />
                                 <Badge
-                                    value={0}
+                                    value={0}    //分数下次再算
                                     textStyle={{ color: 'orange', fontSize: 13 }}
                                     containerStyle={styles.badgeText}
                                 />
@@ -37,19 +37,19 @@ class StudentList extends Component{
                                 </Text>
                             </View>
                             {
-                                listData.studentList.map((item) => (
-                                    <TouchableOpacity style={styles.detailItem} key={item.key} onPress={() => handleModal(true)}>
+                                studentList.map((item) => (
+                                    <TouchableOpacity style={styles.detailItem} key={item.id} onPress={() => handleModal(true)}>
                                         <Image
                                             source={require('../../public/img/test.png')}   //uri: item.avatarUrl
                                             style={styles.stuAvatar}
                                         />
                                         <Badge
-                                            value={item.score}
+                                            value={1}
                                             textStyle={{ color: 'orange', fontSize: 13 }}
                                             containerStyle={styles.badgeText}
                                         />
                                         <Text style={styles.detailText}>
-                                            {item.stuName}
+                                            {item.name}
                                         </Text>
                                     </TouchableOpacity>
                                 ))
@@ -72,7 +72,27 @@ class StudentList extends Component{
                             </View>
                         </View>
                         :
-                        <PublicNoContent tips="暂无学生" />
+                        <View>
+                            <View style={[styles.detailContainer, styles.noStudent]}>
+                                <View>
+                                    <TouchableOpacity onPress={this.handleAddStu} style={styles.detailItem}>
+                                        <View
+                                            style={[styles.stuAvatar, styles.addStu]}
+                                        >
+                                            <Icon
+                                                name="add"
+                                                color="#00aced"
+                                                size={34}
+                                            />
+                                        </View>
+                                        <Text style={styles.detailText}>
+                                            添加学生
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                            <PublicNoContent tips="暂无学生" />
+                        </View>
                 }
             </View>
         )
@@ -82,31 +102,31 @@ class StudentList extends Component{
         handleRandomModal(true);
     };
     render() {
+        const { isMaster, studentList } = this.props;
         return(
             <View style={{ height: '100%'}}>
                 <PublicScrollView
                     renderView={this.getRenderStudent()}
                     setMarginBottom={250}
                 />
-                <View style={styles.bottomBtns}>
-                    <TouchableOpacity style={[styles.bottomBtn]}>
-                        <Icon
-                            name='event-available'
-                            color='#70768c'
-                        />
-                        <Text>考勤</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={[styles.bottomBtn]}
-                        onPress={this.showRandom}
-                    >
-                        <Icon
-                            name='repeat'
-                            color='#70768c'
-                        />
-                        <Text>随机</Text>
-                    </TouchableOpacity>
-                </View>
+                {
+                    studentList.length === 0 ? null :
+                        (isMaster === 0 ?
+                            <View style={styles.bottomBtns}>
+                                <TouchableOpacity
+                                    style={[styles.bottomBtn]}
+                                    onPress={this.showRandom}
+                                >
+                                    <Icon
+                                        name='repeat'
+                                        color='#70768c'
+                                    />
+                                    <Text>随机</Text>
+                                </TouchableOpacity>
+                            </View> : null
+                        )
+                }
+
             </View>
         );
     }
@@ -133,7 +153,6 @@ const styles = StyleSheet.create({
         marginLeft: 15,
         marginRight: 15,
         marginBottom: 10,
-        width: 60
     },
     detailText: {
         fontSize: 12,
@@ -173,5 +192,9 @@ const styles = StyleSheet.create({
         position: 'absolute',
         zIndex: 100
     },
+    noStudent: {
+        position: 'absolute',
+        zIndex: 30
+    }
 });
 export default StudentList;

@@ -6,4 +6,9 @@ export const setClassList = (classList) => {
         classList: classList
     }
 };
-
+export const setCurrentClassId = (currentClassId) => {
+    return {
+        type: classTypes.SET_CURRENT_CLASS_ID,
+        currentClassId: currentClassId
+    }
+};

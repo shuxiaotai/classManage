@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
-import listData from "../../public/mockData/listData";
 import PublicScrollView from "../../public/components/PublicScrollView";
 import PublicNoContent from "../../public/components/PublicNoContent";
 
@@ -23,15 +22,15 @@ class StudentGroupList extends Component{
         })
     };
     getRenderStudentGroup = () => {
-        const { handleModal } = this.props;
+        const { handleModal, groupList } = this.props;
         return(
             <View>
                 {
-                    listData.studentGroupList.map((item) => {
+                    groupList.map((item) => {
                         return(
-                            <View style={styles.stuGroupItem} key={item.key}>
+                            <View style={styles.stuGroupItem} key={item.id}>
                                 <View style={styles.stuGroupHeader}>
-                                    <Text style={styles.stuGroupHeaderText}>{item.groupName}</Text>
+                                    <Text style={styles.stuGroupHeaderText}>{item.name}</Text>
                                 </View>
                                 <TouchableOpacity style={styles.stuGroupContentContainer} onPress={() => handleModal(true)}>
                                     <Image
@@ -40,13 +39,13 @@ class StudentGroupList extends Component{
                                     />
                                     <View style={styles.groupScore}>
                                         <Text style={[styles.groupScoreText, styles.praise]}>
-                                            表扬{item.praiseScore}分
+                                            表扬1分
                                         </Text>
                                         <Text style={styles.groupScoreText}>
-                                            批评{item.criticizeScore}分
+                                            批评1分
                                         </Text>
                                     </View>
-                                    <Text style={styles.groupNums}>{item.groupNum}人</Text>
+                                    <Text style={styles.groupNums}>{item['student_count']}人</Text>
                                 </TouchableOpacity>
                             </View>
                         );
@@ -69,15 +68,32 @@ class StudentGroupList extends Component{
         )
     };
     render() {
+        const { groupList } = this.props;
         return(
             <View style={styles.stuGroupContainer}>
                 {
-                    listData.studentGroupList.length !== 0 ?
+                    groupList.length !== 0 ?
                         <PublicScrollView
                             renderView={this.getRenderStudentGroup()}
                             setMarginBottom={210}
                         />
-                        : <PublicNoContent tips="暂无小组"/>
+                        :
+                        <View>
+                            <TouchableOpacity
+                                style={[styles.addGroup, styles.noGroup]}
+                                onPress={this.toCreateGroup}
+                            >
+                                <Icon
+                                    name="add"
+                                    color="#00aced"
+                                    size={34}
+                                />
+                                <Text style={styles.addGroupText}>
+                                    添加小组
+                                </Text>
+                            </TouchableOpacity>
+                            <PublicNoContent tips="暂无小组"/>
+                        </View>
                 }
             </View>
         );
@@ -139,10 +155,15 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        paddingLeft: 17
+        paddingLeft: 17,
+        width: '100%'
     },
     addGroupText: {
         marginLeft: 10
+    },
+    noGroup: {
+        position: 'absolute',
+        zIndex: 30
     }
 });
 

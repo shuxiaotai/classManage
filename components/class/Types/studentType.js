@@ -1,0 +1,2 @@
+
+export const SET_STUDENT_LIST = 'SET_STUDENT_LIST';

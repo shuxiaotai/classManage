@@ -41,6 +41,5 @@ export const getTokenInfo = async () => {
     return {
         username: username,
         selectIdentity: selectIdentity,
-        token: token
     }
 };
