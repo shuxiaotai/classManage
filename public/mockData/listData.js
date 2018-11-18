@@ -486,7 +486,7 @@ export default {
     //个人评价列表   StudentHomePage.js
     studentRemarkList1: [
         {
-            key: '1',
+            id: '1',
             score: 1,
             isPraise: 0,   //0表示表扬, 1表示批评
             isPerson: 1,    //0表示个人评价，1表示小组评价
@@ -496,7 +496,7 @@ export default {
             groupName: '第一小组'
         },
         {
-            key: '2',
+            id: '2',
             score: 1,
             isPraise: 0,   //0表示表扬, 1表示批评
             isPerson: 0,    //0表示个人评价，1表示小组评价
@@ -506,7 +506,7 @@ export default {
             groupName: '第一小组'
         },
         {
-            key: '3',
+            id: '3',
             score: 1,
             isPraise: 0,   //0表示表扬, 1表示批评
             isPerson: 0,    //0表示个人评价，1表示小组评价
@@ -515,7 +515,7 @@ export default {
             teacher: 'sxt',
             groupName: '第一小组'
         },{
-            key: '4',
+            id: '4',
             score: 1,
             isPraise: 0,   //0表示表扬, 1表示批评
             isPerson: 0,    //0表示个人评价，1表示小组评价
@@ -527,7 +527,7 @@ export default {
     ],
     studentRemarkList2: [
         {
-            key: '5',
+            id: '5',
             score: 1,
             isPraise: 0,   //0表示表扬, 1表示批评
             isPerson: 0,    //0表示个人评价，1表示小组评价
@@ -537,7 +537,7 @@ export default {
             groupName: '第一小组'
         },
         {
-            key: '6',
+            id: '6',
             score: 1,
             isPraise: 0,   //0表示表扬, 1表示批评
             isPerson: 0,    //0表示个人评价，1表示小组评价
@@ -547,7 +547,7 @@ export default {
             groupName: '第一小组'
         },
         {
-            key: '7',
+            id: '7',
             score: 1,
             isPraise: 0,   //0表示表扬, 1表示批评
             isPerson: 0,    //0表示个人评价，1表示小组评价
@@ -556,7 +556,7 @@ export default {
             teacher: 'sxt',
             groupName: '第一小组'
         },{
-            key: '8',
+            id: '8',
             score: 1,
             isPraise: 0,   //0表示表扬, 1表示批评
             isPerson: 0,    //0表示个人评价，1表示小组评价
@@ -568,7 +568,7 @@ export default {
     ],
     studentRemarkList3: [
         {
-            key: '9',
+            id: '9',
             score: 1,
             isPraise: 0,   //0表示表扬, 1表示批评
             isPerson: 1,    //0表示个人评价，1表示小组评价
@@ -578,7 +578,7 @@ export default {
             groupName: '第一小组'
         },
         {
-            key: '10',
+            id: '10',
             score: 1,
             isPraise: 0,   //0表示表扬, 1表示批评
             isPerson: 0,    //0表示个人评价，1表示小组评价
@@ -588,7 +588,7 @@ export default {
             groupName: '第一小组'
         },
         {
-            key: '11',
+            id: '11',
             score: 1,
             isPraise: 0,   //0表示表扬, 1表示批评
             isPerson: 0,    //0表示个人评价，1表示小组评价
@@ -597,7 +597,7 @@ export default {
             teacher: 'sxt',
             groupName: '第一小组'
         },{
-            key: '12',
+            id: '12',
             score: 1,
             isPraise: 0,   //0表示表扬, 1表示批评
             isPerson: 0,    //0表示个人评价，1表示小组评价

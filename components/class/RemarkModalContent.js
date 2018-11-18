@@ -1,43 +1,88 @@
 import React, { Component } from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
+import { connect } from 'react-redux';
 import PublicTab from "../../public/components/PublicTab";
 import PublicCircleItem from "../../public/components/PublicCircleItem";
 import PublicScrollView from "../../public/components/PublicScrollView";
 import listData from "../../public/mockData/listData";
 import PublicBtn from "../../public/components/PublicBtn";
+import * as templateActions from './Actions/templateAction';
+import * as projectActions from './Actions/projectAction';
+import {checkUser, getTokenInfo} from "../../public/utils/checkUser";
+import fetchData from "../../public/utils/fetchData";
 
 const tabItem = [
     {
         name: '表扬',
-        key: 1,
+        key: 0,
     }, {
         name: '待改进',
-        key: 2,
+        key: 1,
     }, {
         name: '自定义点评',
-        key: 3,
+        key: 2,
     }
 ];
 class RemarkModalContent extends Component{
     constructor() {
         super();
         this.state = {
-            selectKey: 3,
-            showSelectCourse: true
+            selectKey: 0,   //0是表扬，1是批评，2是自定义
+            showSelectCourse: false
         }
     }
-
+    componentDidMount() {
+        const { isMaster } = this.props;   //0是任课老师，1是班主任
+        this.getPraiseTemplateList();
+        if (isMaster === 0) {
+            this.getCourseList();
+        } else {
+            this.getScheduleList();
+        }
+    }
+    getPraiseTemplateList = () => {
+        const { navigate } = this.props.navigation;
+        const { currentClassId, setPraiseTemplateList } = this.props;
+        checkUser(() => {
+            fetchData.postData('/praiseTemplateList',
+                {
+                    currentClassId: currentClassId,
+                }
+            ).then((val) => {
+                setPraiseTemplateList(val.praiseTemplateList);
+            });
+        }, navigate);
+    };
+    getCriticizeTemplateList = () => {
+        const { navigate } = this.props.navigation;
+        const { currentClassId, setCriticizeTemplateList } = this.props;
+        checkUser(() => {
+            fetchData.postData('/criticizeTemplateList',
+                {
+                    currentClassId: currentClassId,
+                }
+            ).then((val) => {
+                setCriticizeTemplateList(val.criticizeTemplateList);
+            });
+        }, navigate);
+    };
     onChangeSelectKey = (key) => {
         this.setState({
             selectKey: key
-        })
+        });
+        if (key === 0) {
+            this.getPraiseTemplateList();
+        }else if(key === 1) {
+            this.getCriticizeTemplateList();
+        }
     };
     remarkTips = (isPraise) => {
         let tips = isPraise ? '表扬成功' : '批评成功';
         alert(tips);
     };
     renderRemarkList = (isPraise) => {
-        let list = isPraise ? listData.remarkPraiseList : listData.remarkCriticizeList;
+        const { praiseTemplateList, criticizeTemplateList } = this.props;
+        let list = isPraise ? praiseTemplateList : criticizeTemplateList;
         return(
             <View style={styles.remarkContainer}>
                 {
@@ -45,18 +90,18 @@ class RemarkModalContent extends Component{
                         return(
                             <TouchableOpacity
                                 style={styles.remarkItem}
-                                key={item.key}
+                                key={item.id}
                                 onPress={() => this.remarkTips(isPraise)}
                             >
                                 <View style={isPraise ? styles.scorePraiseView : styles.scoreCriticizeView}>
-                                    <Text style={styles.scoreText}>{isPraise ? '+1' : '-1'}</Text>
+                                    <Text style={styles.scoreText}>{isPraise ? `+${item.score}` : `-${item.score}`}</Text>
                                 </View>
                                 <Image
                                     source={require('../../public/img/test.png')}   //uri: item.avatarUrl
                                     style={styles.remarkImg}
                                 />
                                 <Text style={styles.remark}>
-                                    {item.title}
+                                    {item.name}
                                 </Text>
                             </TouchableOpacity>
                         )
@@ -66,21 +111,22 @@ class RemarkModalContent extends Component{
         )
     };
     getCourse = (key) => {
-        console.log(key);
         this.setState({
             showSelectCourse: false
         })
     };
     renderCourse = () => {
+        const { isMaster, courseList, scheduleList } = this.props;   //0是任课老师，1是班主任
+        let list = isMaster === 0 ? courseList : scheduleList;
         return(
             <View style={styles.courseContainer}>
                 {
-                    listData.courseList.map((item) => {
+                    list.map((item) => {
                         return(
                             <PublicCircleItem
                                 item={item}
                                 pressFun={this.getCourse}
-                                key={item.key}
+                                key={item.id}
                             />
                         )
                     })
@@ -91,18 +137,45 @@ class RemarkModalContent extends Component{
     changeSelectedProject = () => {
         this.setState({
             showSelectCourse: true
-        })
+        });
+    };
+    getScheduleList = () => {
+        const { navigate } = this.props.navigation;
+        const { currentClassId, setScheduleList } = this.props;
+        checkUser(() => {
+            fetchData.postData('/scheduleList',
+                {
+                    currentClassId: currentClassId,
+                }
+            ).then((val) => {
+                setScheduleList(val.scheduleList);
+            });
+        }, navigate);
+    };
+    getCourseList = () => {
+        const { navigate } = this.props.navigation;
+        const { currentClassId, setCourseList } = this.props;
+        checkUser(() => {
+            fetchData.postData('/courseList',
+                {
+                    currentClassId: currentClassId,
+                }
+            ).then((val) => {
+                setCourseList(val.courseList);
+            });
+        }, navigate);
     };
     render() {
         const { selectKey, showSelectCourse } = this.state;
+        const { isMaster } = this.props;
         return(
             <View style={{ flex: 1 }}>
                 <TouchableOpacity onPress={this.changeSelectedProject}>
-                    <Text style={styles.selectCourse}>选择课程</Text>
+                    <Text style={styles.selectCourse}>{isMaster === 0  ? '选择课程' : '选择项目'}</Text>
                 </TouchableOpacity>
                 <PublicTab tabItem={tabItem} selectKey={selectKey} onChangeSelectKey={this.onChangeSelectKey} />
                 {
-                    selectKey === 1 ?
+                    selectKey === 0 ?
                         ( showSelectCourse ?
                             <PublicScrollView
                                 renderView={this.renderCourse()}
@@ -116,7 +189,7 @@ class RemarkModalContent extends Component{
                         : null
                 }
                 {
-                    selectKey === 2 ?
+                    selectKey === 1 ?
                         ( showSelectCourse ?
                             <PublicScrollView
                                 renderView={this.renderCourse()}
@@ -130,7 +203,7 @@ class RemarkModalContent extends Component{
                         : null
                 }
                 {
-                    selectKey === 3 ?
+                    selectKey === 2 ?
                         <View>
                             <TextInput
                                 placeholder="请输入您的点评"
@@ -232,4 +305,31 @@ const styles = StyleSheet.create({
         marginHorizontal: 15
     }
 });
-export default RemarkModalContent;
+
+const mapStateToProps = (state) => {
+    return {
+        praiseTemplateList: state.templateReducer.praiseTemplateList,
+        criticizeTemplateList: state.templateReducer.criticizeTemplateList,
+        currentClassId: state.classReducer.currentClassId,
+        scheduleList: state.projectReducer.scheduleList,
+        courseList: state.projectReducer.courseList
+    }
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setPraiseTemplateList: (praiseTemplateList) => {
+            dispatch(templateActions.setPraiseTemplateList(praiseTemplateList));
+        },
+        setCriticizeTemplateList: (criticizeTemplateList) => {
+            dispatch(templateActions.setCriticizeTemplateList(criticizeTemplateList));
+        },
+        setScheduleList: (scheduleList) => {
+            dispatch(projectActions.setScheduleList(scheduleList));
+        },
+        setCourseList: (courseList) => {
+            dispatch(projectActions.setCourseList(courseList));
+        }
+    }
+};
+export default connect(mapStateToProps, mapDispatchToProps)(RemarkModalContent);

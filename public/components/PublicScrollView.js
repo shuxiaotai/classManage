@@ -10,15 +10,18 @@ class PublicScrollView extends Component{
         }
     }
     headerRefreshing = () => {
+        const { updateFun } = this.props;
         this.setState({
             isHeaderRefreshing: true
         });
-        setTimeout(() => {
-            alert('刷新成功');
-            this.setState({
-                isHeaderRefreshing: false
-            });
-        }, 1000)
+        updateFun(true,
+            setTimeout(() => {
+                alert('刷新成功');
+                this.setState({
+                    isHeaderRefreshing: false
+                });
+            }, 1000)
+        );
     };
     render() {
         const { isHeaderRefreshing } = this.state;

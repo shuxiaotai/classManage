@@ -2,11 +2,8 @@ import React, { Component } from 'react';
 import { Icon, Badge } from 'react-native-elements';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import AddStudent from "./AddStudent";
-import listData from "../../public/mockData/listData";
 import PublicNoContent from "../../public/components/PublicNoContent";
 import PublicScrollView from "../../public/components/PublicScrollView";
-import PublicMask from "../../public/components/PublicMask";
-import PublicModal from "../../public/components/PublicModal";
 
 
 class StudentList extends Component{
@@ -15,8 +12,13 @@ class StudentList extends Component{
         const { navigate } = this.props.navigation;
         navigate('AddStudent');
     };
+    getStudentDetail = (item) => {
+        const { handleModal, setCurrentStudent } = this.props;
+        handleModal(true);
+        setCurrentStudent(item);
+    };
     getRenderStudent = () => {
-        const { handleModal, studentList } = this.props;
+        const { studentList, isMaster } = this.props;
         return(
             <View>
                 {
@@ -38,7 +40,7 @@ class StudentList extends Component{
                             </View>
                             {
                                 studentList.map((item) => (
-                                    <TouchableOpacity style={styles.detailItem} key={item.id} onPress={() => handleModal(true)}>
+                                    <TouchableOpacity style={styles.detailItem} key={item.id} onPress={() => this.getStudentDetail(item)}>
                                         <Image
                                             source={require('../../public/img/test.png')}   //uri: item.avatarUrl
                                             style={styles.stuAvatar}
@@ -48,49 +50,55 @@ class StudentList extends Component{
                                             textStyle={{ color: 'orange', fontSize: 13 }}
                                             containerStyle={styles.badgeText}
                                         />
-                                        <Text style={styles.detailText}>
+                                        <Text style={styles.detailText} numberOfLines={1}>
                                             {item.name}
                                         </Text>
                                     </TouchableOpacity>
                                 ))
                             }
                             <View>
-                                <TouchableOpacity onPress={this.handleAddStu} style={styles.detailItem}>
-                                    <View
-                                        style={[styles.stuAvatar, styles.addStu]}
-                                    >
-                                        <Icon
-                                            name="add"
-                                            color="#00aced"
-                                            size={34}
-                                        />
-                                    </View>
-                                    <Text style={styles.detailText}>
-                                        添加学生
-                                    </Text>
-                                </TouchableOpacity>
+                                {   //班主任才可以添加学生
+                                    isMaster === 1 ?
+                                        <TouchableOpacity onPress={this.handleAddStu} style={styles.detailItem}>
+                                            <View
+                                                style={[styles.stuAvatar, styles.addStu]}
+                                            >
+                                                <Icon
+                                                    name="add"
+                                                    color="#00aced"
+                                                    size={34}
+                                                />
+                                            </View>
+                                            <Text style={styles.detailText}>
+                                                添加学生
+                                            </Text>
+                                        </TouchableOpacity> : null
+                                }
                             </View>
                         </View>
                         :
                         <View>
-                            <View style={[styles.detailContainer, styles.noStudent]}>
-                                <View>
-                                    <TouchableOpacity onPress={this.handleAddStu} style={styles.detailItem}>
-                                        <View
-                                            style={[styles.stuAvatar, styles.addStu]}
-                                        >
-                                            <Icon
-                                                name="add"
-                                                color="#00aced"
-                                                size={34}
-                                            />
+                            {
+                                isMaster === 1 ?
+                                    <View style={[styles.detailContainer, styles.noStudent]}>
+                                        <View>
+                                            <TouchableOpacity onPress={this.handleAddStu} style={styles.detailItem}>
+                                                <View
+                                                    style={[styles.stuAvatar, styles.addStu]}
+                                                >
+                                                    <Icon
+                                                        name="add"
+                                                        color="#00aced"
+                                                        size={34}
+                                                    />
+                                                </View>
+                                                <Text style={styles.detailText}>
+                                                    添加学生
+                                                </Text>
+                                            </TouchableOpacity>
                                         </View>
-                                        <Text style={styles.detailText}>
-                                            添加学生
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
+                                    </View> : null
+                            }
                             <PublicNoContent tips="暂无学生" />
                         </View>
                 }
@@ -102,12 +110,13 @@ class StudentList extends Component{
         handleRandomModal(true);
     };
     render() {
-        const { isMaster, studentList } = this.props;
+        const { isMaster, studentList, updateFun } = this.props;
         return(
             <View style={{ height: '100%'}}>
                 <PublicScrollView
                     renderView={this.getRenderStudent()}
                     setMarginBottom={250}
+                    updateFun={updateFun}
                 />
                 {
                     studentList.length === 0 ? null :
@@ -153,10 +162,11 @@ const styles = StyleSheet.create({
         marginLeft: 15,
         marginRight: 15,
         marginBottom: 10,
+        maxWidth: 60
     },
     detailText: {
         fontSize: 12,
-        marginTop: 7
+        marginTop: 7,
     },
     addStu: {
         backgroundColor: '#f1f1f1',

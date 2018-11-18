@@ -1,0 +1,4 @@
+
+export const SET_SCHEDULE_LIST = 'SET_SCHEDULE_LIST';
+
+export const SET_COURSE_LIST = 'SET_COURSE_LIST';

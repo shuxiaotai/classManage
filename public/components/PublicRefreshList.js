@@ -92,6 +92,7 @@ class PublicRefreshList extends Component{
                             renderItem={getRenderItem()}
                             ListEmptyComponent={ListEmptyComponent}
                             keyExtractor={this._keyExtractor}
+                            ListHeaderComponent={ListHeaderComponent ? ListHeaderComponent : null}
                         /> :
                         <FlatList
                             data={dataArr}

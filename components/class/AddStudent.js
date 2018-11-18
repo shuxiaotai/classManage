@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, TextInput, StyleSheet, Image } from 'react-native';
+import {View, Text, ScrollView, TextInput, StyleSheet, Image, Alert} from 'react-native';
 import PublicHeader from "../../public/components/PublicHeader";
 import listData from "../../public/mockData/listData";
+import { connect } from 'react-redux';
+import * as studentActions from './Actions/studentAction';
+import {checkUser} from "../../public/utils/checkUser";
+import fetchData from "../../public/utils/fetchData";
 
 class AddStudent extends Component{
     constructor() {
@@ -10,6 +14,10 @@ class AddStudent extends Component{
             studentName: ''
         }
     }
+    componentDidMount() {
+        const { setAddStudentList } = this.props;
+        setAddStudentList([]);
+    }
     getHeaderTextComponent = (text) => {
         return(
             <Text style={{ color: '#fff' }}>
@@ -17,11 +25,50 @@ class AddStudent extends Component{
             </Text>
         );
     };
-    getStudentName = () => {
-        alert(this.state.studentName);
+    addStudentName = () => {
+        const { studentName } = this.state;
+        const { addStudentList, setAddStudentList } = this.props;
+        if (studentName === '') {
+            alert('学生姓名不能为空');
+        }else {
+            let student = {
+                name: studentName,  //头像暂时先不做
+                avatar_url: ''
+            };
+            setAddStudentList([...addStudentList, student]);
+            this.setState({
+                studentName: ''
+            })
+        }
+    };
+    toAddStudentList = () => {
+        const { navigation } = this.props;
+        const { navigate } = navigation;
+        const { currentClassId, addStudentList } = this.props;
+        checkUser(() => {
+            fetchData.postData('/addStudentList',
+                {
+                    currentClassId: currentClassId,
+                    addStudentList: addStudentList
+                }
+            ).then((val) => {
+                if(val.addStudentListSuccess) {
+                    Alert.alert(
+                        'Alert',
+                        '添加成功',
+                        [
+                            {text: 'OK', onPress: () => navigation.goBack()},
+                        ],
+                        { cancelable: false }
+                    );
+                }else {
+                    alert('添加失败');
+                }
+            });
+        }, navigate);
     };
     render() {
-        const { navigation } = this.props;
+        const { navigation, addStudentList } = this.props;
         return(
             <View style={{ marginBottom: 100 }}>
                 <PublicHeader
@@ -31,6 +78,7 @@ class AddStudent extends Component{
                     leftComponent={this.getHeaderTextComponent('取消')}
                     isRight={true}
                     rightComponent={this.getHeaderTextComponent('完成')}
+                    rightPressFun={this.toAddStudentList}
                 />
                 <View style={styles.inputContainer}>
                     <TextInput
@@ -41,7 +89,7 @@ class AddStudent extends Component{
                     />
                     <Text
                         style={styles.addStuText}
-                        onPress={this.getStudentName}
+                        onPress={this.addStudentName}
                     >
                         添加
                     </Text>
@@ -50,14 +98,14 @@ class AddStudent extends Component{
                     contentContainerStyle={styles.stuList}
                 >
                     {
-                        listData.addStuList.map((item) => (
-                            <View style={styles.stuItem} key={item.key}>
+                        addStudentList.map((item, index) => (
+                            <View style={styles.stuItem} key={index}>
                                 <Image
                                     source={require('../../public/img/test.png')}   //uri: item.avatarUrl
                                     style={styles.stuAvatar}
                                 />
                                 <Text style={styles.stuText}>
-                                    {item.studentName}
+                                    {item.name}
                                 </Text>
                             </View>
                         ))
@@ -114,4 +162,17 @@ const styles = StyleSheet.create({
     }
 });
 
-export default AddStudent;
+const mapStateToProps = (state) => {
+    return {
+        addStudentList: state.studentReducer.addStudentList,
+        currentClassId: state.classReducer.currentClassId
+    }
+};
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setAddStudentList: (addStudentList) => {
+            dispatch(studentActions.setAddStudentList(addStudentList));
+        }
+    }
+};
+export default connect(mapStateToProps, mapDispatchToProps)(AddStudent);
