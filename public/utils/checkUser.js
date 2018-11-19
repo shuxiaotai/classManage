@@ -38,8 +38,10 @@ export const getTokenInfo = async () => {
     let token = await AsyncStorage.getItem('token');
     let username = jwt_decode(token).username;
     let selectIdentity = jwt_decode(token).selectIdentity;
+    let id = jwt_decode(token).id;
     return {
         username: username,
         selectIdentity: selectIdentity,
+        id: id
     }
 };

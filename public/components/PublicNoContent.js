@@ -18,10 +18,10 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        height: 400
+        height: 400,
     },
     noContent: {
-        width: 80,
+        width: 85,
         height: 80
     },
     tips: {

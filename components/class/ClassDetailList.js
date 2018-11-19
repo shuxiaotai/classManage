@@ -91,7 +91,7 @@ class ClassDetailList extends Component{
             getTokenInfo().then((value) => {
                 fetchData.postData('/groupList',
                     {
-                        username: value.username,
+                        teacherId: value.id,
                         currentClassId: currentClassId,
                     }
                 ).then((val) => {
@@ -164,6 +164,7 @@ class ClassDetailList extends Component{
                                 <RemarkModalContent
                                     navigation={navigation}
                                     isMaster={isMaster}
+                                    handleStudentListModal={this.handleStudentListModal}
                                 /> :
                                 <GroupModalContent
                                     handleModal={this.handleStudentListModal}   //点评小组

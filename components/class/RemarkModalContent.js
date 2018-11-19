@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Image, TextInput, Alert} from 'react-native';
 import { connect } from 'react-redux';
 import PublicTab from "../../public/components/PublicTab";
 import PublicCircleItem from "../../public/components/PublicCircleItem";
@@ -10,6 +10,7 @@ import * as templateActions from './Actions/templateAction';
 import * as projectActions from './Actions/projectAction';
 import {checkUser, getTokenInfo} from "../../public/utils/checkUser";
 import fetchData from "../../public/utils/fetchData";
+import PublicNoContent from "../../public/components/PublicNoContent";
 
 const tabItem = [
     {
@@ -28,7 +29,10 @@ class RemarkModalContent extends Component{
         super();
         this.state = {
             selectKey: 0,   //0是表扬，1是批评，2是自定义
-            showSelectCourse: false
+            showSelectCourse: false,
+            projectId: -1,
+            templateId: -1,
+            customRemark: ''
         }
     }
     componentDidMount() {
@@ -40,7 +44,7 @@ class RemarkModalContent extends Component{
             this.getScheduleList();
         }
     }
-    getPraiseTemplateList = () => {
+    getPraiseTemplateList = () => {   //表扬模板
         const { navigate } = this.props.navigation;
         const { currentClassId, setPraiseTemplateList } = this.props;
         checkUser(() => {
@@ -53,7 +57,7 @@ class RemarkModalContent extends Component{
             });
         }, navigate);
     };
-    getCriticizeTemplateList = () => {
+    getCriticizeTemplateList = () => {   //批评模板
         const { navigate } = this.props.navigation;
         const { currentClassId, setCriticizeTemplateList } = this.props;
         checkUser(() => {
@@ -66,7 +70,7 @@ class RemarkModalContent extends Component{
             });
         }, navigate);
     };
-    onChangeSelectKey = (key) => {
+    onChangeSelectKey = (key) => {    //表扬，批评，自定义切换
         this.setState({
             selectKey: key
         });
@@ -76,22 +80,57 @@ class RemarkModalContent extends Component{
             this.getCriticizeTemplateList();
         }
     };
-    remarkTips = (isPraise) => {
-        let tips = isPraise ? '表扬成功' : '批评成功';
-        alert(tips);
+    remarkTips = (isPraise, id) => {   //点评
+        const { navigate } = this.props.navigation;
+        const { projectId, selectKey } = this.state;
+        const { isMaster, currentStudent, handleStudentListModal } = this.props;
+        if (projectId === -1) {
+            let projectTips = isMaster === 0 ? '请先选择课程' : '请先选择项目';
+            alert(projectTips);
+        }else {
+            this.setState({
+                templateId: id
+            });
+            checkUser(() => {
+                getTokenInfo().then((value) => {
+                    fetchData.postData('/addRemark',
+                        {
+                            teacherId: value.id,
+                            templateId: id,
+                            projectId: id,
+                            studentId: currentStudent.id
+                        }
+                    ).then((val) => {
+                        if (val.addRemarkSuccess) {
+                            Alert.alert(
+                                'Alert',
+                                `${selectKey === 0 ? '表扬成功' : '批评成功'}`,
+                                [
+                                    {text: 'OK', onPress: () => handleStudentListModal(false)},
+                                ],
+                                { cancelable: false }
+                            );
+                        }else {
+                            alert(selectKey === 0 ? '表扬失败' : '批评失败');
+                        }
+                    });
+                });
+            }, navigate);
+        }
     };
-    renderRemarkList = (isPraise) => {
+    renderRemarkList = (isPraise) => {   //渲染点评模板列表
         const { praiseTemplateList, criticizeTemplateList } = this.props;
         let list = isPraise ? praiseTemplateList : criticizeTemplateList;
+        let tips = isPraise ? '该班级暂无表扬模板，请联系管理员开通' : '该班级暂无批评模板，请联系管理员开通';
         return(
             <View style={styles.remarkContainer}>
                 {
-                    list.map((item) => {
+                    list.length !== 0 ? list.map((item) => {
                         return(
                             <TouchableOpacity
                                 style={styles.remarkItem}
                                 key={item.id}
-                                onPress={() => this.remarkTips(isPraise)}
+                                onPress={() => this.remarkTips(isPraise, item.id)}
                             >
                                 <View style={isPraise ? styles.scorePraiseView : styles.scoreCriticizeView}>
                                     <Text style={styles.scoreText}>{isPraise ? `+${item.score}` : `-${item.score}`}</Text>
@@ -105,41 +144,50 @@ class RemarkModalContent extends Component{
                                 </Text>
                             </TouchableOpacity>
                         )
-                    })
+                    }) :
+                        <View style={styles.noCourse}>
+                            <PublicNoContent tips={tips} />
+                        </View>
+
                 }
             </View>
         )
     };
-    getCourse = (key) => {
+    getCourse = (key) => {   //选择项目或课程
         this.setState({
-            showSelectCourse: false
+            showSelectCourse: false,
+            projectId: key,
         })
     };
-    renderCourse = () => {
+    renderCourse = () => {   //渲染日程项目或课程
         const { isMaster, courseList, scheduleList } = this.props;   //0是任课老师，1是班主任
         let list = isMaster === 0 ? courseList : scheduleList;
+        let tips = isMaster === 0 ? '该班级暂无课程选择，请联系管理员开通' : '该班级暂无项目选择，请联系管理员开通';
         return(
             <View style={styles.courseContainer}>
                 {
-                    list.map((item) => {
+                    list.length !== 0 ? list.map((item) => {
                         return(
                             <PublicCircleItem
                                 item={item}
-                                pressFun={this.getCourse}
+                                pressFun={() => this.getCourse(item.id)}
                                 key={item.id}
                             />
                         )
-                    })
+                    }) :
+                        <View style={styles.noCourse}>
+                            <PublicNoContent tips={tips} />
+                        </View>
                 }
             </View>
         )
     };
-    changeSelectedProject = () => {
+    changeSelectedProject = () => {   //是否显示项目
         this.setState({
-            showSelectCourse: true
+            showSelectCourse: !this.state.showSelectCourse
         });
     };
-    getScheduleList = () => {
+    getScheduleList = () => {   //获取日程项目请求
         const { navigate } = this.props.navigation;
         const { currentClassId, setScheduleList } = this.props;
         checkUser(() => {
@@ -152,7 +200,7 @@ class RemarkModalContent extends Component{
             });
         }, navigate);
     };
-    getCourseList = () => {
+    getCourseList = () => {   //获取课程列表请求
         const { navigate } = this.props.navigation;
         const { currentClassId, setCourseList } = this.props;
         checkUser(() => {
@@ -165,13 +213,42 @@ class RemarkModalContent extends Component{
             });
         }, navigate);
     };
+    publishCustomRemark = () => {   //发布自定义点评
+        const { navigate } = this.props.navigation;
+        const { customRemark } = this.state;
+        const { currentStudent, handleStudentListModal } = this.props;
+        checkUser(() => {
+            getTokenInfo().then((value) => {
+                fetchData.postData('/addCustomRemark',
+                    {
+                        teacherId: value.id,
+                        studentId: currentStudent.id,
+                        customRemark: customRemark
+                    }
+                ).then((val) => {
+                    if (val.addCustomRemarkSuccess) {
+                        Alert.alert(
+                            'Alert',
+                            `点评成功`,
+                            [
+                                {text: 'OK', onPress: () => handleStudentListModal(false)},
+                            ],
+                            { cancelable: false }
+                        );
+                    }else {
+                        alert('点评失败');
+                    }
+                });
+            });
+        }, navigate);
+    };
     render() {
         const { selectKey, showSelectCourse } = this.state;
         const { isMaster } = this.props;
         return(
             <View style={{ flex: 1 }}>
                 <TouchableOpacity onPress={this.changeSelectedProject}>
-                    <Text style={styles.selectCourse}>{isMaster === 0  ? '选择课程' : '选择项目'}</Text>
+                    <Text style={styles.selectCourse}>{isMaster === 0  ? (showSelectCourse ? '已显示课程列表': '选择课程') : (showSelectCourse ? '已显示项目列表': '选择项目')}</Text>
                 </TouchableOpacity>
                 <PublicTab tabItem={tabItem} selectKey={selectKey} onChangeSelectKey={this.onChangeSelectKey} />
                 {
@@ -209,8 +286,9 @@ class RemarkModalContent extends Component{
                                 placeholder="请输入您的点评"
                                 style={styles.customInput}
                                 multiline={true}
+                                onChangeText={(customRemark) => this.setState({customRemark})}
                             />
-                            <PublicBtn tips="确认点评" />
+                            <PublicBtn tips="确认点评" onPress={this.publishCustomRemark} />
                         </View>
                         : null
                 }
@@ -303,6 +381,16 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#f1f1f1',
         marginHorizontal: 15
+    },
+    noCourse: {
+        width: '100%',
+        height: 300,
+        marginLeft: -10,
+        marginTop: -20,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
     }
 });
 
@@ -312,7 +400,8 @@ const mapStateToProps = (state) => {
         criticizeTemplateList: state.templateReducer.criticizeTemplateList,
         currentClassId: state.classReducer.currentClassId,
         scheduleList: state.projectReducer.scheduleList,
-        courseList: state.projectReducer.courseList
+        courseList: state.projectReducer.courseList,
+        currentStudent: state.studentReducer.currentStudent
     }
 };
 

@@ -30,6 +30,9 @@ class ClassScreen extends Component{
         }
     }
     componentDidMount() {
+        //到时候在这边把老师和家长区分
+        // console.log(new Date().toLocaleString());
+        // console.log(+new Date());
         this.getClassList(0);
     }
     getClassList = (key) => {
@@ -39,7 +42,7 @@ class ClassScreen extends Component{
             getTokenInfo().then((value) => {
                 fetchData.postData('/classList',
                     {
-                        username: value.username,
+                        teacherId: value.id,
                         selectIdentity: value.selectIdentity,
                         isCreateByMe: key
                     }
