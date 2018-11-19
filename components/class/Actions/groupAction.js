@@ -6,3 +6,17 @@ export const setGroupList = (groupList) => {
         groupList: groupList
     }
 };
+
+export const setCurrentGroup = (currentGroup) => {
+    return {
+        type: groupTypes.SET_CURRENT_GROUP,
+        currentGroup: currentGroup
+    }
+};
+
+export const setStudentOfGroup = (studentOfGroup) => {
+    return {
+        type: groupTypes.SET_STUDENT_OF_GROUP,
+        studentOfGroup: studentOfGroup
+    }
+};

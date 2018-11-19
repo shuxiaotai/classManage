@@ -1,2 +1,6 @@
 
 export const SET_GROUP_LIST = 'SET_GROUP_LIST';
+
+export const SET_CURRENT_GROUP = 'SET_CURRENT_GROUP';
+
+export const SET_STUDENT_OF_GROUP = 'SET_STUDENT_OF_GROUP';

@@ -34,7 +34,7 @@ class EditOrCreateName extends Component{
                     navigation={navigation}
                     isRight={true}
                     rightComponent={this.getComponent(false)}
-                    rightPressFun={rightPressFun ? rightPressFun : null}
+                    rightPressFun={rightPressFun ? () => rightPressFun(LeftName) : null}
                 />
                 <TextInput
                     ref={(studentInput) => this.studentInput = studentInput}

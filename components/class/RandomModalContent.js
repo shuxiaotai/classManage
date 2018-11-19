@@ -1,41 +1,42 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Image, Text, TouchableOpacity } from 'react-native';
 
-let list = [
-    {
-        key: 1,
-        name: 'sxt1'
-    },
-    {
-        key: 2,
-        name: 'sss2'
-    },
-    {
-        key: 3,
-        name: '朱叔叔3'
-    },
-    {
-        key: 4,
-        name: '朱sss4'
-    },
-    {
-        key: 5,
-        name: '朱sss5'
-    }
-];
+// let list = [
+//     {
+//         key: 1,
+//         name: 'sxt1'
+//     },
+//     {
+//         key: 2,
+//         name: 'sss2'
+//     },
+//     {
+//         key: 3,
+//         name: '朱叔叔3'
+//     },
+//     {
+//         key: 4,
+//         name: '朱sss4'
+//     },
+//     {
+//         key: 5,
+//         name: '朱sss5'
+//     }
+// ];
 
 class RandomModalContent extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            selectStudent: list[0]
+            selectStudent: props.studentList[0]
         }
     }
     componentDidMount() {
+        const { studentList } = this.props;
         let timer = setInterval(() => {
-            let i = Math.floor(Math.random() * list.length);
+            let i = Math.floor(Math.random() * studentList.length);
             this.setState({
-                selectStudent: list[i]
+                selectStudent: studentList[i]
             });
             console.log(i);
         }, 100);

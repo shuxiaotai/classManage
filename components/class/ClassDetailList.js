@@ -67,7 +67,9 @@ class ClassDetailList extends Component{
             ).then((val) => {
                 setStudentList(val.studentList);
                 if(isFresh) {
-                    freshFun();
+                    if (freshFun) {
+                        freshFun();
+                    }
                 }
             });
         }, navigate);
@@ -125,7 +127,11 @@ class ClassDetailList extends Component{
     };
     toStudentHomePage = () => {
         const { navigate } = this.props.navigation;
-        navigate('StudentHomePage');
+        const { isMaster } = this.props.navigation.state.params;
+        navigate('StudentHomePage', {
+            handleStudentListModal: this.handleStudentListModal,
+            isMaster: isMaster
+        });
     };
     toEditGroup = () => {
         const { navigate } = this.props.navigation;
@@ -137,7 +143,7 @@ class ClassDetailList extends Component{
         })
     };
     render() {
-        const { navigation, studentList, parentList, groupList, setCurrentStudent, currentStudent } = this.props;
+        const { navigation, studentList, parentList, groupList, setCurrentStudent, currentStudent, setCurrentGroup, currentGroup, setStudentOfGroup, studentOfGroup } = this.props;
         const { grade, name, isMaster } = navigation.state.params;   //isMaster：0是任课老师，1是班主任
         const { selectKey, isStudentVisible, isGroupVisible, isRandomVisible } = this.state;
         return(
@@ -155,10 +161,12 @@ class ClassDetailList extends Component{
                     leftFun={isRandomVisible ? null : (isStudentVisible ? this.toStudentHomePage : this.toEditGroup)}
                     handleModal={isRandomVisible ? this.handleRandomModal : (isStudentVisible ? this.handleStudentListModal : this.handleGroupListModal)}
                     modalLeft={isRandomVisible ? '' : ((isStudentVisible && isGroupVisible) ? '' : (isStudentVisible ? '学生主页' : '编辑小组'))}
-                    modalTitle={isRandomVisible ? '随机抽选' : ((isStudentVisible && isGroupVisible) ? '点评第一小组' : (isStudentVisible ? `点评${currentStudent.name}` : '第一小组'))}
+                    modalTitle={isRandomVisible ? '随机抽选' : ((isStudentVisible && isGroupVisible) ? `点评${currentGroup.name}` : (isStudentVisible ? `点评${currentStudent.name}` : `${currentGroup.name}`))}
                     renderComponent={
                         isRandomVisible ?
-                            <RandomModalContent />
+                            <RandomModalContent
+                                studentList={studentList}
+                            />
                             : (
                             isStudentVisible ?
                                 <RemarkModalContent
@@ -166,9 +174,14 @@ class ClassDetailList extends Component{
                                     isMaster={isMaster}
                                     handleStudentListModal={this.handleStudentListModal}
                                 /> :
-                                <GroupModalContent
-                                    handleModal={this.handleStudentListModal}   //点评小组
-                                />
+                                (selectKey === 2 && isGroupVisible ?
+                                    <GroupModalContent
+                                        handleModal={this.handleStudentListModal}   //点评小组
+                                        navigation={navigation}
+                                        currentGroup={currentGroup}
+                                        setStudentOfGroup={setStudentOfGroup}
+                                        studentOfGroup={studentOfGroup}
+                                    /> : null)
                             )
                     }
                 />
@@ -193,6 +206,7 @@ class ClassDetailList extends Component{
                                 navigation={navigation}
                                 groupList={groupList}
                                 handleModal={this.handleGroupListModal}
+                                setCurrentGroup={setCurrentGroup}
                             /> : null
                         ) : null
                 }
@@ -215,7 +229,9 @@ const mapStateToProps = (state) => {
         studentList: state.studentReducer.studentList,
         parentList: state.parentReducer.parentList,
         groupList: state.groupReducer.groupList,
-        currentStudent: state.studentReducer.currentStudent
+        currentStudent: state.studentReducer.currentStudent,
+        currentGroup: state.groupReducer.currentGroup,
+        studentOfGroup: state.groupReducer.studentOfGroup
     }
 };
 const mapDispatchToProps = (dispatch) => {
@@ -231,6 +247,12 @@ const mapDispatchToProps = (dispatch) => {
         },
         setCurrentStudent: (currentStudent) => {
             dispatch(studentActions.setCurrentStudent(currentStudent));
+        },
+        setCurrentGroup: (currentGroup) => {
+            dispatch(groupActions.setCurrentGroup(currentGroup));
+        },
+        setStudentOfGroup: (studentOfGroup) => {
+            dispatch(groupActions.setStudentOfGroup(studentOfGroup));
         }
     }
 };

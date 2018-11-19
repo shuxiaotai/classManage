@@ -7,6 +7,7 @@ import listData from "../../public/mockData/listData";
 import PublicRefreshList from "../../public/components/PublicRefreshList";
 import PublicNoContent from "../../public/components/PublicNoContent";
 import PublicMask from "../../public/components/PublicMask";
+import { connect } from 'react-redux';
 
 
 class StudentHomePage extends Component{
@@ -30,7 +31,8 @@ class StudentHomePage extends Component{
     };
     toStudentDetailInfo = () => {
         const { navigate } = this.props.navigation;
-        navigate('StudentDetailInfo');
+        const { currentStudent } = this.props;
+        navigate('StudentDetailInfo', { currentStudent });
     };
     handleShowSelectTime = () => {
         this.setState({
@@ -122,16 +124,25 @@ class StudentHomePage extends Component{
             </View>
         </View>
     );
-    render() {
+    toLastPage = () => {
         const { navigation } = this.props;
+        const { handleStudentListModal } = this.props.navigation.state.params;
+        navigation.goBack();
+        handleStudentListModal(false);
+    };
+    render() {
+        const { navigation, currentStudent } = this.props;
         const { showSelectTime, onlyMyRemark, selectTimeKey, selectTimeName, dataArr } = this.state;
+        const { isMaster } = this.props.navigation.state.params;
         return(
             <View style={{ position: 'relative' }}>
                 <PublicHeader
-                    title="舒小的主页"
-                    isLeft={true} navigation={navigation}
+                    title={currentStudent.name}
+                    isLeft={true}
+                    leftPressFun={this.toLastPage}
+                    navigation={navigation}
                     isRight={true}
-                    rightComponent={this.toGetRightComponent()}
+                    rightComponent={isMaster === 1 ? this.toGetRightComponent() : null}
                     rightPressFun={this.toStudentDetailInfo}
                 />
                 <View style={styles.homePageTop}>
@@ -350,4 +361,10 @@ const styles = StyleSheet.create({
         color: '#fff'
     }
 });
-export default StudentHomePage;
+
+const mapStateToProps = (state) => {
+    return {
+        currentStudent: state.studentReducer.currentStudent
+    }
+};
+export default connect(mapStateToProps, null)(StudentHomePage);

@@ -6,9 +6,13 @@ import PublicNoContent from "../../public/components/PublicNoContent";
 
 class StudentGroupList extends Component{
 
-    toNextStep = () => {
-        const { navigate } = this.props.navigation;
-        navigate('GroupAddStudent');
+    toNextStep = (groupName) => {
+        if(groupName === '') {
+            alert('小组名不能为空');
+        }else {
+            const { navigate } = this.props.navigation;
+            navigate('GroupAddStudent', { groupName });
+        }
     };
     toCreateGroup = () => {
         const { navigate } = this.props.navigation;
@@ -21,8 +25,13 @@ class StudentGroupList extends Component{
             rightPressFun: this.toNextStep
         })
     };
+    showStudentOfGroup = (item) => {
+        const { handleModal, setCurrentGroup } = this.props;
+        setCurrentGroup(item);
+        handleModal(true);
+    };
     getRenderStudentGroup = () => {
-        const { handleModal, groupList } = this.props;
+        const { groupList } = this.props;
         return(
             <View>
                 {
@@ -32,7 +41,7 @@ class StudentGroupList extends Component{
                                 <View style={styles.stuGroupHeader}>
                                     <Text style={styles.stuGroupHeaderText}>{item.name}</Text>
                                 </View>
-                                <TouchableOpacity style={styles.stuGroupContentContainer} onPress={() => handleModal(true)}>
+                                <TouchableOpacity style={styles.stuGroupContentContainer} onPress={() => this.showStudentOfGroup(item)}>
                                     <Image
                                         source={require('../../public/img/test.png')}
                                         style={styles.stuGroupAvatar}

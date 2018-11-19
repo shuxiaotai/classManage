@@ -5,9 +5,9 @@ import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 class PublicHeader extends Component {
 
     getTouchableComponent = (isLeft, component) => {
-        const { rightPressFun } = this.props;
+        const { rightPressFun, leftPressFun } = this.props;
         return(
-            <TouchableOpacity onPress={isLeft ? this.toBack : (rightPressFun ? rightPressFun : this.toBack)}>
+            <TouchableOpacity onPress={isLeft ? (leftPressFun ? leftPressFun : this.toBack) : (rightPressFun ? rightPressFun : this.toBack)}>
                 {
                     isLeft ? (component ? component :
                         <View style={styles.backContainer}>

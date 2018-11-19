@@ -1,23 +1,61 @@
 import React, { Component } from 'react';
-import { View, Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import {View, Image, StyleSheet, Text, TouchableOpacity, Alert} from 'react-native';
 import PublicHeader from "../../public/components/PublicHeader";
 import PublicBtn from "../../public/components/PublicBtn";
 import PublicHorizontalItem from "../../public/components/PublicHorizontalItem";
 import EditOrCreateName from "./EditOrCreateName";
+import * as studentActions from "./Actions/studentAction";
+import {connect} from "react-redux";
+import fetchData from "../../public/utils/fetchData";
+import {checkUser} from "../../public/utils/checkUser";
 
 class StudentDetailInfo extends Component{
 
     toEditStudentName = () => {
-        const { navigate } = this.props.navigation;
+        const { navigation } = this.props;
+        const { navigate } = navigation;
+        const { currentStudent } = navigation.state.params;
         navigate('EditOrCreateName', ({
             title : '学生姓名',
             leftText: '取消',
             rightText: '保存',
-            leftName: '舒小台'
+            leftName: currentStudent.name,
+            rightPressFun: this.saveStudentName
         }));
+    };
+    saveStudentName = (name) => {
+        const { navigation } = this.props;
+        const { navigate } = navigation;
+        const { currentStudent, setCurrentStudent } = this.props;
+        checkUser(() => {
+            fetchData.postData('/editStudentName',
+                {
+                    newStudentName: name,
+                    studentId: currentStudent.id
+                }
+            ).then((val) => {
+                if(val.editStudentNameSuccess) {
+                    Alert.alert(
+                        'Alert',
+                        '修改成功',
+                        [
+                            {text: 'OK',
+                                onPress: () => {
+                                    let newCurrentStudent = {...currentStudent, name: name};
+                                    setCurrentStudent(newCurrentStudent);
+                                    navigation.goBack();
+                                }
+                            },
+                        ],
+                        { cancelable: false }
+                    );
+                }
+            });
+        }, navigate);
     };
     render() {
         const { navigation } = this.props;
+        const { currentStudent } = navigation.state.params;
         return(
             <View>
                 <PublicHeader
@@ -33,7 +71,7 @@ class StudentDetailInfo extends Component{
                     <PublicHorizontalItem
                         toTargetFun={this.toEditStudentName}
                         leftText="学生姓名"
-                        rightText="舒小台"
+                        rightText={currentStudent.name}
                     />
                 </View>
                 <PublicBtn
@@ -58,4 +96,19 @@ const styles = StyleSheet.create({
         borderRadius: 50
     },
 });
-export default StudentDetailInfo;
+
+const mapStateToProps = (state) => {
+    return {
+        currentStudent: state.studentReducer.currentStudent
+    }
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setCurrentStudent: (currentStudent) => {
+            dispatch(studentActions.setCurrentStudent(currentStudent));
+        }
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(StudentDetailInfo);

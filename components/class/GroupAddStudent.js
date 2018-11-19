@@ -1,45 +1,45 @@
 import React, { Component } from 'react';
-import { View, TextInput, StyleSheet, Image, Text, TouchableOpacity } from 'react-native';
+import { View, TextInput, StyleSheet, Image, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { Icon } from 'react-native-elements';
 import PublicHeader from "../../public/components/PublicHeader";
-import listData from "../../public/mockData/listData";
+import { connect } from 'react-redux';
+import fetchData from "../../public/utils/fetchData";
+import {checkUser, getTokenInfo} from "../../public/utils/checkUser";
 
-
-
-let selectStudentArr = [];
 class GroupAddStudent extends Component{
     constructor() {
         super();
         this.state = {
             isSearching: false,
             studentName: '',
-            selectStudentList: selectStudentArr
+            selectStudentList: []
         }
     }
-    selectStudent = (key) => {
-        let index = selectStudentArr.indexOf(key);
+    selectStudent = (id) => {
+        const { selectStudentList } = this.state;
+        let index = selectStudentList.indexOf(id);
         if (index === -1) {
-            selectStudentArr.push(key);
+            selectStudentList.push(id);
         } else {
-            selectStudentArr.splice(index, 1);
+            selectStudentList.splice(index, 1);
         }
         this.setState({
-            selectStudentList: selectStudentArr
+            selectStudentList: selectStudentList
         });
     };
     getRenderSelectStudentList = () => (
-        <View>
+        <ScrollView>
             {
-                listData.selectStudentList.map((item) => (
+                this.props.studentList.map((item) => (
                     <TouchableOpacity
                         style={styles.selectStuListItem}
-                        key={item.key}
+                        key={item.id}
                         activeOpacity={0.7}
-                        onPress={() => this.selectStudent(item.key)}
+                        onPress={() => this.selectStudent(item.id)}
                     >
                         <Icon
                             name="check-circle"
-                            color={this.state.selectStudentList.indexOf(item.key) !== -1 ? '#3498db' : 'gray'}
+                            color={this.state.selectStudentList.indexOf(item.id) !== -1 ? '#3498db' : 'gray'}
                         />
                         <Image
                             source={require('../../public/img/test.png')}
@@ -49,18 +49,50 @@ class GroupAddStudent extends Component{
                     </TouchableOpacity>
                 ))
             }
-        </View>
+        </ScrollView>
     );
+    addGroupFun = () => {
+        const { selectStudentList } = this.state;
+        const { currentClassId, navigation } = this.props;
+        const { groupName } = navigation.state.params;
+        const { navigate } = navigation;
+        checkUser(() => {
+            getTokenInfo().then((value) => {
+                fetchData.postData('/addGroup',
+                    {
+                        groupName: groupName,
+                        classId: currentClassId,
+                        teacherId: value.id,
+                        studentIdArr: selectStudentList
+                    }
+                ).then((val) => {
+                    if(val.addGroupSuccess) {
+                        Alert.alert(
+                            'Alert',
+                            `添加小组成功`,
+                            [
+                                {text: 'OK', onPress: () => navigate('ClassDetailList')},
+                            ],
+                            { cancelable: false }
+                        );
+                    }else {
+                        alert('添加小组失败');
+                    }
+                });
+            });
+        }, navigate);
+    };
     render() {
         const { navigation } = this.props;
-        const { studentName, isSearching } = this.state;
+        const { studentName, isSearching, selectStudentList } = this.state;
         return(
-            <View>
+            <View style={{ flex: 1 }}>
                 <PublicHeader
-                    title="添加学生(小组)"
+                    title={`添加学生(${selectStudentList.length})`}
                     isLeft={true}
                     navigation={navigation}
                     isRight={true}
+                    rightPressFun={this.addGroupFun}
                     rightComponent={<Text style={{ color: '#fff' }}>完成</Text>}
                 />
                 <View>
@@ -115,4 +147,10 @@ const styles = StyleSheet.create({
     }
 });
 
-export default GroupAddStudent;
+const mapStateToProps = (state) => {
+    return {
+        studentList: state.studentReducer.studentList,
+        currentClassId: state.classReducer.currentClassId
+    }
+};
+export default connect(mapStateToProps, null)(GroupAddStudent);

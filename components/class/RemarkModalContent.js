@@ -248,7 +248,12 @@ class RemarkModalContent extends Component{
         return(
             <View style={{ flex: 1 }}>
                 <TouchableOpacity onPress={this.changeSelectedProject}>
-                    <Text style={styles.selectCourse}>{isMaster === 0  ? (showSelectCourse ? '已显示课程列表': '选择课程') : (showSelectCourse ? '已显示项目列表': '选择项目')}</Text>
+                    <Text style={styles.selectCourse}>
+                        {
+                            selectKey === 2 ? null : (isMaster === 0  ? (showSelectCourse ? '已显示课程列表': '选择课程') : (showSelectCourse ? '已显示项目列表': '选择项目'))
+                        }
+
+                    </Text>
                 </TouchableOpacity>
                 <PublicTab tabItem={tabItem} selectKey={selectKey} onChangeSelectKey={this.onChangeSelectKey} />
                 {

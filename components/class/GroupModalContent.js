@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { Icon } from 'react-native-elements';
 import listData from "../../public/mockData/listData";
+import fetchData from "../../public/utils/fetchData";
+import {checkUser, getTokenInfo} from "../../public/utils/checkUser";
 
 let selectGroupListArr = [1, 2, 3];
 class GroupModalContent extends Component{
@@ -11,6 +13,19 @@ class GroupModalContent extends Component{
         this.state = {
             selectGroupList: selectGroupListArr
         }
+    }
+    componentDidMount() {
+        const { navigate } = this.props.navigation;
+        const { currentGroup, setStudentOfGroup } = this.props;
+        checkUser(() => {
+            fetchData.postData('/studentListOfGroup',
+                {
+                    groupId: currentGroup.id
+                }
+            ).then((val) => {
+                setStudentOfGroup(val.studentListOfGroup);
+            });
+        }, navigate);
     }
     selectGroupStudent = (key) => {
         let index = selectGroupListArr.indexOf(key);
@@ -25,15 +40,16 @@ class GroupModalContent extends Component{
     };
     renderGroupStudentList = () => {
         const { selectGroupList } = this.state;
+        const { studentOfGroup } = this.props;
         return(
             <ScrollView
                 contentContainerStyle={styles.remarkContainer}>
                 {
-                    listData.selectGroupStuList.map((item) => {
+                    studentOfGroup.map((item) => {
                         return(
                             <TouchableOpacity
                                 style={styles.remarkItem}
-                                key={item.key}
+                                key={item.id}
                                 activeOpacity={0.8}
                                 onPress={() => this.selectGroupStudent(item.key)}
                             >

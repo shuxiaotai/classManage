@@ -15,12 +15,14 @@ class PublicScrollView extends Component{
             isHeaderRefreshing: true
         });
         updateFun(true,
-            setTimeout(() => {
-                alert('刷新成功');
-                this.setState({
-                    isHeaderRefreshing: false
-                });
-            }, 1000)
+            () => {
+                setTimeout(() => {
+                    alert('刷新成功');
+                    this.setState({
+                        isHeaderRefreshing: false
+                    });
+                }, 1000)
+            }
         );
     };
     render() {
