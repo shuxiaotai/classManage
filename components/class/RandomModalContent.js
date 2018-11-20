@@ -38,11 +38,18 @@ class RandomModalContent extends Component{
             this.setState({
                 selectStudent: studentList[i]
             });
-            console.log(i);
         }, 100);
         setTimeout(() => {
             clearInterval(timer)
         }, 1000);
+    };
+    toRemarkRandomStudent = () => {
+        const { handleStudentListModal, setCurrentStudent, handleRandomModal, showRandomModal } = this.props;
+        const { selectStudent } = this.state;
+        handleStudentListModal(true);   //显示点评界面
+        setCurrentStudent(selectStudent);
+        handleRandomModal(false);
+        showRandomModal(true)
     };
     render() {
         const { selectStudent } = this.state;
@@ -55,7 +62,10 @@ class RandomModalContent extends Component{
                     />
                     <Text style={styles.randomText}>{selectStudent ? selectStudent.name : ''}</Text>
                 </View>
-                <TouchableOpacity style={styles.sendRemark}>
+                <TouchableOpacity
+                    style={styles.sendRemark}
+                    onPress={this.toRemarkRandomStudent}
+                >
                     <Text style={{ color: '#fff' }}>发送点评</Text>
                 </TouchableOpacity>
             </View>

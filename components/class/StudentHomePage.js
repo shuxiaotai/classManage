@@ -32,7 +32,11 @@ class StudentHomePage extends Component{
     toStudentDetailInfo = () => {
         const { navigate } = this.props.navigation;
         const { currentStudent } = this.props;
-        navigate('StudentDetailInfo', { currentStudent });
+        const { handleStudentListModal } = this.props.navigation.state.params;
+        navigate('StudentDetailInfo', {
+            currentStudent,
+            handleStudentListModal
+        });
     };
     handleShowSelectTime = () => {
         this.setState({

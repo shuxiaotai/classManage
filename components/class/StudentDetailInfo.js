@@ -53,6 +53,34 @@ class StudentDetailInfo extends Component{
             });
         }, navigate);
     };
+    removeStudentInClass = () => {
+        const { navigate } = this.props.navigation;
+        const { currentStudent } = this.props;
+        const { handleStudentListModal } = this.props.navigation.state.params;
+        checkUser(() => {
+            fetchData.postData('/removeStudentInClass',
+                {
+                    studentId: currentStudent.id
+                }
+            ).then((val) => {
+                if(val.removeStudentSuccess) {
+                    Alert.alert(
+                        'Alert',
+                        '移除成功',
+                        [
+                            {text: 'OK', onPress: () =>  {
+                                handleStudentListModal(false);
+                                navigate('ClassDetailList')
+                            }},
+                        ],
+                        { cancelable: false }
+                    );
+                }else {
+                    alert('移除失败');
+                }
+            });
+        }, navigate);
+    };
     render() {
         const { navigation } = this.props;
         const { currentStudent } = navigation.state.params;
@@ -76,6 +104,7 @@ class StudentDetailInfo extends Component{
                 </View>
                 <PublicBtn
                     tips="从班级中删除"
+                    onPress={this.removeStudentInClass}
                 />
             </View>
         )

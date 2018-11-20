@@ -77,7 +77,7 @@ class StudentGroupList extends Component{
         )
     };
     render() {
-        const { groupList } = this.props;
+        const { groupList, updateFun } = this.props;
         return(
             <View style={styles.stuGroupContainer}>
                 {
@@ -85,6 +85,7 @@ class StudentGroupList extends Component{
                         <PublicScrollView
                             renderView={this.getRenderStudentGroup()}
                             setMarginBottom={210}
+                            updateFun={updateFun}
                         />
                         :
                         <View>

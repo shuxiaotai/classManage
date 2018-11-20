@@ -1,17 +1,15 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { Icon } from 'react-native-elements';
-import listData from "../../public/mockData/listData";
 import fetchData from "../../public/utils/fetchData";
-import {checkUser, getTokenInfo} from "../../public/utils/checkUser";
+import {checkUser} from "../../public/utils/checkUser";
 
-let selectGroupListArr = [1, 2, 3];
 class GroupModalContent extends Component{
 
     constructor() {
         super();
         this.state = {
-            selectGroupList: selectGroupListArr
+            selectGroupList: []
         }
     }
     componentDidMount() {
@@ -23,19 +21,27 @@ class GroupModalContent extends Component{
                     groupId: currentGroup.id
                 }
             ).then((val) => {
+                let studentListOfGroupTemp = [];
+                val.studentListOfGroup.forEach((item) => {
+                    studentListOfGroupTemp.push(item.id);
+                });
+                this.setState({
+                    selectGroupList: studentListOfGroupTemp
+                });
                 setStudentOfGroup(val.studentListOfGroup);
             });
         }, navigate);
     }
-    selectGroupStudent = (key) => {
-        let index = selectGroupListArr.indexOf(key);
+    selectGroupStudent = (id) => {
+        const { selectGroupList } = this.state;
+        let index = selectGroupList.indexOf(id);
         if (index === -1) {
-            selectGroupListArr.push(key);
+            selectGroupList.push(id);
         } else {
-            selectGroupListArr.splice(index, 1);
+            selectGroupList.splice(index, 1);
         }
         this.setState({
-            selectGroupList: selectGroupListArr
+            selectGroupList: selectGroupList
         });
     };
     renderGroupStudentList = () => {
@@ -51,12 +57,12 @@ class GroupModalContent extends Component{
                                 style={styles.remarkItem}
                                 key={item.id}
                                 activeOpacity={0.8}
-                                onPress={() => this.selectGroupStudent(item.key)}
+                                onPress={() => this.selectGroupStudent(item.id)}
                             >
                                 <View style={styles.checkIcon}>
                                     <Icon
                                         name="check-circle"
-                                        color={selectGroupList.indexOf(item.key) !== -1 ? '#3498db' : 'gray'}
+                                        color={selectGroupList.indexOf(item.id) !== -1 ? '#3498db' : 'gray'}
                                         size={20}
                                     />
                                 </View>
@@ -74,16 +80,25 @@ class GroupModalContent extends Component{
             </ScrollView>
         )
     };
-
+    publishRemarkGroup = () => {
+        const { selectGroupList } = this.state;
+        const { handleModal, setIsRemarkGroup, setRemarkGroupStudentIds } = this.props;
+        if (selectGroupList.length === 0) {
+            alert('请选择至少一名学生');
+        }else {
+            handleModal(true);
+            setIsRemarkGroup(true);
+            setRemarkGroupStudentIds(selectGroupList);
+        }
+    };
     render() {
-        const { handleModal } = this.props;
         return(
             <View style={{ flex: 1 }}>
                 {this.renderGroupStudentList()}
                 <TouchableOpacity
                     style={styles.remarkOnGroup}
                     activeOpacity={0.7}
-                    onPress={() => handleModal(true)}
+                    onPress={this.publishRemarkGroup}
                 >
                     <Text
                         style={styles.remarkOnGroupText}

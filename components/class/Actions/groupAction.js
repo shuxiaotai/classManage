@@ -20,3 +20,17 @@ export const setStudentOfGroup = (studentOfGroup) => {
         studentOfGroup: studentOfGroup
     }
 };
+
+export const setIsRemarkGroup = (isRemarkGroup) => {
+    return {
+        type: groupTypes.IS_REMARK_GROUP,
+        isRemarkGroup: isRemarkGroup
+    }
+};
+
+export const setRemarkGroupStudentIds = (remarkGroupStudentIds) => {
+    return {
+        type: groupTypes.SET_REMARK_GROUP_STUDENT_IDS,
+        remarkGroupStudentIds: remarkGroupStudentIds
+    }
+};

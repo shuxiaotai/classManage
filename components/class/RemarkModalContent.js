@@ -83,7 +83,7 @@ class RemarkModalContent extends Component{
     remarkTips = (isPraise, id) => {   //点评
         const { navigate } = this.props.navigation;
         const { projectId, selectKey } = this.state;
-        const { isMaster, currentStudent, handleStudentListModal } = this.props;
+        const { isMaster, currentStudent, handleStudentAndGroupListModal, isRemarkGroup, currentGroup, remarkGroupStudentIds } = this.props;
         if (projectId === -1) {
             let projectTips = isMaster === 0 ? '请先选择课程' : '请先选择项目';
             alert(projectTips);
@@ -97,8 +97,9 @@ class RemarkModalContent extends Component{
                         {
                             teacherId: value.id,
                             templateId: id,
-                            projectId: id,
-                            studentId: currentStudent.id
+                            projectId: projectId,
+                            studentIds: isRemarkGroup ? remarkGroupStudentIds : currentStudent.id,
+                            groupId: isRemarkGroup ? currentGroup.id : 0
                         }
                     ).then((val) => {
                         if (val.addRemarkSuccess) {
@@ -106,7 +107,9 @@ class RemarkModalContent extends Component{
                                 'Alert',
                                 `${selectKey === 0 ? '表扬成功' : '批评成功'}`,
                                 [
-                                    {text: 'OK', onPress: () => handleStudentListModal(false)},
+                                    {text: 'OK', onPress: () => {
+                                        handleStudentAndGroupListModal(false)
+                                    }},
                                 ],
                                 { cancelable: false }
                             );
@@ -216,14 +219,15 @@ class RemarkModalContent extends Component{
     publishCustomRemark = () => {   //发布自定义点评
         const { navigate } = this.props.navigation;
         const { customRemark } = this.state;
-        const { currentStudent, handleStudentListModal } = this.props;
+        const { currentStudent, isRemarkGroup, currentGroup, remarkGroupStudentIds, handleStudentAndGroupListModal } = this.props;
         checkUser(() => {
             getTokenInfo().then((value) => {
                 fetchData.postData('/addCustomRemark',
                     {
                         teacherId: value.id,
-                        studentId: currentStudent.id,
-                        customRemark: customRemark
+                        studentIds: isRemarkGroup ? remarkGroupStudentIds : currentStudent.id,
+                        customRemark: customRemark,
+                        groupId: isRemarkGroup ? currentGroup.id : 0
                     }
                 ).then((val) => {
                     if (val.addCustomRemarkSuccess) {
@@ -231,7 +235,9 @@ class RemarkModalContent extends Component{
                             'Alert',
                             `点评成功`,
                             [
-                                {text: 'OK', onPress: () => handleStudentListModal(false)},
+                                {text: 'OK', onPress: () => {
+                                    handleStudentAndGroupListModal(false)
+                                }},
                             ],
                             { cancelable: false }
                         );
