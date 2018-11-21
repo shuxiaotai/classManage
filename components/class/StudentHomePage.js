@@ -16,7 +16,7 @@ class StudentHomePage extends Component{
         this.state = {
             showSelectTime: false,
             onlyMyRemark: false,
-            selectTimeKey: 2,
+            selectTimeKey: 1,
             selectTimeName: '本周',
             dataArr: []
         }
@@ -48,11 +48,11 @@ class StudentHomePage extends Component{
             onlyMyRemark: !this.state.onlyMyRemark
         })
     };
-    selectTimeFun = (key, timeName) => {
+    selectTimeFun = (id, name) => {
         this.setState({
-            selectTimeKey: key,
+            selectTimeKey: id,
             showSelectTime: false,
-            selectTimeName: timeName
+            selectTimeName: name
         })
     };
     //获取模拟数据
@@ -96,7 +96,7 @@ class StudentHomePage extends Component{
             </View>
         );
     };
-    getHeaderComponent = () => (
+    getHeaderComponent = (selectTimeName) => (
         <View>
             <View style={styles.scoreCharts}>
                 <PercentageCircle
@@ -105,7 +105,7 @@ class StudentHomePage extends Component{
                     color={"#3498db"}
                     borderWidth={9}
                 >
-                    <Text style={{fontSize: 14}}>{this.state.selectTimeName}得1分</Text>
+                    <Text style={{fontSize: 14}}>{selectTimeName}得1分</Text>
                 </PercentageCircle>
                 <TouchableOpacity style={styles.inviteParent}>
                     <Text style={styles.inviteParentText}>邀请家长</Text>
@@ -123,7 +123,7 @@ class StudentHomePage extends Component{
             </View>
             <View style={styles.tipsOfTimeWrapper}>
                 <View style={styles.listTipsOfTime}>
-                    <Text>{this.state.selectTimeName}</Text>
+                    <Text>{selectTimeName}</Text>
                 </View>
             </View>
         </View>
@@ -185,10 +185,10 @@ class StudentHomePage extends Component{
                             return(
                                 <TouchableOpacity
                                     style={styles.selectItem}
-                                    key={item.key}
-                                    onPress={() => this.selectTimeFun(item.key, item.timeName)}
+                                    key={item.id}
+                                    onPress={() => this.selectTimeFun(item.id, item.name)}
                                 >
-                                    <Text style={{ color: selectTimeKey === item.key ? '#0f7cda' : 'black' }}>{item.timeName}</Text>
+                                    <Text style={{ color: selectTimeKey === item.id ? '#0f7cda' : 'black' }}>{item.name}</Text>
                                 </TouchableOpacity>
                             );
                         })
@@ -202,7 +202,7 @@ class StudentHomePage extends Component{
                                 getRenderItem={this.getRenderStuRemark}
                                 getList={this.getList}
                                 totalPage={3}
-                                ListHeaderComponent={this.getHeaderComponent}
+                                ListHeaderComponent={this.getHeaderComponent(selectTimeName)}
                             />
                         </View> :
                         <PublicNoContent tips="暂无点评记录" />

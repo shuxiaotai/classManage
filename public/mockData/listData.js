@@ -463,24 +463,24 @@ export default {
     //时间选择列表    StudentHomePage.js
     selectTimeList: [
         {
-            key: 1,
-            timeName: '今天'
+            id: 0,
+            name: '今天'
         },
         {
-            key: 2,
-            timeName: '本周'
+            id: 1,
+            name: '本周'
         },
         {
-            key: 3,
-            timeName: '上周'
+            id: 2,
+            name: '上周'
         },
         {
-            key: 4,
-            timeName: '本月'
+            id: 3,
+            name: '本月'
         },
         {
-            key: 5,
-            timeName: '近一年'
+            id: 4,
+            name: '近一年'
         }
     ],
     //个人评价列表   StudentHomePage.js

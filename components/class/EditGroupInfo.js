@@ -61,6 +61,37 @@ class EditGroupInfo extends Component{
         handleGroupListModal(false);
         navigation.goBack();
     };
+    removeGroup = () => {
+        const { navigation } = this.props;
+        const { handleGroupListModal } = navigation.state.params;
+        const { navigate } = navigation;
+        const { currentGroup } = this.props;
+        checkUser(() => {
+            fetchData.postData('/removeGroup',
+                {
+                    groupId: currentGroup.id
+                }
+            ).then((val) => {
+                if(val.removeGroupSuccess) {
+                    Alert.alert(
+                        'Alert',
+                        '解散小组成功',
+                        [
+                            {text: 'OK',
+                                onPress: () => {
+                                    navigation.goBack();
+                                    handleGroupListModal(false);
+                                }
+                            },
+                        ],
+                        { cancelable: false }
+                    );
+                }else {
+                    alert('解散小组失败');
+                }
+            });
+        }, navigate);
+    };
     render() {
         const { navigation, currentGroup, studentOfGroup } = this.props;
         return(
@@ -100,6 +131,7 @@ class EditGroupInfo extends Component{
                 </TouchableOpacity>
                 <PublicBtn
                     tips="解散小组"
+                    onPress={this.removeGroup}
                 />
             </View>
         )
