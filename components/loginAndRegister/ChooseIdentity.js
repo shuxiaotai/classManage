@@ -38,8 +38,6 @@ class ChooseIdentity extends Component{
                             });
                             navigate('Home');
                         }, 1000);
-                    }else {
-                        alert('身份已过期，请重新登录');
                     }
                 });
             }

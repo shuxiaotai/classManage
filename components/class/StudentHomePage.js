@@ -8,6 +8,10 @@ import PublicRefreshList from "../../public/components/PublicRefreshList";
 import PublicNoContent from "../../public/components/PublicNoContent";
 import PublicMask from "../../public/components/PublicMask";
 import { connect } from 'react-redux';
+import {checkUser, getTokenInfo} from "../../public/utils/checkUser";
+import fetchData from "../../public/utils/fetchData";
+import * as studentActions from './Actions/studentAction';
+import moment from 'moment';
 
 
 class StudentHomePage extends Component{
@@ -22,8 +26,28 @@ class StudentHomePage extends Component{
         }
     }
     componentDidMount() {
-        this.getList(1);
+        // this.getList(1);
+        this.fetchStudentRemark(1, false);
     }
+    fetchStudentRemark = (time, filterTeacher) => {
+        const { navigate } = this.props.navigation;
+        const { currentStudent, setStudentRemarkInfo, setStudentRemarkList } = this.props;
+        checkUser(() => {
+            getTokenInfo().then((value) => {
+                fetchData.postData('/studentRemarkList',
+                    {
+                        studentId: currentStudent.id,
+                        time: time,
+                        teacherId: filterTeacher ? value.id : 'null',
+                    }
+                ).then((val) => {
+                    setStudentRemarkInfo(val.studentRemarkInfo);
+                    setStudentRemarkList(val.studentRemarkList);
+                    console.log(val);
+                });
+            });
+        }, navigate);
+    };
     toGetRightComponent = () => {
         return(
             <Text style={styles.stuInfo}>学生资料</Text>
@@ -44,16 +68,19 @@ class StudentHomePage extends Component{
         })
     };
     onlyMyRemarkFun = () => {
+        const { selectTimeKey, onlyMyRemark} = this.state;
         this.setState({
-            onlyMyRemark: !this.state.onlyMyRemark
-        })
+            onlyMyRemark: !onlyMyRemark
+        });
+        this.fetchStudentRemark(selectTimeKey, !onlyMyRemark);
     };
     selectTimeFun = (id, name) => {
         this.setState({
             selectTimeKey: id,
             showSelectTime: false,
             selectTimeName: name
-        })
+        });
+        this.fetchStudentRemark(id, false);
     };
     //获取模拟数据
     getList = (page) => {
@@ -85,49 +112,52 @@ class StudentHomePage extends Component{
                 />
                 <View>
                     <View style={[styles.rightTips, styles.topScore]}>
-                        <Text style={styles.rightScore}>{item.isPraise === 0 ? '+' : '-'}{item.score}分</Text>
-                        <Text>因为{item.isPerson === 0 ? '个人' : `${item.groupName}`}{item.projectName}</Text>
+                        <Text style={styles.rightScore}>{item.score === null ? '无分数' : item['is_praise'] === '0' ? ('+' + item.score + '分'): ('-' + item.score + '分')}</Text>
+                        <Text>因为 {item['group_name']} {item['project_name'] === null ? '自定义点评' : item['project_name']} {item['template_name']}</Text>
                     </View>
                     <View style={styles.rightTips}>
-                        <Text style={[styles.bottomText, styles.bottomLeftText]}>{item.time}</Text>
-                        <Text style={styles.bottomText}>由{item.teacher}老师点评</Text>
+                        <Text style={[styles.bottomText, styles.bottomLeftText]}>{moment(item['create_time']).format('YYYY-MM-DD HH:mm:ss')}</Text>
+                        <Text style={styles.bottomText}>由{item['teacher_name']}老师点评</Text>
                     </View>
                 </View>
             </View>
         );
     };
-    getHeaderComponent = (selectTimeName) => (
-        <View>
-            <View style={styles.scoreCharts}>
-                <PercentageCircle
-                    radius={75}
-                    percent={100}
-                    color={"#3498db"}
-                    borderWidth={9}
-                >
-                    <Text style={{fontSize: 14}}>{selectTimeName}得1分</Text>
-                </PercentageCircle>
-                <TouchableOpacity style={styles.inviteParent}>
-                    <Text style={styles.inviteParentText}>邀请家长</Text>
-                </TouchableOpacity>
-                <View style={styles.scoreContainer}>
-                    <View style={[styles.scoreView, styles.leftScore]}>
-                        <Text style={styles.scoreText}>+1分</Text>
-                        <Text>表扬</Text>
+    getHeaderComponent = (selectTimeName) => {
+        const { studentRemarkInfo } = this.props;
+        return (
+            <View>
+                <View style={styles.scoreCharts}>
+                    <PercentageCircle
+                        radius={75}
+                        percent={100}
+                        color={"#3498db"}
+                        borderWidth={9}
+                    >
+                        <Text style={{fontSize: 14}}>{selectTimeName}得{studentRemarkInfo.score}分</Text>
+                    </PercentageCircle>
+                    <TouchableOpacity style={styles.inviteParent}>
+                        <Text style={styles.inviteParentText}>邀请家长</Text>
+                    </TouchableOpacity>
+                    <View style={styles.scoreContainer}>
+                        <View style={[styles.scoreView, styles.leftScore]}>
+                            <Text style={styles.scoreText}>+{studentRemarkInfo['praise_score']}分</Text>
+                            <Text>表扬</Text>
+                        </View>
+                        <View style={styles.scoreView}>
+                            <Text style={styles.scoreText}>{studentRemarkInfo['criticize_score']}分</Text>
+                            <Text>批评</Text>
+                        </View>
                     </View>
-                    <View style={styles.scoreView}>
-                        <Text style={styles.scoreText}>-1分</Text>
-                        <Text>批评</Text>
+                </View>
+                <View style={styles.tipsOfTimeWrapper}>
+                    <View style={styles.listTipsOfTime}>
+                        <Text>{selectTimeName}</Text>
                     </View>
                 </View>
             </View>
-            <View style={styles.tipsOfTimeWrapper}>
-                <View style={styles.listTipsOfTime}>
-                    <Text>{selectTimeName}</Text>
-                </View>
-            </View>
-        </View>
-    );
+        );
+    };
     toLastPage = () => {
         const { navigation } = this.props;
         const { handleStudentListModal } = this.props.navigation.state.params;
@@ -135,7 +165,7 @@ class StudentHomePage extends Component{
         handleStudentListModal(false);
     };
     render() {
-        const { navigation, currentStudent } = this.props;
+        const { navigation, currentStudent, studentRemarkList } = this.props;
         const { showSelectTime, onlyMyRemark, selectTimeKey, selectTimeName, dataArr } = this.state;
         const { isMaster } = this.props.navigation.state.params;
         return(
@@ -195,10 +225,10 @@ class StudentHomePage extends Component{
                     }
                 </View>
                 {
-                    (dataArr.length !== 0) ?
+                    (studentRemarkList.length !== 0) ?
                         <View style={styles.stuRemarkListContainer}>
                             <PublicRefreshList
-                                dataArr={dataArr}
+                                dataArr={studentRemarkList}
                                 getRenderItem={this.getRenderStuRemark}
                                 getList={this.getList}
                                 totalPage={3}
@@ -368,7 +398,19 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
     return {
-        currentStudent: state.studentReducer.currentStudent
+        currentStudent: state.studentReducer.currentStudent,
+        studentRemarkInfo: state.studentReducer.studentRemarkInfo,
+        studentRemarkList: state.studentReducer.studentRemarkList
     }
 };
-export default connect(mapStateToProps, null)(StudentHomePage);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setStudentRemarkInfo: (studentRemarkInfo) => {
+            dispatch(studentActions.setStudentRemarkInfo(studentRemarkInfo));
+        },
+        setStudentRemarkList: (studentRemarkList) => {
+            dispatch(studentActions.setStudentRemarkList(studentRemarkList));
+        }
+    }
+};
+export default connect(mapStateToProps, mapDispatchToProps)(StudentHomePage);

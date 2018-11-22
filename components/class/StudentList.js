@@ -17,6 +17,16 @@ class StudentList extends Component{
         handleModal(true);
         setCurrentStudent(item);
     };
+    getTotalScore = () => {
+        const { studentList } = this.props;
+        let totalScore = 0;
+        if (studentList.length > 0) {
+            studentList.forEach((item) => {
+                totalScore += item.score;
+            });
+        }
+        return totalScore;
+    };
     getRenderStudent = () => {
         const { studentList, isMaster } = this.props;
         return(
@@ -30,7 +40,7 @@ class StudentList extends Component{
                                     style={styles.stuAvatar}
                                 />
                                 <Badge
-                                    value={0}    //分数下次再算
+                                    value={this.getTotalScore()}    //分数下次再算
                                     textStyle={{ color: 'orange', fontSize: 13 }}
                                     containerStyle={styles.badgeText}
                                 />
@@ -46,7 +56,7 @@ class StudentList extends Component{
                                             style={styles.stuAvatar}
                                         />
                                         <Badge
-                                            value={1}
+                                            value={item.score}
                                             textStyle={{ color: 'orange', fontSize: 13 }}
                                             containerStyle={styles.badgeText}
                                         />

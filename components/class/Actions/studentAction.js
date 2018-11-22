@@ -19,3 +19,17 @@ export const setCurrentStudent = (currentStudent) => {
         currentStudent: currentStudent
     }
 };
+
+export const setStudentRemarkInfo = (studentRemarkInfo) => {
+    return {
+        type: studentTypes.SET_STUDENT_REMARK_INFO,
+        studentRemarkInfo: studentRemarkInfo
+    }
+};
+
+export const setStudentRemarkList = (studentRemarkList) => {
+    return {
+        type: studentTypes.SET_STUDENT_REMARK_LIST,
+        studentRemarkList: studentRemarkList
+    }
+};

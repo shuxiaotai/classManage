@@ -48,10 +48,10 @@ class StudentGroupList extends Component{
                                     />
                                     <View style={styles.groupScore}>
                                         <Text style={[styles.groupScoreText, styles.praise]}>
-                                            表扬1分
+                                            表扬{item['praise_score']}分
                                         </Text>
                                         <Text style={styles.groupScoreText}>
-                                            批评1分
+                                            批评{Math.abs(item['criticize_score'])}分
                                         </Text>
                                     </View>
                                     <Text style={styles.groupNums}>{item['student_count']}人</Text>
