@@ -675,5 +675,32 @@ export default {
             key: 9,
             title: '朱xx家长'
         }
+    ],
+    //年级列表， SelectGrade.js
+    gradeList: [
+        {
+            id: 1,
+            name: '一年级'
+        },
+        {
+            id: 2,
+            name: '二年级'
+        },
+        {
+            id: 3,
+            name: '三年级'
+        },
+        {
+            id: 4,
+            name: '四年级'
+        },
+        {
+            id: 5,
+            name: '五年级'
+        },
+        {
+            id: 6,
+            name: '六年级'
+        }
     ]
 }

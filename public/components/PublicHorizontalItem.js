@@ -3,20 +3,25 @@ import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
 
 const PublicHorizontalItem = (props) => {
-    const { toTargetFun, leftText, rightText } = props;
+    const { toTargetFun, leftText, rightText, rightComponent, activeOpacity } = props;
     return(
         <TouchableOpacity
             style={styles.stuNameContainer}
-            activeOpacity={0.5}
+            activeOpacity={activeOpacity ? activeOpacity : 0.5}
             onPress={toTargetFun}
         >
             <Text style={styles.leftText}>{leftText}</Text>
             <View style={styles.rightTextWrapper}>
-                <Text style={styles.rightText}>{rightText}</Text>
-                <Icon
-                    name="chevron-right"
-                    color="gray"
-                />
+                {
+                    rightComponent ? rightComponent : <Text style={styles.rightText}>{rightText}</Text>
+                }
+                {
+                    rightComponent ? null :
+                        <Icon
+                            name="chevron-right"
+                            color="gray"
+                        />
+                }
             </View>
         </TouchableOpacity>
     )

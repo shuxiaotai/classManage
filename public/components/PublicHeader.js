@@ -50,6 +50,7 @@ class PublicHeader extends Component {
                     (isRight && !isLeft) ?
                         <Header
                             centerComponent={{ text: title, style: { color: '#fff' } }}
+                            rightComponent={rightComponent ? this.getTouchableComponent(false, rightComponent) : null}
                         />
                         : null
                 }

@@ -18,6 +18,7 @@ import * as studentActions from './Actions/studentAction';
 import * as parentActions from './Actions/parentAction';
 import * as groupActions from './Actions/groupAction';
 import PublicNoContent from "../../public/components/PublicNoContent";
+import CheckList from "./CheckList";
 
 const tabItem = [
     {
@@ -47,7 +48,7 @@ class ClassDetailList extends Component{
     constructor() {
         super();
         this.state = {
-            selectKey: 1,
+            selectKey: 2,
             isStudentVisible: false,
             isGroupVisible: false,
             isRandomVisible: false,
@@ -238,7 +239,7 @@ class ClassDetailList extends Component{
                                 handleModal={this.handleGroupListModal}
                                 setCurrentGroup={setCurrentGroup}
                                 updateFun={this.getGroupList}
-                            /> : null
+                            /> : <CheckList />
                         ) : null
                 }
                 {
