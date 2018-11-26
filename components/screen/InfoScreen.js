@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Image, FlatList } from 'react-native';
+import { Text, View, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import PublicHeader from "../../public/components/PublicHeader";
 import PublicTab from "../../public/components/PublicTab";
 import PublicNoContent from "../../public/components/PublicNoContent";
+import listData from "../../public/mockData/listData";
+import Rate from "../info/Rate";
+import SelectVisibleClass from "../info/SelectVisibleClass";
 
 const tabItem = [
     {
@@ -21,73 +24,6 @@ const tabItem = [
     }
 ];
 
-const listAll = [
-    {
-        key: '1',
-        imgSrc: "https://facebook.github.io/react/logo-og.png",
-        name: 'sxt',
-        teacherType: 0,  //0为班主任，1为任课老师
-        time: '2018-10-10 19:09',
-        isNotication: true,
-        title: '10.20的语文作业',
-        content: '语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业'
-    },
-    {
-        key: '2',
-        imgSrc: "https://facebook.github.io/react/logo-og.png",
-        name: 'sxt',
-        teacherType: 1,
-        time: '2018-10-10 19:09',
-        isNotication: false,    //true为公告，false为作业
-        title: '10.20的语文作业',
-        content: '语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业'
-    },
-    {
-        key: '3',
-        imgSrc: "https://facebook.github.io/react/logo-og.png",
-        name: 'sxt',
-        teacherType: 1,
-        time: '2018-10-10 19:09',
-        isNotication: false,    //true为公告，false为作业
-        title: '10.20的语文作业',
-        content: '语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业'
-    }
-];
-const listNotication = [
-    {
-        key: '1',
-        imgSrc: "https://facebook.github.io/react/logo-og.png",
-        name: 'sxt',
-        teacherType: 0,  //0为班主任，1为任课老师
-        time: '2018-10-10 19:09',
-        isNotication: true,
-        title: '10.20的语文作业',
-        content: '语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业'
-    },
-];
-const listMessage = [
-    {
-        key: '1',
-        imgSrc: "https://facebook.github.io/react/logo-og.png",
-        name: 'sxt',
-        teacherType: 0,  //0为班主任，1为任课老师
-        time: '2018-10-10 19:09',
-        isNotication: false,
-        title: '10.20的语文作业',
-        content: '语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业'
-    },
-    {
-        key: '2',
-        imgSrc: "https://facebook.github.io/react/logo-og.png",
-        name: 'sxt',
-        teacherType: 0,  //0为班主任，1为任课老师
-        time: '2018-10-10 19:09',
-        isNotication: false,
-        title: '10.20的语文作业',
-        content: '语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业'
-    },
-];
-const list = [];
 class InfoScreen extends Component{
     constructor() {
         super();
@@ -106,7 +42,8 @@ class InfoScreen extends Component{
             <View style={styles.infoItem}>
                 <View style={styles.infoHeader}>
                     <Image
-                        source={{uri: item.imgSrc}}
+                        // source={{uri: item.imgSrc}}
+                        source={require('../../public/img/test.png')}
                         style={styles.infoImg}
                     />
                     <View style={styles.infoText}>
@@ -125,8 +62,13 @@ class InfoScreen extends Component{
             </View>
         );
     };
+    toSelectVisibleClass = () => {
+        const { navigate } = this.props.navigation;
+        navigate('SelectVisibleClass');
+    };
     render() {
         const { selectKey } = this.state;
+        const { navigation } = this.props;
         return(
             <View style={styles.main}>
                 <PublicHeader title="通知" />
@@ -134,34 +76,46 @@ class InfoScreen extends Component{
                 <View style={styles.infoContainer}>
                     {selectKey === 1 ?
                         <FlatList
-                            data={list}
+                            data={listData.listAll}
                             renderItem={this.getRenderItem()}
                             ListEmptyComponent={<PublicNoContent tips="暂无作业和公告"/>}
                         /> : null
                     }
                     {selectKey === 2 ?
                         <FlatList
-                            data={listNotication}
+                            data={listData.listNotication}
                             renderItem={this.getRenderItem()}
                             ListEmptyComponent={<PublicNoContent tips="暂无公告"/>}
                         /> : null
                     }
                     {selectKey === 3 ?
                         <FlatList
-                            data={list}
+                            data={listData.listMessage}
                             renderItem={this.getRenderItem()}
                             ListEmptyComponent={<PublicNoContent tips="暂无作业"/>}
                         /> : null
                     }
+                    {selectKey === 4 ?
+                        <Rate
+                            navigation={navigation}
+                        />: null
+                    }
 
                 </View>
-                <View style={styles.edit}>
-                    <Icon
-                        name='edit'
-                        color='#00aced'
-                        size={25}
-                    />
-                </View>
+                {
+                    (selectKey === 1 || selectKey === 2 || selectKey === 3 ?
+                        <TouchableOpacity
+                            style={styles.edit}
+                            onPress={this.toSelectVisibleClass}
+                        >
+                            <Icon
+                                name='edit'
+                                color='#00aced'
+                                size={25}
+                            />
+                        </TouchableOpacity> : null
+                    )
+                }
             </View>
         );
     }

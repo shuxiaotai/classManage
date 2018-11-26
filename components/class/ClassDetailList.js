@@ -164,7 +164,9 @@ class ClassDetailList extends Component{
     };
     render() {
         const { navigation, studentList, parentList, groupList, setCurrentStudent, currentStudent, setCurrentGroup, currentGroup, setStudentOfGroup, studentOfGroup, setIsRemarkGroup, setRemarkGroupStudentIds, isRemarkGroup, remarkGroupStudentIds } = this.props;
+        // 暂时注释
         const { grade, name, isMaster } = navigation.state.params;   //isMaster：0是任课老师，1是班主任
+        // const isMaster = 1;
         const { selectKey, isStudentVisible, isGroupVisible, isRandomVisible, showRandoming } = this.state;
         return(
             <View>
@@ -216,7 +218,8 @@ class ClassDetailList extends Component{
                             )
                     }
                 />
-                <PublicHeader title={`${grade}${name}`} isLeft={true} navigation={navigation} />
+                {/*<PublicHeader title={`${grade}${name}`} isLeft={true} navigation={navigation} />*/}
+                <PublicHeader title="暂时" isLeft={true} navigation={navigation} />
                 <PublicTab tabItem={isMaster === 1 ? tabItemIsMaster : tabItem} selectKey={selectKey} onChangeSelectKey={this.onChangeSelectKey} />
                 {
                     selectKey === 1 ?
@@ -239,7 +242,10 @@ class ClassDetailList extends Component{
                                 handleModal={this.handleGroupListModal}
                                 setCurrentGroup={setCurrentGroup}
                                 updateFun={this.getGroupList}
-                            /> : <CheckList />
+                            /> : 
+                            <CheckList
+                                navigation={navigation}
+                            />
                         ) : null
                 }
                 {

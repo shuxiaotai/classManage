@@ -7,6 +7,7 @@ import listData from "../../public/mockData/listData";
 import PublicRefreshList from "../../public/components/PublicRefreshList";
 import PublicNoContent from "../../public/components/PublicNoContent";
 import PublicMask from "../../public/components/PublicMask";
+import PublicSelectTime from "../../public/components/PublicSelectTime";
 import { connect } from 'react-redux';
 import {checkUser, getTokenInfo} from "../../public/utils/checkUser";
 import fetchData from "../../public/utils/fetchData";
@@ -75,6 +76,8 @@ class StudentHomePage extends Component{
         this.fetchStudentRemark(selectTimeKey, !onlyMyRemark);
     };
     selectTimeFun = (id, name) => {
+        console.log(id);
+        console.log(name);
         this.setState({
             selectTimeKey: id,
             showSelectTime: false,
@@ -168,6 +171,7 @@ class StudentHomePage extends Component{
         const { navigation, currentStudent, studentRemarkList } = this.props;
         const { showSelectTime, onlyMyRemark, selectTimeKey, selectTimeName, dataArr } = this.state;
         const { isMaster } = this.props.navigation.state.params;
+        // const isMaster = 1;   //暂时注释
         return(
             <View style={{ position: 'relative' }}>
                 <PublicHeader
@@ -180,20 +184,14 @@ class StudentHomePage extends Component{
                     rightPressFun={this.toStudentDetailInfo}
                 />
                 <View style={styles.homePageTop}>
-                    <TouchableOpacity
-                        style={[styles.homePageTopItem, styles.leftTopItem]}
-                        onPress={this.handleShowSelectTime}
-                        activeOpacity={1}
-                    >
-                        <Text>
-                            {selectTimeName}
-                        </Text>
-                        <View style={{ position: 'absolute', right: 50 }}>
-                            <Icon
-                                name={showSelectTime ? 'expand-less' : 'expand-more'}   //expand-less, 'expand-more'
-                            />
-                        </View>
-                    </TouchableOpacity>
+                    <PublicSelectTime
+                        selectTimeName={selectTimeName}
+                        showSelectTime={showSelectTime}
+                        handleShowSelectTime={this.handleShowSelectTime}
+                        selectTimeKey={selectTimeKey}
+                        selectTimeFun={this.selectTimeFun}
+                        top={27}
+                    />
                     <TouchableOpacity
                         style={styles.homePageTopItem}
                         onPress={this.onlyMyRemarkFun}
@@ -209,21 +207,7 @@ class StudentHomePage extends Component{
                     height={Dimensions.get('window').height - 104}
                     top={104}
                 />
-                <View style={showSelectTime ? styles.selectContainer : styles.selectHiddenContainer}>
-                    {
-                        listData.selectTimeList.map((item) => {
-                            return(
-                                <TouchableOpacity
-                                    style={styles.selectItem}
-                                    key={item.id}
-                                    onPress={() => this.selectTimeFun(item.id, item.name)}
-                                >
-                                    <Text style={{ color: selectTimeKey === item.id ? '#0f7cda' : 'black' }}>{item.name}</Text>
-                                </TouchableOpacity>
-                            );
-                        })
-                    }
-                </View>
+
                 {
                     (studentRemarkList.length !== 0) ?
                         <View style={styles.stuRemarkListContainer}>
@@ -252,18 +236,14 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        zIndex: 100
     },
     homePageTopItem: {
         flex: 1,
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'center',
-    },
-    leftTopItem: {
-        borderStyle: 'solid',
-        borderRightWidth: 1,
-        borderRightColor: 'gray',
     },
     scoreCharts: {
         alignItems: 'center',
@@ -273,17 +253,6 @@ const styles = StyleSheet.create({
         width: '100%',
         backgroundColor: '#fff',
         marginBottom: 10
-    },
-    selectContainer: {
-        width: '50%',
-        height: 200,
-        backgroundColor: 'rgba(255, 255, 255, 0.9)',
-        position: 'absolute',
-        top: 103,
-        zIndex: 100
-    },
-    selectHiddenContainer: {
-        display: 'none'
     },
     maskContainer: {
         width: '100%',
@@ -295,14 +264,6 @@ const styles = StyleSheet.create({
     },
     maskHiddenContainer: {
         display: 'none'
-    },
-    selectItem: {
-        height: 40,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderStyle: 'solid',
-        borderBottomWidth: 1,
-        borderBottomColor: '#EAEAEA'
     },
     scoreContainer: {
         height: 30,

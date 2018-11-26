@@ -9,8 +9,12 @@ import SelectGrade from "./components/class/SelectGrade";
 import CreateClass from "./components/class/CreateClass";
 import EditGroupInfo from "./components/class/EditGroupInfo";
 import GroupAddStudent from "./components/class/GroupAddStudent";
+import CheckChart from "./components/class/CheckChart";
 import LoginOrRegister from "./components/loginAndRegister/LoginOrRegister";
 import ChooseIdentity from "./components/loginAndRegister/ChooseIdentity";
+import CheckStudentDetail from "./components/class/CheckStudentDetail";
+import RateDetail from "./components/info/RateDetail";
+import SelectVisibleClass from "./components/info/SelectVisibleClass";
 
 const App = createStackNavigator({
     Home: {
@@ -48,6 +52,18 @@ const App = createStackNavigator({
     },
     SelectGrade: {
         screen: SelectGrade
+    },
+    CheckChart: {
+        screen: CheckChart
+    },
+    CheckStudentDetail: {
+        screen: CheckStudentDetail
+    },
+    RateDetail: {
+        screen: RateDetail
+    },
+    SelectVisibleClass: {
+        screen: SelectVisibleClass
     }
 }, {
     headerMode: 'none',

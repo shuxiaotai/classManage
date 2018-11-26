@@ -702,5 +702,139 @@ export default {
             id: 6,
             name: '六年级'
         }
+    ],
+    //考勤列表  CheckList.js
+    checkList: [
+        {
+            id: 1,
+            name: 'sxt',
+            checkTipsId: 0,
+        },
+        {
+            id: 2,
+            name: '舒小台',
+            checkTipsId: 0,
+        },
+        {
+            id: 3,
+            name: '舒小台',
+            checkTipsId: 0,
+        },
+        {
+            id: 4,
+            name: '舒小台',
+            checkTipsId: 1,
+        },
+        {
+            id: 5,
+            name: '舒小台',
+            checkTipsId: 2,
+        }
+    ],
+    // 光荣榜列表  Rate.js
+    rateList: [
+        {
+            id: 1,
+            name: 'sxt',
+            checkTipsId: 0,
+        },
+        {
+            id: 2,
+            name: '舒小台',
+            checkTipsId: 0,
+        },
+        {
+            id: 3,
+            name: '舒小台',
+            checkTipsId: 0,
+        },
+    ],
+    //学生考勤，缺勤次数选择  CheckStudentDetail.js
+    selectCheckCountList: [
+        {
+            id: 0,
+            name: '按全勤次数'
+        },
+        {
+            id: 1,
+            name: '按缺勤次数'
+        },
+        {
+            id: 2,
+            name: '按迟到次数'
+        },
+        {
+            id: 3,
+            name: '按请假次数'
+        }
+    ],
+    //全部通知列表  InfoScreen.js
+    listAll: [
+        {
+            key: '1',
+            imgSrc: "",
+            name: 'sxt',
+            teacherType: 0,  //0为班主任，1为任课老师
+            time: '2018-10-10 19:09',
+            isNotication: true,
+            title: '10.20的语文作业',
+            content: '语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业'
+        },
+        {
+            key: '2',
+            imgSrc: "",
+            name: 'sxt',
+            teacherType: 1,
+            time: '2018-10-10 19:09',
+            isNotication: false,    //true为公告，false为作业
+            title: '10.20的语文作业',
+            content: '语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业'
+        },
+        {
+            key: '3',
+            imgSrc: "",
+            name: 'sxt',
+            teacherType: 1,
+            time: '2018-10-10 19:09',
+            isNotication: false,    //true为公告，false为作业
+            title: '10.20的语文作业',
+            content: '语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业'
+        }
+    ],
+    //公告列表   InfoScreen.js
+    listNotication: [
+        {
+            key: '1',
+            imgSrc: "",
+            name: 'sxt',
+            teacherType: 0,  //0为班主任，1为任课老师
+            time: '2018-10-10 19:09',
+            isNotication: true,
+            title: '10.20的语文作业',
+            content: '语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业'
+        },
+    ],
+    //作业列表  InfoScreen.js
+    listMessage: [
+        {
+            key: '1',
+            imgSrc: "",
+            name: 'sxt',
+            teacherType: 0,  //0为班主任，1为任课老师
+            time: '2018-10-10 19:09',
+            isNotication: false,
+            title: '10.20的语文作业',
+            content: '语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业'
+        },
+        {
+            key: '2',
+            imgSrc: "",
+            name: 'sxt',
+            teacherType: 0,  //0为班主任，1为任课老师
+            time: '2018-10-10 19:09',
+            isNotication: false,
+            title: '10.20的语文作业',
+            content: '语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业语文作业'
+        },
     ]
 }
