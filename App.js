@@ -15,6 +15,7 @@ import ChooseIdentity from "./components/loginAndRegister/ChooseIdentity";
 import CheckStudentDetail from "./components/class/CheckStudentDetail";
 import RateDetail from "./components/info/RateDetail";
 import SelectVisibleClass from "./components/info/SelectVisibleClass";
+import PublishNoticeOrHomeWork from "./components/info/PublishNoticeOrHomeWork";
 
 const App = createStackNavigator({
     Home: {
@@ -64,6 +65,9 @@ const App = createStackNavigator({
     },
     SelectVisibleClass: {
         screen: SelectVisibleClass
+    },
+    PublishNoticeOrHomeWork: {
+        screen: PublishNoticeOrHomeWork
     }
 }, {
     headerMode: 'none',

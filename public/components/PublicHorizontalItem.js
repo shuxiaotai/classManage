@@ -3,10 +3,10 @@ import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
 
 const PublicHorizontalItem = (props) => {
-    const { toTargetFun, leftText, rightText, rightComponent, activeOpacity } = props;
+    const { toTargetFun, leftText, rightText, rightComponent, activeOpacity, marginTop } = props;
     return(
         <TouchableOpacity
-            style={styles.stuNameContainer}
+            style={[styles.stuNameContainer, {marginTop: marginTop ? marginTop: 15}]}
             activeOpacity={activeOpacity ? activeOpacity : 0.5}
             onPress={toTargetFun}
         >
@@ -34,7 +34,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: 15
     },
     leftText: {
         paddingLeft: 10

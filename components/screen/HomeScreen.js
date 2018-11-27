@@ -9,18 +9,6 @@ import ClassScreen from "./ClassScreen";
 //#3498db
 //MaterialIcons
 const HomeScreen = createBottomTabNavigator({
-    Info: {
-        screen: InfoScreen,
-        navigationOptions: () => ({
-            title: '通知',
-            tabBarIcon: ({tintColor}) => (
-                <Icon
-                    name="add-alarm"
-                    color={tintColor}
-                />
-            )
-        })
-    },
     Class: {
         screen: ClassScreen,
         navigationOptions: () => ({
@@ -28,6 +16,18 @@ const HomeScreen = createBottomTabNavigator({
             tabBarIcon: ({tintColor}) => (
                 <Icon
                     name="event-note"
+                    color={tintColor}
+                />
+            )
+        })
+    },
+    Info: {
+        screen: InfoScreen,
+        navigationOptions: () => ({
+            title: '通知',
+            tabBarIcon: ({tintColor}) => (
+                <Icon
+                    name="add-alarm"
                     color={tintColor}
                 />
             )
