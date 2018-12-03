@@ -54,7 +54,7 @@ class GroupAddStudent extends Component{
     addGroupFun = () => {
         const { selectStudentList } = this.state;
         const { currentClassId, navigation } = this.props;
-        const { groupName } = navigation.state.params;
+        const { groupName, getGroupList } = navigation.state.params;
         const { navigate } = navigation;
         checkUser(() => {
             getTokenInfo().then((value) => {
@@ -71,7 +71,10 @@ class GroupAddStudent extends Component{
                             'Alert',
                             `添加小组成功`,
                             [
-                                {text: 'OK', onPress: () => navigate('ClassDetailList')},
+                                {text: 'OK', onPress: () => {
+                                        getGroupList();
+                                        navigate('ClassDetailList')
+                                    }},
                             ],
                             { cancelable: false }
                         );

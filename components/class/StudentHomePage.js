@@ -44,7 +44,6 @@ class StudentHomePage extends Component{
                 ).then((val) => {
                     setStudentRemarkInfo(val.studentRemarkInfo);
                     setStudentRemarkList(val.studentRemarkList);
-                    console.log(val);
                 });
             });
         }, navigate);
@@ -57,10 +56,11 @@ class StudentHomePage extends Component{
     toStudentDetailInfo = () => {
         const { navigate } = this.props.navigation;
         const { currentStudent } = this.props;
-        const { handleStudentListModal } = this.props.navigation.state.params;
+        const { handleStudentListModal, getStudentList } = this.props.navigation.state.params;
         navigate('StudentDetailInfo', {
             currentStudent,
-            handleStudentListModal
+            handleStudentListModal,
+            getStudentList
         });
     };
     handleShowSelectTime = () => {

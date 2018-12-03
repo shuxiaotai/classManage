@@ -27,6 +27,7 @@ class StudentDetailInfo extends Component{
         const { navigation } = this.props;
         const { navigate } = navigation;
         const { currentStudent, setCurrentStudent } = this.props;
+        const { getStudentList } = navigation.state.params;
         checkUser(() => {
             fetchData.postData('/editStudentName',
                 {
@@ -43,6 +44,7 @@ class StudentDetailInfo extends Component{
                                 onPress: () => {
                                     let newCurrentStudent = {...currentStudent, name: name};
                                     setCurrentStudent(newCurrentStudent);
+                                    getStudentList();
                                     navigation.goBack();
                                 }
                             },
@@ -56,7 +58,7 @@ class StudentDetailInfo extends Component{
     removeStudentInClass = () => {
         const { navigate } = this.props.navigation;
         const { currentStudent } = this.props;
-        const { handleStudentListModal } = this.props.navigation.state.params;
+        const { handleStudentListModal, getStudentList } = this.props.navigation.state.params;
         checkUser(() => {
             fetchData.postData('/removeStudentInClass',
                 {
@@ -69,8 +71,9 @@ class StudentDetailInfo extends Component{
                         '移除成功',
                         [
                             {text: 'OK', onPress: () =>  {
-                                handleStudentListModal(false);
-                                navigate('ClassDetailList')
+                                    getStudentList();
+                                    handleStudentListModal(false);
+                                    navigate('ClassDetailList')
                             }},
                         ],
                         { cancelable: false }

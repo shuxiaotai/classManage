@@ -10,7 +10,8 @@ class StudentList extends Component{
 
     handleAddStu = () => {
         const { navigate } = this.props.navigation;
-        navigate('AddStudent');
+        const { getStudentList } = this.props;
+        navigate('AddStudent', {getStudentList});
     };
     getStudentDetail = (item) => {
         const { handleModal, setCurrentStudent } = this.props;
@@ -50,7 +51,11 @@ class StudentList extends Component{
                             </View>
                             {
                                 studentList.map((item) => (
-                                    <TouchableOpacity style={styles.detailItem} key={item.id} onPress={() => this.getStudentDetail(item)}>
+                                    <TouchableOpacity
+                                        style={styles.detailItem}
+                                        key={item.id}
+                                        onPress={() => this.getStudentDetail(item)}
+                                    >
                                         <Image
                                             source={require('../../public/img/test.png')}   //uri: item.avatarUrl
                                             style={styles.stuAvatar}

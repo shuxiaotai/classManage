@@ -143,13 +143,15 @@ class ClassDetailList extends Component{
         const { isMaster } = this.props.navigation.state.params;
         navigate('StudentHomePage', {
             handleStudentListModal: this.handleStudentListModal,
-            isMaster: isMaster
+            isMaster: isMaster,
+            getStudentList: this.getStudentList
         });
     };
     toEditGroup = () => {
         const { navigate } = this.props.navigation;
         navigate('EditGroupInfo', {
-            handleGroupListModal: this.handleGroupListModal
+            handleGroupListModal: this.handleGroupListModal,
+            getGroupList: this.getGroupList
         });
     };
     handleRandomModal = (visible) => {
@@ -231,6 +233,7 @@ class ClassDetailList extends Component{
                             isMaster={isMaster}
                             updateFun={this.getStudentList}
                             setCurrentStudent={setCurrentStudent}
+                            getStudentList={this.getStudentList}
                         /> : null
                 }
                 {
@@ -242,6 +245,7 @@ class ClassDetailList extends Component{
                                 handleModal={this.handleGroupListModal}
                                 setCurrentGroup={setCurrentGroup}
                                 updateFun={this.getGroupList}
+                                getGroupList={this.getGroupList}
                             /> : 
                             <CheckList
                                 navigation={navigation}

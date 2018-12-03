@@ -27,6 +27,7 @@ class EditGroupInfo extends Component{
     saveEditGroupName = (name) => {
         const { navigation, currentGroup, setCurrentGroup } = this.props;
         const { navigate } = navigation;
+        const { getGroupList } = navigation.state.params;
         checkUser(() => {
             fetchData.postData('/editGroupName',
                 {
@@ -41,6 +42,7 @@ class EditGroupInfo extends Component{
                         [
                             {text: 'OK',
                                 onPress: () => {
+                                    getGroupList();
                                     let newCurrentGroup = {...currentGroup, name: name};
                                     setCurrentGroup(newCurrentGroup);
                                     navigation.goBack();
@@ -66,6 +68,7 @@ class EditGroupInfo extends Component{
         const { handleGroupListModal } = navigation.state.params;
         const { navigate } = navigation;
         const { currentGroup } = this.props;
+        const { getGroupList } = navigation.state.params;
         checkUser(() => {
             fetchData.postData('/removeGroup',
                 {
@@ -79,6 +82,7 @@ class EditGroupInfo extends Component{
                         [
                             {text: 'OK',
                                 onPress: () => {
+                                    getGroupList();
                                     navigation.goBack();
                                     handleGroupListModal(false);
                                 }

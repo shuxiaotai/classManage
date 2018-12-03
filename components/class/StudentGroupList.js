@@ -7,11 +7,15 @@ import PublicNoContent from "../../public/components/PublicNoContent";
 class StudentGroupList extends Component{
 
     toNextStep = (groupName) => {
+        const { getGroupList } = this.props;
         if(groupName === '') {
             alert('小组名不能为空');
         }else {
             const { navigate } = this.props.navigation;
-            navigate('GroupAddStudent', { groupName });
+            navigate('GroupAddStudent', {
+                groupName,
+                getGroupList
+            });
         }
     };
     toCreateGroup = () => {
@@ -22,7 +26,7 @@ class StudentGroupList extends Component{
             rightText: '下一步',
             leftName: '',
             placeholder: '请输入小组名称(16字符内)',
-            rightPressFun: this.toNextStep
+            rightPressFun: this.toNextStep,
         })
     };
     showStudentOfGroup = (item) => {

@@ -45,6 +45,7 @@ class AddStudent extends Component{
         const { navigation } = this.props;
         const { navigate } = navigation;
         const { currentClassId, addStudentList } = this.props;
+        const { getStudentList } = navigation.state.params;
         checkUser(() => {
             fetchData.postData('/addStudentList',
                 {
@@ -57,7 +58,10 @@ class AddStudent extends Component{
                         'Alert',
                         '添加成功',
                         [
-                            {text: 'OK', onPress: () => navigation.goBack()},
+                            {text: 'OK', onPress: () => {
+                                    getStudentList();
+                                    navigation.goBack();
+                                }},
                         ],
                         { cancelable: false }
                     );

@@ -11,14 +11,18 @@ import ClassScreen from "./ClassScreen";
 const HomeScreen = createBottomTabNavigator({
     Class: {
         screen: ClassScreen,
-        navigationOptions: () => ({
+        navigationOptions: ({ navigation }) => ({
             title: '课堂',
-            tabBarIcon: ({tintColor}) => (
-                <Icon
-                    name="event-note"
-                    color={tintColor}
-                />
-            )
+            tabBarIcon: ({focused, tintColor}) => {
+                const { routeName } = navigation.state;
+                console.log(routeName);
+                return (
+                    <Icon
+                        name="event-note"
+                        color={tintColor}
+                    />
+                )
+            }
         })
     },
     Info: {

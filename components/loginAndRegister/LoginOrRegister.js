@@ -78,7 +78,7 @@ class LoginOrRegister extends Component{
                                 'Alert',
                                 '登录成功',
                                 [
-                                    {text: 'OK', onPress: () => navigate('Home')},
+                                    {text: 'OK', onPress: () => navigate('Class')},
                                 ],
                                 { cancelable: false }
                             );
