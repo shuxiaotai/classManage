@@ -15,7 +15,7 @@ const HomeScreen = createBottomTabNavigator({
             title: '课堂',
             tabBarIcon: ({focused, tintColor}) => {
                 const { routeName } = navigation.state;
-                console.log(routeName);
+                // console.log(routeName);
                 return (
                     <Icon
                         name="event-note"

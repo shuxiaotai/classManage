@@ -31,7 +31,7 @@ class ClassScreen extends Component{
             dataArr: [],
             showManageClassBtn: false,
             isDeleteClass: false,
-            selectClassList: []
+            selectClassId: -1
         }
     }
     componentDidMount() {
@@ -59,10 +59,13 @@ class ClassScreen extends Component{
         }, navigate);
     };
     onChangeSelectKey = (key) => {
-        this.setState({
-            selectKey: key,
-        });
-        this.getClassList(key)
+        const { isDeleteClass } = this.state;
+        if (!isDeleteClass) {
+            this.setState({
+                selectKey: key,
+            });
+            this.getClassList(key)
+        }
     };
     getClassDetail = (id, grade, name, isMaster) => {
         const { navigate } = this.props.navigation;
@@ -79,7 +82,7 @@ class ClassScreen extends Component{
         }
     };
     getRenderItem = () => {
-        const { isDeleteClass, selectClassList } = this.state;
+        const { isDeleteClass, selectClassId, selectKey } = this.state;
         return({item}) => (
             <TouchableOpacity
                 onPress={() => this.touchClass(item)}
@@ -87,11 +90,11 @@ class ClassScreen extends Component{
             >
                 <View style={styles.mainItem}>
                     {
-                        isDeleteClass ?
+                        isDeleteClass && selectKey === 1 ?
                             <View style={styles.checkClass}>
                                 <Icon
                                     name="check-circle"
-                                    color={selectClassList.indexOf(item.id) !== -1 ? '#3498db': 'gray'}
+                                    color={selectClassId === item.id ? '#3498db': 'gray'}
                                 />
                             </View> : null
                     }
@@ -150,32 +153,80 @@ class ClassScreen extends Component{
     };
     toCreateClass = () => {
         const { navigate } = this.props.navigation;
-        navigate('CreateClass');
-    };
-    toDeleteClass = () => {
+        const { selectKey } = this.state;
         this.setState({
             showManageClassBtn: false,
-            isDeleteClass: true
-        })
+        });
+        if (selectKey === 0) {
+            alert('当前您为任课老师，不能创建班级，请切换至班主任');
+        }else {
+            checkUser(() => {
+                getTokenInfo().then((value) => {
+                    fetchData.postData('/checkMasterClass',
+                        {
+                            teacherId: value.id,
+                        }
+                    ).then((val) => {
+                        if(val.hasMasterClass){
+                            alert('您已经有创建的班级了')
+                        }else {
+                            navigate('CreateClass', {
+                                getClassList: this.getClassList
+                            });
+                        }
+                    });
+                });
+            }, navigate);
+        }
+    };
+    toDeleteClass = () => {
+        const { selectKey } = this.state;
+        const { classList } = this.props;
+        if (selectKey === 0) {
+            alert('当前您为任课老师，不能删除班级，请切换至班主任');
+            this.setState({
+                showManageClassBtn: false,
+            })
+        } else {
+            if (classList.length === 0) {
+                this.setState({
+                    showManageClassBtn: false,
+                });
+                alert('未创建班级');
+            } else {
+                this.setState({
+                    showManageClassBtn: false,
+                    isDeleteClass: true
+                });
+            }
+        }
     };
     selectClass = (id) => {
-        const { selectClassList } = this.state;
-        let index = selectClassList.indexOf(id);
-        if (index === -1) {
-            selectClassList.push(id);
-        } else {
-            selectClassList.splice(index, 1);
-        }
         this.setState({
-            selectClassList: selectClassList
-        });
+            selectClassId: id
+        })
     };
     toPostDeleteClass = () => {
-        //发请求
+        //发删除班级请求
         this.setState({
             isDeleteClass: false,
-            selectClassList: []
-        })
+        });
+        const { selectClassId } = this.state;
+        const { navigate } = this.props.navigation;
+        checkUser(() => {
+            fetchData.postData('/deleteClass',
+                {
+                    classId: selectClassId
+                }
+            ).then((val) => {
+                if(val.deleteClassSuccess){
+                    this.getClassList(1);
+                    alert('删除成功')
+                }else {
+                    alert('删除失败')
+                }
+            });
+        }, navigate);
     };
     render() {
         const { selectKey, dataArr, showManageClassBtn, isDeleteClass } = this.state;

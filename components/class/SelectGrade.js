@@ -11,10 +11,14 @@ class SelectGrade extends Component{
             selectGradeId: ''
         }
     }
-    toSelectThisGrade = (id) => {
+    toSelectThisGrade = (id, name) => {
+        const { navigation } = this.props;
+        const { getGradeName } = navigation.state.params;
         this.setState({
             selectGradeId: id
-        })
+        });
+        getGradeName(name);
+        navigation.goBack();
     };
     render() {
         const { navigation } = this.props;
@@ -32,7 +36,7 @@ class SelectGrade extends Component{
                             <TouchableOpacity
                                 style={styles.selectGradeItem}
                                 key={item.id}
-                                onPress={() => this.toSelectThisGrade(item.id)}
+                                onPress={() => this.toSelectThisGrade(item.id, item.name)}
                             >
                                 <Text>{item.name}</Text>
                                 {

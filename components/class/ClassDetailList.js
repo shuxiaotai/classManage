@@ -48,7 +48,7 @@ class ClassDetailList extends Component{
     constructor() {
         super();
         this.state = {
-            selectKey: 2,
+            selectKey: 1,
             isStudentVisible: false,
             isGroupVisible: false,
             isRandomVisible: false,
@@ -220,8 +220,8 @@ class ClassDetailList extends Component{
                             )
                     }
                 />
-                {/*<PublicHeader title={`${grade}${name}`} isLeft={true} navigation={navigation} />*/}
-                <PublicHeader title="暂时" isLeft={true} navigation={navigation} />
+                <PublicHeader title={`${grade}${name}`} isLeft={true} navigation={navigation} />
+                {/*<PublicHeader title="暂时" isLeft={true} navigation={navigation} />*/}
                 <PublicTab tabItem={isMaster === 1 ? tabItemIsMaster : tabItem} selectKey={selectKey} onChangeSelectKey={this.onChangeSelectKey} />
                 {
                     selectKey === 1 ?
