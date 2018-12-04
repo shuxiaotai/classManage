@@ -190,6 +190,7 @@ class StudentHomePage extends Component{
                         handleShowSelectTime={this.handleShowSelectTime}
                         selectTimeKey={selectTimeKey}
                         selectTimeFun={this.selectTimeFun}
+                        data={listData.selectTimeList}
                         top={27}
                     />
                     <TouchableOpacity

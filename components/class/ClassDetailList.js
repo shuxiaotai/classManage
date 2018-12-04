@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {View, Dimensions} from 'react-native';
+import {View, Dimensions, Text} from 'react-native';
 import PublicHeader from "../../public/components/PublicHeader";
 import PublicTab from "../../public/components/PublicTab";
 import StudentList from "./StudentList";
@@ -166,7 +166,7 @@ class ClassDetailList extends Component{
     };
     render() {
         const { navigation, studentList, parentList, groupList, setCurrentStudent, currentStudent, setCurrentGroup, currentGroup, setStudentOfGroup, studentOfGroup, setIsRemarkGroup, setRemarkGroupStudentIds, isRemarkGroup, remarkGroupStudentIds } = this.props;
-        // 暂时注释
+        const { navigate } = navigation;
         const { grade, name, isMaster } = navigation.state.params;   //isMaster：0是任课老师，1是班主任
         // const isMaster = 1;
         const { selectKey, isStudentVisible, isGroupVisible, isRandomVisible, showRandoming } = this.state;
@@ -220,7 +220,14 @@ class ClassDetailList extends Component{
                             )
                     }
                 />
-                <PublicHeader title={`${grade}${name}`} isLeft={true} navigation={navigation} />
+                <PublicHeader
+                    title={`${grade}${name}`}
+                    isLeft={true}
+                    navigation={navigation}
+                    isRight={isMaster === 1 && selectKey === 2}
+                    rightComponent={isMaster === 1 && selectKey === 2 ? <Text style={{ color: '#fff' }}>考勤报表</Text> : null}
+                    rightPressFun={() => navigate('CheckChart')}
+                />
                 {/*<PublicHeader title="暂时" isLeft={true} navigation={navigation} />*/}
                 <PublicTab tabItem={isMaster === 1 ? tabItemIsMaster : tabItem} selectKey={selectKey} onChangeSelectKey={this.onChangeSelectKey} />
                 {

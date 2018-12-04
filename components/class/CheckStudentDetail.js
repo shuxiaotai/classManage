@@ -5,17 +5,60 @@ import PublicSelectTime from "../../public/components/PublicSelectTime";
 import PublicMask from "../../public/components/PublicMask";
 import listData from "../../public/mockData/listData";
 import PublicImageItem from "../../public/components/PublicImageItem";
+import fetchData from "../../public/utils/fetchData";
+import {checkUser} from "../../public/utils/checkUser";
+import { connect } from 'react-redux';
+import * as checkActions from "./Actions/checkAction";
 
+
+const selectCheckCountList = [
+    {
+        id: 0,
+        name: '按全勤次数'
+    },
+    {
+        id: 1,
+        name: '按缺勤次数'
+    },
+    {
+        id: 2,
+        name: '按迟到次数'
+    },
+    {
+        id: 3,
+        name: '按请假次数'
+    }
+];
 class CheckStudentDetail extends Component{
     constructor() {
         super();
         this.state = {
             showSelectTime: false,
-            selectTabKey: 0,   //左边那个
-            selectTimeKey: 1,
-            selectTimeName: ''
+            selectTabKey: 0,   //0是时间，1是出勤等
+            selectTimeKey: 1,   //时间选哪个
+            selectCheckCountKey: 0,  //出勤等选项选哪个
+            selectTimeName: '本周',
+            selectCheckCountName: '按全勤次数'
         }
     }
+    componentDidMount() {
+        this.fetchCheckStudentDetailList(1, 0);
+    }
+    fetchCheckStudentDetailList = (time, state) => {
+        const { navigation, currentClassId, setStudentCheckDetailList } = this.props;
+        const { navigate } = navigation;
+        checkUser(() => {
+            fetchData.postData('/studentCheckDetailList',
+                {
+                    time: time,
+                    classId: currentClassId,
+                    checkState: state
+                }
+            ).then((val) => {
+                setStudentCheckDetailList(val.studentCheckDetailList);
+            });
+        }, navigate);
+    };
     handleShowSelectTime = (selectTabKey) => {    //显示和关闭两个下拉框
         this.setState({
             showSelectTime: !this.state.showSelectTime,
@@ -23,15 +66,26 @@ class CheckStudentDetail extends Component{
         })
     };
     selectTimeFun = (id, name) => {
+        const { selectCheckCountKey } = this.state;
+        this.fetchCheckStudentDetailList(id, selectCheckCountKey);
         this.setState({
             selectTimeKey: id,
             showSelectTime: false,
             selectTimeName: name,
         });
     };
+    selectCheckCountFun = (id, name) => {
+        const { selectTimeKey } = this.state;
+        this.fetchCheckStudentDetailList(selectTimeKey, id);
+        this.setState({
+            selectCheckCountKey: id,
+            showSelectTime: false,
+            selectCheckCountName: name,
+        });
+    };
     render() {
-        const { navigation } = this.props;
-        const { showSelectTime, selectTabKey, selectTimeKey, selectTimeName } = this.state;
+        const { navigation, studentCheckDetailList } = this.props;
+        const { showSelectTime, selectTabKey, selectTimeKey, selectTimeName, selectCheckCountKey, selectCheckCountName } = this.state;
         return(
             <View>
                 <PublicHeader
@@ -41,27 +95,30 @@ class CheckStudentDetail extends Component{
                 />
                 <View style={styles.selectItemContainer}>
                     <PublicSelectTime
-                        selectTimeName={selectTabKey === 0 ? (selectTimeName === '' ? '本周' : selectTimeName) : '本周'}
+                        selectTimeName={selectTimeName}
                         showSelectTime={selectTabKey === 0 ? showSelectTime : false}
                         selectTimeKey={selectTimeKey}
                         top={27}
+                        data={listData.selectTimeList}
                         handleShowSelectTime={() => this.handleShowSelectTime(0)}
                         selectTimeFun={this.selectTimeFun}
                     />
                     <PublicSelectTime
-                        selectTimeName={selectTabKey === 1 ? (selectTimeName === '' ? '按缺勤次数' : selectTimeName) : '按缺勤次数'}
+                        selectTimeName={selectCheckCountName}
                         showSelectTime={selectTabKey === 1 ? showSelectTime : false}
-                        selectTimeKey={1}
+                        selectTimeKey={selectCheckCountKey}
                         top={27}
                         arrowRight={20}
-                        data={listData.selectCheckCountList}
+                        data={selectCheckCountList}
                         height={160}
                         handleShowSelectTime={() => this.handleShowSelectTime(1)}
-                        selectTimeFun={this.selectTimeFun}
+                        selectTimeFun={this.selectCheckCountFun}
                     />
                 </View>
                 <PublicImageItem
-                    rightName="出勤1次"
+                    isShowCheckCount={true}
+                    selectRightName={selectCheckCountName.slice(1, 3)}
+                    data={studentCheckDetailList}
                 />
                 <PublicMask
                     isVisible={showSelectTime}
@@ -107,4 +164,18 @@ const styles = StyleSheet.create({
         right: 20
     }
 });
-export default CheckStudentDetail;
+const mapStateToProps = (state) => {
+    return {
+        studentCheckDetailList: state.checkReducer.studentCheckDetailList,
+        currentClassId: state.classReducer.currentClassId,
+    }
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setStudentCheckDetailList: (studentCheckDetailList) => {
+            dispatch(checkActions.setStudentCheckDetailList(studentCheckDetailList));
+        }
+    }
+};
+export default connect(mapStateToProps, mapDispatchToProps)(CheckStudentDetail);

@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, AlertIOS } from 'react-native';
-import listData from "../../public/mockData/listData";
+import {View, AlertIOS, Alert} from 'react-native';
 import PublicBtn from "../../public/components/PublicBtn";
 import PublicImageItem from "../../public/components/PublicImageItem";
+import { connect } from 'react-redux';
 import CheckChart from "./CheckChart";
+import fetchData from "../../public/utils/fetchData";
+import {checkUser, getTokenInfo} from "../../public/utils/checkUser";
 
 const checkItem = [
     {
@@ -23,13 +25,22 @@ const checkItem = [
         name: '请假'
     },
 ];
+let newStudentList = [];
 
 class CheckList extends Component{
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
-            changeCheckTips: false
-        }
+            changeCheckState: false
+        };
+        newStudentList = [];
+        props.studentList.forEach((item) => {
+            let obj = {};
+            obj.id = item.id;
+            obj.name = item.name;
+            obj.checkTipsId = 0;
+            newStudentList.push(obj);
+        });
     }
     changeCheckTips = (item) => {
         if (item.checkTipsId === 3) {
@@ -38,13 +49,48 @@ class CheckList extends Component{
             item.checkTipsId++;
         }
         this.setState({
-            changeCheckTips: !this.state.changeCheckTips
+            changeCheckState: !this.state.changeCheckState
         })
     };
     toCheckChart = (val) => {
-        // console.log(val);
         const { navigate } = this.props.navigation;
-        navigate('CheckChart');
+        const { currentClassId, studentList } = this.props;
+        checkUser(() => {
+            fetchData.postData('/addCheck',
+                {
+                    checkName: val,
+                    checkStudentList: newStudentList,
+                    classId: currentClassId
+                }
+            ).then((value) => {
+                if (value.addCheckSuccess) {
+                    Alert.alert(
+                        'Alert',
+                        `创建考勤成功`,
+                        [
+                            {text: 'OK', onPress: () => {
+                                    newStudentList = [];
+                                    studentList.forEach((item) => {
+                                        let obj = {};
+                                        obj.id = item.id;
+                                        obj.name = item.name;
+                                        obj.checkTipsId = 0;
+                                        newStudentList.push(obj);
+                                    });
+                                    this.setState({
+                                        changeCheckState: !this.state.changeCheckState
+                                    });
+                                    navigate('CheckChart');
+                            }},
+                        ],
+                        { cancelable: false }
+                    );
+                } else {
+                    alert('创建考勤失败');
+                }
+            });
+        }, navigate);
+
     };
     saveCheckRecord = () => {
         AlertIOS.prompt(
@@ -69,6 +115,7 @@ class CheckList extends Component{
                 <PublicImageItem
                     checkItem={checkItem}
                     changeCheckTips={this.changeCheckTips}
+                    data={newStudentList}
                 />
                 <PublicBtn
                     tips="保存考勤记录"
@@ -78,5 +125,10 @@ class CheckList extends Component{
         )
     }
 }
-
-export default CheckList;
+const mapStateToProps = (state) => {
+    return {
+        studentList: state.studentReducer.studentList,
+        currentClassId: state.classReducer.currentClassId
+    }
+};
+export default connect(mapStateToProps)(CheckList);

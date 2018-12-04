@@ -1,13 +1,12 @@
 import React from 'react';
-import listData from "../mockData/listData";
 import {View, Image, Text, TouchableOpacity, StyleSheet} from 'react-native';
 
 const PublicImageItem = (props) => {
-    const { data, changeCheckTips, rightName, checkItem, avatarMarginLeft} = props;
+    const { data, changeCheckTips, rightName, checkItem, avatarMarginLeft, isShowCheckCount, selectRightName} = props;
     return(
         <View style={styles.checkListContainer}>
             {
-                (data ? data : listData.checkList).map((item) => (
+                data.map((item) => (
                     <View style={styles.checkListItem} key={item.id}>
                         {
                             avatarMarginLeft ? ((item.id === 1 || item.id === 2 || item.id === 3) ?
@@ -24,7 +23,7 @@ const PublicImageItem = (props) => {
                             style={styles.checkTips}
                             onPress={changeCheckTips ? () => changeCheckTips(item) : null}
                         >
-                            <Text>{rightName ? rightName : checkItem[item['checkTipsId']].name}</Text>
+                            <Text>{rightName ? rightName : (isShowCheckCount ? `${selectRightName} ${item['state_count']} 次` : checkItem[item['checkTipsId']].name)}</Text>
                         </TouchableOpacity>
                     </View>
                 ))

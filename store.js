@@ -6,6 +6,7 @@ import parentReducer from './components/class/Reduces/parentReducer';
 import groupReducer from './components/class/Reduces/groupReducer';
 import templateReducer from './components/class/Reduces/templateReducer';
 import projectReducer from './components/class/Reduces/projectReducer';
+import checkReducer from './components/class/Reduces/checkReducer';
 
 const reducers = combineReducers({
     LoginReducer,
@@ -14,7 +15,8 @@ const reducers = combineReducers({
     parentReducer,
     groupReducer,
     templateReducer,
-    projectReducer
+    projectReducer,
+    checkReducer
 });
 const store = createStore(
     reducers

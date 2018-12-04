@@ -35,7 +35,7 @@ class ClassScreen extends Component{
         }
     }
     componentDidMount() {
-        console.log('mount');
+        // console.log('mount');
         //到时候在这边把老师和家长区分
         // console.log(new Date().toLocaleString());
         // console.log(+new Date());

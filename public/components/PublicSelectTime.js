@@ -24,7 +24,7 @@ class PublicSelectTime extends Component {
                 </TouchableOpacity>
                 <View style={showSelectTime ? [styles.selectContainer, {top: top ? top : 34, height: height ? height : 200}] : styles.selectHiddenContainer}>
                     {
-                        (data ? data : listData.selectTimeList).map((item) => {
+                        data.map((item) => {
                             return(
                                 <TouchableOpacity
                                     style={styles.selectItem}
