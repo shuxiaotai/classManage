@@ -116,8 +116,10 @@ class CheckStudentDetail extends Component{
                     />
                 </View>
                 <PublicImageItem
-                    isShowCheckCount={true}
-                    selectRightName={selectCheckCountName.slice(1, 3)}
+                    isShowSelectRightName={true}
+                    selectRightFrontName={selectCheckCountName.slice(1, 3)}
+                    selectRightEndName='次'
+                    selectRightKey='state_count'
                     data={studentCheckDetailList}
                 />
                 <PublicMask

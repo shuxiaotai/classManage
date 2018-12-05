@@ -2,16 +2,16 @@ import React from 'react';
 import {View, Image, Text, TouchableOpacity, StyleSheet} from 'react-native';
 
 const PublicImageItem = (props) => {
-    const { data, changeCheckTips, rightName, checkItem, avatarMarginLeft, isShowCheckCount, selectRightName} = props;
+    const { data, changeCheckTips, rightName, checkItem, avatarMarginLeft, isShowSelectRightName, selectRightFrontName, selectRightEndName, selectRightKey} = props;
     return(
         <View style={styles.checkListContainer}>
             {
-                data.map((item) => (
+                data.map((item, index) => (
                     <View style={styles.checkListItem} key={item.id}>
                         {
-                            avatarMarginLeft ? ((item.id === 1 || item.id === 2 || item.id === 3) ?
+                            avatarMarginLeft ? ((index === 0 || index === 1 || index === 2) ?
                                 <View style={styles.rateTips}>
-                                    <Text>{item.id}</Text>
+                                    <Text>{index + 1}</Text>
                                 </View> : null) : null
                         }
                         <Image
@@ -23,7 +23,7 @@ const PublicImageItem = (props) => {
                             style={styles.checkTips}
                             onPress={changeCheckTips ? () => changeCheckTips(item) : null}
                         >
-                            <Text>{rightName ? rightName : (isShowCheckCount ? `${selectRightName} ${item['state_count']} 次` : checkItem[item['checkTipsId']].name)}</Text>
+                            <Text>{rightName ? rightName : (isShowSelectRightName ? `${selectRightFrontName} ${item[selectRightKey]} ${selectRightEndName}` : checkItem[item['checkTipsId']].name)}</Text>
                         </TouchableOpacity>
                     </View>
                 ))

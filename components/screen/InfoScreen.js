@@ -7,6 +7,11 @@ import PublicNoContent from "../../public/components/PublicNoContent";
 import listData from "../../public/mockData/listData";
 import Rate from "../info/Rate";
 import SelectVisibleClass from "../info/SelectVisibleClass";
+import { connect } from 'react-redux';
+import * as infoActions from '../info/Actions/infoAction';
+import {checkUser, getTokenInfo} from "../../public/utils/checkUser";
+import fetchData from "../../public/utils/fetchData";
+import moment from "moment/moment";
 
 const tabItem = [
     {
@@ -31,11 +36,49 @@ class InfoScreen extends Component{
             selectKey: 1
         }
     }
-
+    componentDidMount() {
+        this.fetchAllInfoList();
+    }
     onChangeSelectKey = (key) => {
         this.setState({
             selectKey: key
-        })
+        });
+        if (key === 1) {
+            this.fetchAllInfoList();
+        }
+        if (key === 2) {
+           this.fetchNoticeList();
+        }
+        if(key === 3) {
+            this.fetchHomeworkList();
+        }
+    };
+    fetchAllInfoList = () => {
+        const { navigation, setAllInfoList } = this.props;
+        const { navigate } = navigation;
+        checkUser(() => {
+            fetchData.postData('/allInfoList').then((val) => {
+                setAllInfoList(val.allInfoList);
+            });
+        }, navigate);
+    };
+    fetchNoticeList = () => {
+        const { navigation, setNoticeList } = this.props;
+        const { navigate } = navigation;
+        checkUser(() => {
+            fetchData.postData('/noticeList').then((val) => {
+                setNoticeList(val.noticeList);
+            });
+        }, navigate);
+    };
+    fetchHomeworkList = () => {
+        const { navigation, setHomeworkList } = this.props;
+        const { navigate } = navigation;
+        checkUser(() => {
+            fetchData.postData('/homeWorkList').then((val) => {
+                setHomeworkList(val.homeworkList);
+            });
+        }, navigate);
     };
     getRenderItem = () => {
         return({item}) => (
@@ -47,14 +90,14 @@ class InfoScreen extends Component{
                         style={styles.infoImg}
                     />
                     <View style={styles.infoText}>
-                        <Text>{item.name} | </Text>
-                        <Text style={styles.teacher}>{(item.teacherType === 0) ? '班主任' : '任课老师'}</Text>
+                        <Text>{item['class_grade']}{item['class_name']} | </Text>
+                        <Text style={styles.teacher}>{item['teacher_name']}老师发布</Text>
                     </View>
-                    <Text>{item.time}</Text>
+                    <Text>{moment(item['create_time']).format('YYYY-MM-DD HH:mm:ss')}</Text>
                 </View>
                 <View style={styles.title}>
                     <Icon
-                        name={item.isNotication ? 'mail' : 'home'}
+                        name={item['is_notice'] === '0' ? 'mail' : 'home'}
                         color='#00aced' />
                     <Text style={styles.titleText}>{item.title}</Text>
                 </View>
@@ -66,9 +109,10 @@ class InfoScreen extends Component{
         const { navigate } = this.props.navigation;
         navigate('SelectVisibleClass');
     };
+    _keyExtractor = (item) => item.id.toString();
     render() {
         const { selectKey } = this.state;
-        const { navigation } = this.props;
+        const { navigation, noticeList, homeworkList, allInfoList, setRateInfo, rateInfo } = this.props;
         return(
             <View style={styles.main}>
                 <PublicHeader title="通知" />
@@ -76,28 +120,33 @@ class InfoScreen extends Component{
                 <View style={styles.infoContainer}>
                     {selectKey === 1 ?
                         <FlatList
-                            data={listData.listAll}
+                            data={allInfoList}
                             renderItem={this.getRenderItem()}
                             ListEmptyComponent={<PublicNoContent tips="暂无作业和公告"/>}
+                            keyExtractor={(item, index) => (item['info_id'] + index).toString()}
                         /> : null
                     }
                     {selectKey === 2 ?
                         <FlatList
-                            data={listData.listNotication}
+                            data={noticeList}
                             renderItem={this.getRenderItem()}
                             ListEmptyComponent={<PublicNoContent tips="暂无公告"/>}
+                            keyExtractor={this._keyExtractor}
                         /> : null
                     }
                     {selectKey === 3 ?
                         <FlatList
-                            data={listData.listMessage}
+                            data={homeworkList}
                             renderItem={this.getRenderItem()}
                             ListEmptyComponent={<PublicNoContent tips="暂无作业"/>}
+                            keyExtractor={(item, index) => (item['info_id'] + index).toString()}
                         /> : null
                     }
                     {selectKey === 4 ?
                         <Rate
                             navigation={navigation}
+                            setRateInfo={setRateInfo}
+                            rateInfo={rateInfo}
                         />: null
                     }
 
@@ -159,7 +208,7 @@ const styles = StyleSheet.create({
         marginLeft: 10
     },
     teacher: {
-        fontSize: 10,
+        fontSize: 12,
         color: 'gray',
         marginRight: 10,
         alignSelf: 'center'
@@ -175,5 +224,28 @@ const styles = StyleSheet.create({
         marginLeft: 8
     }
 });
-
-export default InfoScreen;
+const mapStateToProps = (state) => {
+    return {
+        noticeList: state.infoReducer.noticeList,
+        homeworkList: state.infoReducer.homeworkList,
+        allInfoList: state.infoReducer.allInfoList,
+        rateInfo: state.infoReducer.rateInfo,
+    }
+};
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setNoticeList: (noticeList) => {
+            dispatch(infoActions.setNoticeList(noticeList))
+        },
+        setHomeworkList: (homeworkList) => {
+            dispatch(infoActions.setHomeworkList(homeworkList))
+        },
+        setAllInfoList: (allInfoList) => {
+            dispatch(infoActions.setAllInfoList(allInfoList))
+        },
+        setRateInfo: (rateInfo) => {
+            dispatch(infoActions.setRateInfo(rateInfo))
+        },
+    }
+};
+export default connect(mapStateToProps, mapDispatchToProps)(InfoScreen);

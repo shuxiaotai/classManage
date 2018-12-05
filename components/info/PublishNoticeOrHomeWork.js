@@ -1,34 +1,115 @@
 import React, { Component } from 'react';
 import PublicHeader from "../../public/components/PublicHeader";
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Alert } from 'react-native';
 import PublicBtn from "../../public/components/PublicBtn";
+import {checkUser, getTokenInfo} from "../../public/utils/checkUser";
+import fetchData from "../../public/utils/fetchData";
 
 class PublishNoticeOrHomeWork extends Component{
+    constructor() {
+        super();
+        this.state = {
+            title: '',
+            content: ''
+        }
+    }
+    toPublishNotice = () => {
+        const { title, content } = this.state;
+        const { navigation } = this.props;
+        const { navigate } = navigation;
+        const { postNotice, masterClassId } = navigation.state.params;
+        checkUser(() => {
+            getTokenInfo().then((value) => {
+                fetchData.postData('/publishNotice',
+                    {
+                        classId: masterClassId,
+                        title: title,
+                        content: content,
+                        isNotice: postNotice,
+                        teacherId: value.id
+                    }
+                ).then((val) => {
+                    if (val.publishNoticeSuccess) {
+                        Alert.alert(
+                            'Alert',
+                            `发布公告成功`,
+                            [
+                                {text: 'OK', onPress: () => {
+                                       navigate('Info');
+                                    }},
+                            ],
+                            { cancelable: false }
+                        );
+                    } else {
+                        alert('发布公告失败');
+                    }
+                });
+            });
+        }, navigate);
+    };
+    toPublishHomework = () => {
+        const { title, content } = this.state;
+        const { navigation } = this.props;
+        const { navigate } = navigation;
+        const { postNotice, teacherClassIdArr } = navigation.state.params;
+        checkUser(() => {
+            getTokenInfo().then((value) => {
+                fetchData.postData('/publishHomeWork',
+                    {
+                        classIdArr: teacherClassIdArr,
+                        title: title,
+                        content: content,
+                        isNotice: postNotice,
+                        teacherId: value.id
+                    }
+                ).then((val) => {
+                    if (val.publishHomeworkSuccess) {
+                        Alert.alert(
+                            'Alert',
+                            `发布作业成功`,
+                            [
+                                {text: 'OK', onPress: () => {
+                                        navigate('Info');
+                                    }},
+                            ],
+                            { cancelable: false }
+                        );
+                    } else {
+                        alert('发布作业失败');
+                    }
+                });
+            });
+        }, navigate);
+    };
     render() {
         const { navigation } = this.props;
+        const { postNotice } = navigation.state.params;
         return(
             <View>
                 <PublicHeader
-                    title="发布作业"
+                    title={`${postNotice === 0 ? '发布公告' : '发布作业'}`}
                     navigation={navigation}
                     isLeft={true}
                 />
                 <View style={styles.publishContainer}>
                     <View style={styles.titleContainer}>
-                        <Text>作业标题</Text>
+                        <Text>{`${postNotice === 0 ? '公告' : '作业'}`}标题</Text>
                         <TextInput
                             style={styles.titleInput}
                             placeholder="最多可输入20字"
+                            onChangeText={(title) => this.setState({title})}
                         />
                     </View>
                     <TextInput
                         placeholder="请输入内容，最多可输入1000字"
                         multiline={true}
                         style={styles.contentInput}
+                        onChangeText={(content) => this.setState({content})}
                     />
                 </View>
                 <PublicBtn
-                    tips="发布作业"
+                    tips={`${postNotice === 0 ? '发布公告' : '发布作业'}`}
+                    onPress={postNotice === 0 ? this.toPublishNotice : this.toPublishHomework}
                 />
             </View>
         )

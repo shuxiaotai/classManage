@@ -3,27 +3,89 @@ import {View, Text, StyleSheet, SectionList, TouchableOpacity, Image, Dimensions
 import PublicHeader from "../../public/components/PublicHeader";
 import PublicMask from "../../public/components/PublicMask";
 import { Icon } from 'react-native-elements';
+import {checkUser, getTokenInfo} from "../../public/utils/checkUser";
+import fetchData from "../../public/utils/fetchData";
+import * as infoActions from './Actions/infoAction';
+import { connect } from 'react-redux';
 
 class SelectVisibleClass extends Component{
     constructor() {
         super();
         this.state = {
-            showVisibleClass: false,
-            postNotice: -1,
-            noticeId: -1,
-            homeWordArr: []
+            showVisibleClass: false,   //显示往下显示点击框
+            postNotice: -1,  //-1的时候都没选，0是公告，1是作业，
+            masterClassId: -1,  // 选择的创建班级id
+            teacherClassIdArr: [],   //选择的管理班级ids
+            isSelectAll: false   //是否全选
         }
     }
-    renderVisibleClassList = ({ item, index }) => {
-        const { postNotice } = this.state;
+    componentDidMount(){
+        this.fetchVisibleClass();
+    }
+    fetchVisibleClass = () => {
+        const { navigate } = this.props.navigation;
+        const { setMasterClassList, setTeacherClassList } = this.props;
+        checkUser(() => {
+            getTokenInfo().then((value) => {
+                fetchData.postData('/visibleClassList',
+                    {
+                        teacherId: value.id,
+                    }
+                ).then((val) => {
+                    setMasterClassList(val.classList.masterClassList);
+                    setTeacherClassList(val.classList.teacherClassList);
+                });
+            });
+        }, navigate);
+    };
+    getClassIds = (id) => {
+        const { masterClassId } = this.state;
+        if (masterClassId === id) {
+            this.setState({
+                masterClassId: -1
+            });
+        } else {
+            this.setState({
+                masterClassId: id
+            });
+        }
+    };
+    getTeacherClassIdArr = (id) => {
+        const { teacherClassIdArr } = this.state;
+        const { teacherClassList } = this.props;
+        let index = teacherClassIdArr.indexOf(id);
+        if (index === -1) {
+            teacherClassIdArr.push(id);
+        } else {
+            teacherClassIdArr.splice(index, 1);
+        }
+        this.setState({
+            teacherClassIdArr: teacherClassIdArr
+        });
+        if (teacherClassList.length === teacherClassIdArr.length) {
+            this.setState({
+                isSelectAll: true
+            });
+        }else {
+            this.setState({
+                isSelectAll: false
+            });
+        }
+    };
+    renderVisibleClassList = ({ item }) => {
+        const { postNotice, masterClassId, teacherClassIdArr } = this.state;
         return(
-            <TouchableOpacity style={styles.classItem}>
+            <TouchableOpacity
+                style={styles.classItem}
+                activeOpacity={postNotice === -1 ? 1 : 0.5}
+                onPress={postNotice === 0 ? () => this.getClassIds(item.id) : () => this.getTeacherClassIdArr(item.id)}
+            >
                 {
                     item.isNotice === postNotice ?
                         <View style={styles.checkClass}>
                             <Icon
                                 name="check-circle"
-                                color={[].indexOf(item.id) !== -1 ? '#3498db': 'gray'}
+                                color={postNotice === 0 ? (item.id === masterClassId ? '#3498db': 'gray') : (teacherClassIdArr.indexOf(item.id) !== -1 ? '#3498db': 'gray')}
                             />
                         </View> : null
                 }
@@ -40,16 +102,18 @@ class SelectVisibleClass extends Component{
             showVisibleClass: !this.state.showVisibleClass
         })
     };
-    publishNotice = () => {
+    publishNotice = () => {   //点击发布公告的向下显示框
         this.setState({
             postNotice: 0,
-            showVisibleClass: false
+            showVisibleClass: false,
+            masterClassId: -1
         })
     };
     publishWork = () => {
         this.setState({
             postNotice: 1,
-            showVisibleClass: false
+            showVisibleClass: false,
+            teacherClassIdArr: []
         })
     };
     cancelSelect = () => {
@@ -58,12 +122,62 @@ class SelectVisibleClass extends Component{
         })
     };
     toPublishNoticeOrHomework = () => {
+        const { postNotice, masterClassId, teacherClassIdArr } = this.state;
         const { navigate } = this.props.navigation;
-        navigate('PublishNoticeOrHomeWork');
+        if (postNotice === 0) {
+            navigate('PublishNoticeOrHomeWork', {
+                postNotice,
+                masterClassId
+            });
+        }else {
+            navigate('PublishNoticeOrHomeWork', {
+                postNotice,
+                teacherClassIdArr
+            });
+        }
+    };
+    selectAll = () => {
+        const { isSelectAll } = this.state;
+        this.setState({
+            isSelectAll: !isSelectAll
+        });
+        if (!isSelectAll) {
+            const { teacherClassList } = this.props;
+            let selectAllIdArr = [];
+            teacherClassList.forEach((item) => {
+                selectAllIdArr.push(item.id);
+            });
+            this.setState({
+                teacherClassIdArr: selectAllIdArr
+            })
+        } else {
+            this.setState({
+                teacherClassIdArr: []
+            })
+        }
     };
     render() {
-        const { navigation } = this.props;
-        const { showVisibleClass, postNotice } = this.state;
+        const { navigation, masterClassList, teacherClassList } = this.props;
+        console.log(this.state.teacherClassIdArr);
+        let newMasterClassList = [];
+        masterClassList.forEach((item) => {
+            let obj = {};
+            obj.id = item.id;
+            obj.name = item.name;   //头像后面做
+            obj.grade = item.grade;
+            obj.isNotice = 0;
+            newMasterClassList.push(obj);
+        });
+        let newTeacherClassList = [];
+        teacherClassList.forEach((item) => {
+            let obj = {};
+            obj.id = item.id;
+            obj.name = item.name;   //头像后面做
+            obj.grade = item.grade;
+            obj.isNotice = 1;
+            newTeacherClassList.push(obj);
+        });
+        const { showVisibleClass, postNotice, isSelectAll } = this.state;
         return(
             <View style={{ height: '100%', position: 'relative'}}>
                 <PublicHeader
@@ -110,21 +224,27 @@ class SelectVisibleClass extends Component{
                         <Text style={{ marginVertical: 10, marginLeft: 8, fontSize: 14 }}>{title}</Text>
                     )}
                     sections={[
-                        { title: "创建的班级", data: [{isNotice: 0, name: 'item1'}] },
-                        { title: "管理的班级", data: [{isNotice: 1, name: 'item3'}, {isNotice: 1, name: 'item4'}] },
+                        { title: "创建的班级", data: newMasterClassList },
+                        { title: "管理的班级", data: newTeacherClassList },
                     ]}
                     keyExtractor={(item, index) => item + index}
                 />
                 {
                     postNotice !== -1 ?
                         <View style={styles.assignContainer}>
-                            <TouchableOpacity style={styles.selectAllContainer}>
-                                <Icon
-                                    name="check-circle"
-                                    color="gray"
-                                />
-                                <Text style={{ marginLeft: 10 }}>全选</Text>
-                            </TouchableOpacity>
+                            {
+                                postNotice === 1 ?
+                                    <TouchableOpacity
+                                        style={styles.selectAllContainer}
+                                        onPress={this.selectAll}
+                                    >
+                                        <Icon
+                                            name="check-circle"
+                                            color={isSelectAll ? '#3498db' : 'gray'}
+                                        />
+                                        <Text style={{ marginLeft: 10 }}>全选</Text>
+                                    </TouchableOpacity> : null
+                            }
                             <TouchableOpacity
                                 style={styles.assignBtn}
                                 onPress={this.toPublishNoticeOrHomework}
@@ -213,4 +333,20 @@ const styles = StyleSheet.create({
         display: 'none'
     },
 });
-export default SelectVisibleClass;
+const mapStateToProps = (state) => {
+    return {
+        masterClassList: state.infoReducer.masterClassList,
+        teacherClassList: state.infoReducer.teacherClassList
+    }
+};
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setMasterClassList: (masterClassList) => {
+            dispatch(infoActions.setMasterClassList(masterClassList));
+        },
+        setTeacherClassList: (teacherClassList) => {
+            dispatch(infoActions.setTeacherClassList(teacherClassList));
+        }
+    }
+};
+export default connect(mapStateToProps, mapDispatchToProps)(SelectVisibleClass);
