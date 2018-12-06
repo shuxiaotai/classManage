@@ -1,19 +1,65 @@
 import React, { Component } from 'react';
 import { Text, View, SectionList, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import PublicHeader from "../../public/components/PublicHeader";
+import pinyinUtil from '../../public/utils/pinyinUtil';
+import {checkUser, getTokenInfo} from "../../public/utils/checkUser";
+import fetchData from "../../public/utils/fetchData";
 
 class addressBookScreen extends Component{
     constructor() {
         super();
         this.state = {
-            sections: [
-                { title: "A", data: [{name: 'item1'}, {name: 'item2'}] },
-                { title: "B", data: [{name: 'item3'}, {name: 'item4'}] },
-                { title: "C", data: [{name: 'item5'}, {name: 'item6'}] }
-            ]
+            sections: [],
+            touchList: []
         }
     }
 
+    componentDidMount() {
+        this.fetchAddressBookList();
+    }
+    fetchAddressBookList = () => {
+        const { navigation } = this.props;
+        const { navigate } = navigation;
+        checkUser(() => {
+            getTokenInfo().then((value) => {
+                fetchData.postData('/addressBookList',
+                    {
+                        teacherId: value.id,
+                    }
+                ).then((val) => {
+                    this.getSections(val.addressBookList);
+                });
+            });
+        }, navigate);
+    };
+    getSections = (addressBookList) => {
+        addressBookList.sort((a, b) => {
+            return pinyinUtil.getFirstLetter(a.username)[0].toLowerCase().charCodeAt(0) - pinyinUtil.getFirstLetter(b.username)[0].toLowerCase().charCodeAt(0)
+        });
+        let touchData = new Set();
+        addressBookList.forEach((item) => {
+            touchData.add(pinyinUtil.getFirstLetter(item.username)[0].toLowerCase());
+        });
+        touchData = [...touchData];
+        let addressData = [];
+        touchData.forEach((item) => {
+            let obj = {};
+            obj.title = item;
+            obj.data = [];
+            addressData.push(obj);
+        });
+        addressBookList.forEach((item) => {
+            addressData.forEach((addressItem) => {
+                if (addressItem.title === pinyinUtil.getFirstLetter(item.username)[0].toLowerCase()) {
+                    addressItem.data.push(item);
+                }
+            })
+        });
+        this.setState({
+            sections: addressData,
+            touchList: touchData
+        })
+    };
     renderAddressBook = ({ item, index }) => {
         return(
             <TouchableOpacity style={styles.bookItem}>
@@ -21,8 +67,9 @@ class addressBookScreen extends Component{
                     source={require('../../public/img/test.png')}
                     style={styles.userImg}
                 />
-                <Text>{item.name}</Text>
-                <Text style={styles.roleText}>老师</Text>
+                <Text style={styles.roleText}>{item['is_parent'] === 1 ? '家长': '老师'}</Text>
+                <Text style={styles.phoneText}>{item.phone}</Text>
+                <Text>{item.username}</Text>
             </TouchableOpacity>
         )
     };
@@ -31,7 +78,7 @@ class addressBookScreen extends Component{
         this.sectionList.scrollToLocation({sectionIndex: key, itemIndex: 0, viewOffset: 28});
     };
     render() {
-        const {sections} = this.state;
+        const { sections, touchList } = this.state;
         return(
             <View>
                 <PublicHeader title="通讯录" />
@@ -45,21 +92,18 @@ class addressBookScreen extends Component{
                     keyExtractor={(item, index) => item + index}
                 />
                 <View style={styles.letterContainer}>
-                    <TouchableOpacity
-                        onPress={() => this.onLetterSelect(0)}
-                    >
-                        <Text>a</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => this.onLetterSelect(1)}
-                    >
-                        <Text>b</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => this.onLetterSelect(2)}
-                    >
-                        <Text>c</Text>
-                    </TouchableOpacity>
+                    {
+                        touchList.map((item, index) => {
+                            return(
+                                <TouchableOpacity
+                                    onPress={() => this.onLetterSelect(index)}
+                                    key={index}
+                                >
+                                    <Text>{item}</Text>
+                                </TouchableOpacity>
+                            )
+                        })
+                    }
                 </View>
             </View>
         );
@@ -88,7 +132,9 @@ const styles = StyleSheet.create({
     roleText: {
         fontSize: 12,
         color: 'gray',
-        marginLeft: 10
+    },
+    phoneText: {
+        marginHorizontal: 10
     }
 });
 export default addressBookScreen;
