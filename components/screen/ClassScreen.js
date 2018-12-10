@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Text, View, StyleSheet, Image, Dimensions, TouchableOpacity} from 'react-native';
+import {Text, View, StyleSheet, Image, Dimensions, TouchableOpacity, DeviceEventEmitter} from 'react-native';
 import { connect } from 'react-redux';
 import { Icon } from 'react-native-elements';
 import PublicHeader from "../../public/components/PublicHeader";
@@ -22,26 +22,43 @@ const tabItem = [
         key: 1,
     }
 ];
-
 class ClassScreen extends Component{
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             selectKey: 0,
             dataArr: [],
             showManageClassBtn: false,
             isDeleteClass: false,
-            selectClassId: -1
-        }
+            selectClassId: -1,
+            isFetch: false,
+            isTeacher: -1
+        };
     }
     componentDidMount() {
-        // console.log('mount');
         //到时候在这边把老师和家长区分
         // console.log(new Date().toLocaleString());
         // console.log(+new Date());
         this.getClassList(0);
+        const { navigation } = this.props;
+        navigation.setParams({
+            onChangeselectKey: this.onChangeselectKey
+        });
     }
+    static getDerivedStateFromProps(preProps, preState) {   //退出登录一次是ok的，两次有问题
+        if (preProps.navigation.state.params && preProps.navigation.state.params.isTeacher === 0 && preState.isTeacher !== -1) {
+            return {
+                selectKey: preProps.navigation.state.params.isTeacher,
+                isTeacher: -2
+            };
+        }
+        return null;
+    }
+    // componentDidUpdate() {
+    //     console.log('update');
+    // }
     getClassList = (key) => {
+        // console.log('===');
         const { navigate } = this.props.navigation;
         const { setClassList } = this.props;
         checkUser(() => {
@@ -58,7 +75,7 @@ class ClassScreen extends Component{
             });
         }, navigate);
     };
-    onChangeSelectKey = (key) => {
+    onChangeselectKey = (key) => {
         const { isDeleteClass } = this.state;
         if (!isDeleteClass) {
             this.setState({
@@ -263,7 +280,7 @@ class ClassScreen extends Component{
                         <Text>删除班级</Text>
                     </TouchableOpacity>
                 </View>
-                <PublicTab tabItem={tabItem} selectKey={selectKey} onChangeSelectKey={this.onChangeSelectKey} />
+                <PublicTab tabItem={tabItem} selectKey={selectKey} onChangeSelectKey={this.onChangeselectKey} />
                 {
                     selectKey === 1 ?
                     <View style={styles.main}>

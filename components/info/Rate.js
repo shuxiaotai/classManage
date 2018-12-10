@@ -9,28 +9,14 @@ import moment from "moment/moment";
 
 class Rate extends Component {
     componentDidMount() {
-        this.fetchRateInfo();
+        const { fetchRateInfo } = this.props;
+        fetchRateInfo();
     }
     toRateDetail = (classId) => {
         const { navigate } = this.props.navigation;
         navigate('RateDetail', {
             classId
         });
-    };
-    fetchRateInfo = () => {
-        const { setRateInfo } = this.props;
-        const { navigate } = this.props.navigation;
-        checkUser(() => {
-            getTokenInfo().then((value) => {
-                fetchData.postData('/rateList',
-                    {
-                        teacherId: value.id,
-                    }
-                ).then((val) => {
-                    setRateInfo(val.rateInfo);
-                });
-            });
-        }, navigate);
     };
     render() {
         const { rateInfo } = this.props;

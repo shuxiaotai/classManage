@@ -14,51 +14,80 @@ const HomeScreen = createBottomTabNavigator({
         navigationOptions: ({ navigation }) => ({
             title: '课堂',
             tabBarIcon: ({focused, tintColor}) => {
-                const { routeName } = navigation.state;
-                // console.log(routeName);
                 return (
                     <Icon
                         name="event-note"
                         color={tintColor}
                     />
                 )
-            }
+            },
+            tabBarOnPress: (obj) => {
+                const { params } = obj.navigation.state;
+                if (params) {
+                    params.onChangeselectKey(0);
+                    navigation.navigate('Class');
+                }
+            },
         })
     },
     Info: {
         screen: InfoScreen,
-        navigationOptions: () => ({
+        navigationOptions: ({ navigation }) => ({
             title: '通知',
-            tabBarIcon: ({tintColor}) => (
-                <Icon
-                    name="add-alarm"
-                    color={tintColor}
-                />
-            )
+            tabBarIcon: ({tintColor}) => {
+                return(
+                    <Icon
+                        name="add-alarm"
+                        color={tintColor}
+                    />
+                )
+            },
+            tabBarOnPress: (obj) => {
+                const { params } = obj.navigation.state;
+                if (params) {
+                    params.onChangeSelectKey(1);  //全部公告和作业
+                    navigation.navigate('Info');
+                }else {
+                    navigation.navigate('Info');
+                }
+            },
         })
     },
     AddressBook: {
         screen: AddressBookScreen,
-        navigationOptions: () => ({
+        navigationOptions: ({ navigation }) => ({
             title: '通讯录',
-            tabBarIcon: ({tintColor}) => (
-                <Icon
-                    name="assignment-ind"
-                    color={tintColor}
-                />
-            )
+            tabBarIcon: ({tintColor}) => {
+                return(
+                    <Icon
+                        name="assignment-ind"
+                        color={tintColor}
+                    />
+                )
+            },
+            tabBarOnPress: (obj) => {
+                const { params } = obj.navigation.state;
+                if (params) {
+                    params.onLetterSelect(0);  //回到顶部
+                    navigation.navigate('AddressBook');
+                }else {
+                    navigation.navigate('AddressBook');
+                }
+            },
         })
     },
     Me: {
         screen: MeScreen,
-        navigationOptions: () => ({
+        navigationOptions: ({ navigation }) => ({
             title: '我',
-            tabBarIcon: ({tintColor}) => (
-                <Icon
-                    name="accessibility"
-                    color={tintColor}
-                />
-            )
+            tabBarIcon: ({tintColor}) => {
+                return(
+                    <Icon
+                        name="accessibility"
+                        color={tintColor}
+                    />
+                )
+            }
         })
     },
 }, {

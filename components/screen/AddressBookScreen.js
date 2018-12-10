@@ -16,6 +16,10 @@ class addressBookScreen extends Component{
 
     componentDidMount() {
         this.fetchAddressBookList();
+        const { navigation } = this.props;
+        navigation.setParams({
+            onLetterSelect: this.onLetterSelect
+        });
     }
     fetchAddressBookList = () => {
         const { navigation } = this.props;

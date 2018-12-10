@@ -17,7 +17,7 @@ class PublishNoticeOrHomeWork extends Component{
         const { title, content } = this.state;
         const { navigation } = this.props;
         const { navigate } = navigation;
-        const { postNotice, masterClassId } = navigation.state.params;
+        const { postNotice, masterClassId, fetchAllInfoList } = navigation.state.params;
         checkUser(() => {
             getTokenInfo().then((value) => {
                 fetchData.postData('/publishNotice',
@@ -35,7 +35,8 @@ class PublishNoticeOrHomeWork extends Component{
                             `发布公告成功`,
                             [
                                 {text: 'OK', onPress: () => {
-                                       navigate('Info');
+                                        fetchAllInfoList();
+                                        navigate('Info');
                                     }},
                             ],
                             { cancelable: false }
@@ -51,7 +52,7 @@ class PublishNoticeOrHomeWork extends Component{
         const { title, content } = this.state;
         const { navigation } = this.props;
         const { navigate } = navigation;
-        const { postNotice, teacherClassIdArr } = navigation.state.params;
+        const { postNotice, teacherClassIdArr, fetchAllInfoList } = navigation.state.params;
         checkUser(() => {
             getTokenInfo().then((value) => {
                 fetchData.postData('/publishHomeWork',
@@ -69,6 +70,7 @@ class PublishNoticeOrHomeWork extends Component{
                             `发布作业成功`,
                             [
                                 {text: 'OK', onPress: () => {
+                                        fetchAllInfoList();
                                         navigate('Info');
                                     }},
                             ],

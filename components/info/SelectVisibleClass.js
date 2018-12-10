@@ -124,15 +124,18 @@ class SelectVisibleClass extends Component{
     toPublishNoticeOrHomework = () => {
         const { postNotice, masterClassId, teacherClassIdArr } = this.state;
         const { navigate } = this.props.navigation;
+        const { fetchAllInfoList } = this.props.navigation.state.params;
         if (postNotice === 0) {
             navigate('PublishNoticeOrHomeWork', {
                 postNotice,
-                masterClassId
+                masterClassId,
+                fetchAllInfoList
             });
         }else {
             navigate('PublishNoticeOrHomeWork', {
                 postNotice,
-                teacherClassIdArr
+                teacherClassIdArr,
+                fetchAllInfoList
             });
         }
     };
@@ -158,7 +161,6 @@ class SelectVisibleClass extends Component{
     };
     render() {
         const { navigation, masterClassList, teacherClassList } = this.props;
-        console.log(this.state.teacherClassIdArr);
         let newMasterClassList = [];
         masterClassList.forEach((item) => {
             let obj = {};

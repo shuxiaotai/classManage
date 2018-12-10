@@ -38,7 +38,14 @@ class InfoScreen extends Component{
     }
     componentDidMount() {
         this.fetchAllInfoList();
+        const { navigation } = this.props;
+        navigation.setParams({
+            onChangeSelectKey: this.onChangeSelectKey
+        });
     }
+    // componentDidUpdate() {
+    //     console.log('update');
+    // }
     onChangeSelectKey = (key) => {
         this.setState({
             selectKey: key
@@ -52,6 +59,24 @@ class InfoScreen extends Component{
         if(key === 3) {
             this.fetchHomeworkList();
         }
+        if (key === 4) {
+            this.fetchRateInfo();
+        }
+    };
+    fetchRateInfo = () => {
+        const { setRateInfo } = this.props;
+        const { navigate } = this.props.navigation;
+        checkUser(() => {
+            getTokenInfo().then((value) => {
+                fetchData.postData('/rateList',
+                    {
+                        teacherId: value.id,
+                    }
+                ).then((val) => {
+                    setRateInfo(val.rateInfo);
+                });
+            });
+        }, navigate);
     };
     fetchAllInfoList = () => {
         const { navigation, setAllInfoList } = this.props;
@@ -107,9 +132,10 @@ class InfoScreen extends Component{
     };
     toSelectVisibleClass = () => {
         const { navigate } = this.props.navigation;
-        navigate('SelectVisibleClass');
+        navigate('SelectVisibleClass', {
+            fetchAllInfoList: this.fetchAllInfoList
+        });
     };
-    _keyExtractor = (item) => item.id.toString();
     render() {
         const { selectKey } = this.state;
         const { navigation, noticeList, homeworkList, allInfoList, setRateInfo, rateInfo } = this.props;
@@ -123,7 +149,7 @@ class InfoScreen extends Component{
                             data={allInfoList}
                             renderItem={this.getRenderItem()}
                             ListEmptyComponent={<PublicNoContent tips="暂无作业和公告"/>}
-                            keyExtractor={(item, index) => (item['info_id'] + index).toString()}
+                            keyExtractor={(item, index) => index.toString()}
                         /> : null
                     }
                     {selectKey === 2 ?
@@ -131,7 +157,7 @@ class InfoScreen extends Component{
                             data={noticeList}
                             renderItem={this.getRenderItem()}
                             ListEmptyComponent={<PublicNoContent tips="暂无公告"/>}
-                            keyExtractor={this._keyExtractor}
+                            keyExtractor={(item, index) => index.toString()}
                         /> : null
                     }
                     {selectKey === 3 ?
@@ -139,14 +165,14 @@ class InfoScreen extends Component{
                             data={homeworkList}
                             renderItem={this.getRenderItem()}
                             ListEmptyComponent={<PublicNoContent tips="暂无作业"/>}
-                            keyExtractor={(item, index) => (item['info_id'] + index).toString()}
+                            keyExtractor={(item, index) => index.toString()}
                         /> : null
                     }
                     {selectKey === 4 ?
                         <Rate
                             navigation={navigation}
-                            setRateInfo={setRateInfo}
                             rateInfo={rateInfo}
+                            fetchRateInfo={this.fetchRateInfo}
                         />: null
                     }
 

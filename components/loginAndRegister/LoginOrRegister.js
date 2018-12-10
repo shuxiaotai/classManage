@@ -6,6 +6,8 @@ import LoginLogo from './LoginLogo';
 import PublicBtn from "../../public/components/PublicBtn";
 import fetchData from "../../public/utils/fetchData";
 import * as loginActions from "./Actions/LoginAction";
+import {checkUser, getTokenInfo} from "../../public/utils/checkUser";
+import * as classActions from '../class/Actions/classAction';
 
 class LoginOrRegister extends Component{
 
@@ -20,6 +22,23 @@ class LoginOrRegister extends Component{
     toFront = () => {
         const { navigation } = this.props;
         navigation.goBack();
+    };
+    getClassList = (key) => {
+        const { navigate } = this.props.navigation;
+        const { setClassList } = this.props;
+        checkUser(() => {
+            getTokenInfo().then((value) => {
+                fetchData.postData('/classList',
+                    {
+                        teacherId: value.id,
+                        selectIdentity: value.selectIdentity,
+                        isCreateByMe: key
+                    }
+                ).then((val) => {
+                    setClassList(val.classList);
+                });
+            });
+        }, navigate);
     };
     toRegister = () => {
         const { username, selectIdentity, setHasRegister } = this.props;
@@ -59,6 +78,7 @@ class LoginOrRegister extends Component{
         const { navigate } = this.props.navigation;
         const { username, selectIdentity } = this.props;
         const { password } = this.state;
+        let self = this;
         if (password === '') {
             alert('密码不能为空');
         } else {
@@ -78,7 +98,12 @@ class LoginOrRegister extends Component{
                                 'Alert',
                                 '登录成功',
                                 [
-                                    {text: 'OK', onPress: () => navigate('Class')},
+                                    {text: 'OK', onPress: () => {
+                                                navigate('Class', {
+                                                    isTeacher: 0
+                                                });
+                                                self.getClassList(0);
+                                        }},
                                 ],
                                 { cancelable: false }
                             );
@@ -184,6 +209,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         setHasRegister: (hasRegister) => {
             dispatch(loginActions.setHasRegister(hasRegister));
+        },
+        setClassList: (classList) => {
+            dispatch(classActions.setClassList(classList));
         }
     }
 };

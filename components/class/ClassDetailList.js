@@ -206,6 +206,8 @@ class ClassDetailList extends Component{
                                     remarkGroupStudentIds={remarkGroupStudentIds}
                                     handleGroupListModal={this.handleGroupListModal}
                                     handleStudentAndGroupListModal={this.handleStudentAndGroupListModal}
+                                    getStudentList={this.getStudentList}
+                                    getGroupList={this.getGroupList}
                                 /> :
                                 (selectKey === 2 && isGroupVisible ?
                                     <GroupModalContent

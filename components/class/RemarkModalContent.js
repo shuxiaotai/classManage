@@ -83,7 +83,7 @@ class RemarkModalContent extends Component{
     remarkTips = (isPraise, id) => {   //点评
         const { navigate } = this.props.navigation;
         const { projectId, selectKey } = this.state;
-        const { isMaster, currentStudent, handleStudentAndGroupListModal, isRemarkGroup, currentGroup, remarkGroupStudentIds } = this.props;
+        const { isMaster, currentStudent, handleStudentAndGroupListModal, isRemarkGroup, currentGroup, remarkGroupStudentIds, getStudentList, getGroupList } = this.props;
         if (projectId === -1) {
             let projectTips = isMaster === 0 ? '请先选择课程' : '请先选择项目';
             alert(projectTips);
@@ -108,7 +108,12 @@ class RemarkModalContent extends Component{
                                 `${selectKey === 0 ? '表扬成功' : '批评成功'}`,
                                 [
                                     {text: 'OK', onPress: () => {
-                                        handleStudentAndGroupListModal(false)
+                                            if(isRemarkGroup) {
+                                                getGroupList()    //刷新小组列表
+                                            }else {
+                                                getStudentList();   //刷新学生列表
+                                            }
+                                            handleStudentAndGroupListModal(false);
                                     }},
                                 ],
                                 { cancelable: false }
