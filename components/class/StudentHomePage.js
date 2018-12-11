@@ -33,11 +33,12 @@ class StudentHomePage extends Component{
     fetchStudentRemark = (time, filterTeacher) => {
         const { navigate } = this.props.navigation;
         const { currentStudent, setStudentRemarkInfo, setStudentRemarkList } = this.props;
+        const { myChildId } = this.props.navigation.state.params;
         checkUser(() => {
             getTokenInfo().then((value) => {
                 fetchData.postData('/studentRemarkList',
                     {
-                        studentId: currentStudent.id,
+                        studentId: myChildId ? myChildId : currentStudent.id,
                         time: time,
                         teacherId: filterTeacher ? value.id : 'null',
                     }
@@ -76,8 +77,6 @@ class StudentHomePage extends Component{
         this.fetchStudentRemark(selectTimeKey, !onlyMyRemark);
     };
     selectTimeFun = (id, name) => {
-        console.log(id);
-        console.log(name);
         this.setState({
             selectTimeKey: id,
             showSelectTime: false,
@@ -128,6 +127,7 @@ class StudentHomePage extends Component{
     };
     getHeaderComponent = (selectTimeName) => {
         const { studentRemarkInfo } = this.props;
+        const { isParent } = this.props.navigation.state.params;
         return (
             <View>
                 <View style={styles.scoreCharts}>
@@ -139,9 +139,12 @@ class StudentHomePage extends Component{
                     >
                         <Text style={{fontSize: 14}}>{selectTimeName}得{studentRemarkInfo.score}分</Text>
                     </PercentageCircle>
-                    <TouchableOpacity style={styles.inviteParent}>
-                        <Text style={styles.inviteParentText}>邀请家长</Text>
-                    </TouchableOpacity>
+                    {
+                        isParent === 1 ? null :
+                            <TouchableOpacity style={styles.inviteParent}>
+                                <Text style={styles.inviteParentText}>邀请家长</Text>
+                            </TouchableOpacity>
+                    }
                     <View style={styles.scoreContainer}>
                         <View style={[styles.scoreView, styles.leftScore]}>
                             <Text style={styles.scoreText}>+{studentRemarkInfo['praise_score']}分</Text>
@@ -165,12 +168,14 @@ class StudentHomePage extends Component{
         const { navigation } = this.props;
         const { handleStudentListModal } = this.props.navigation.state.params;
         navigation.goBack();
-        handleStudentListModal(false);
+        if (handleStudentListModal) {
+            handleStudentListModal(false);
+        }
     };
     render() {
         const { navigation, currentStudent, studentRemarkList } = this.props;
         const { showSelectTime, onlyMyRemark, selectTimeKey, selectTimeName, dataArr } = this.state;
-        const { isMaster } = this.props.navigation.state.params;
+        const { isMaster, isParent } = this.props.navigation.state.params;
         // const isMaster = 1;   //暂时注释
         return(
             <View style={{ position: 'relative' }}>
@@ -192,15 +197,20 @@ class StudentHomePage extends Component{
                         selectTimeFun={this.selectTimeFun}
                         data={listData.selectTimeList}
                         top={27}
+                        arrowRight={isParent === 1 ? 130 : ''}
                     />
-                    <TouchableOpacity
-                        style={styles.homePageTopItem}
-                        onPress={this.onlyMyRemarkFun}
-                    >
-                        <Text style={{ color: onlyMyRemark ? '#0f7cda' : 'black' }}>
-                            只看自己的点评
-                        </Text>
-                    </TouchableOpacity>
+                    {
+                        isParent === 1 ?
+                             null :
+                            <TouchableOpacity
+                                style={styles.homePageTopItem}
+                                onPress={this.onlyMyRemarkFun}
+                            >
+                                <Text style={{ color: onlyMyRemark ? '#0f7cda' : 'black' }}>
+                                    只看自己的点评
+                                </Text>
+                            </TouchableOpacity>
+                    }
                 </View>
                 <PublicMask
                     isVisible={showSelectTime}

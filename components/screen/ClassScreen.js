@@ -11,6 +11,8 @@ import PublicMask from "../../public/components/PublicMask";
 import fetchData from "../../public/utils/fetchData";
 import { checkUser, getTokenInfo } from '../../public/utils/checkUser';
 import * as classActions from '../class/Actions/classAction';
+import PublicImageItem from "../../public/components/PublicImageItem";
+import moment from "moment/moment";
 
 const tabItem = [
     {
@@ -32,21 +34,39 @@ class ClassScreen extends Component{
             isDeleteClass: false,
             selectClassId: -1,
             isFetch: false,
-            isTeacher: -1
+            isTeacher: -1,
+            selectIdentity: -1,  //0是老师，1是家长
+            childInfo: '',
+            latestRemark: [],
+            latestCheck: []
         };
     }
     componentDidMount() {
         //到时候在这边把老师和家长区分
         // console.log(new Date().toLocaleString());
         // console.log(+new Date());
-        this.getClassList(0);
         const { navigation } = this.props;
-        navigation.setParams({
-            onChangeselectKey: this.onChangeselectKey
+        getTokenInfo().then((value) => {
+            this.setState({
+                selectIdentity: value.selectIdentity
+            });
+            if (value.selectIdentity === 0) {   //老师
+                this.getClassList(0);
+                navigation.setParams({
+                    selectIdentity: value.selectIdentity,
+                    onChangeselectKey: this.onChangeselectKey
+                });
+            }else {
+                this.getChildInfo();
+                navigation.setParams({
+                    selectIdentity: value.selectIdentity,
+                    getChildInfo: this.getChildInfo
+                });
+            }
         });
     }
     static getDerivedStateFromProps(preProps, preState) {   //退出登录一次是ok的，两次有问题
-        if (preProps.navigation.state.params && preProps.navigation.state.params.isTeacher === 0 && preState.isTeacher !== -1) {
+        if ((preState.selectIdentity === 0 || preState.selectIdentity === 1)&& preProps.navigation.state.params && preProps.navigation.state.params.isTeacher === 0 && preState.isTeacher !== -1) {
             return {
                 selectKey: preProps.navigation.state.params.isTeacher,
                 isTeacher: -2
@@ -57,6 +77,25 @@ class ClassScreen extends Component{
     // componentDidUpdate() {
     //     console.log('update');
     // }
+    getChildInfo = () => {
+        const { navigate } = this.props.navigation;
+        checkUser(() => {
+            getTokenInfo().then((value) => {
+                fetchData.postData('/childInfo',
+                    {
+                        parentId: value.selectIdentity === 1 ? value.id : '',
+                        selectIdentity: value.selectIdentity
+                    }
+                ).then((val) => {
+                    this.setState({
+                        childInfo: val.personInfo.childInfo,
+                        latestRemark: val.personInfo.remark,
+                        latestCheck: val.personInfo.check
+                    })
+                });
+            });
+        }, navigate);
+    };
     getClassList = (key) => {
         // console.log('===');
         const { navigate } = this.props.navigation;
@@ -245,8 +284,25 @@ class ClassScreen extends Component{
             });
         }, navigate);
     };
+    toGetChildRemark = () => {
+        const { navigate } = this.props.navigation;
+        const { childInfo } = this.state;
+        navigate('StudentHomePage', {
+            isMaster: 0,
+            isParent: 1,
+            myChildId: childInfo.id
+        });
+    };
+    toGetCheck = () => {
+        const { navigate } = this.props.navigation;
+        const { childInfo } = this.state;
+        navigate('CheckStudentDetail', {
+            isParent: 1,
+            studentId: childInfo.id
+        });
+    };
     render() {
-        const { selectKey, dataArr, showManageClassBtn, isDeleteClass } = this.state;
+        const { selectKey, dataArr, showManageClassBtn, isDeleteClass, selectIdentity, childInfo, latestRemark, latestCheck } = this.state;
         const { classList, navigation } = this.props;
         return(
             <View style={{ position: 'relative' }}>
@@ -260,7 +316,7 @@ class ClassScreen extends Component{
                 <PublicHeader
                     title="课堂"
                     isRight={true}
-                    rightComponent={this.getRightComponent()}
+                    rightComponent={selectIdentity === 0 ? this.getRightComponent() : null}
                     navigation={navigation}
                     rightPressFun={isDeleteClass ? this.toPostDeleteClass : this.handleShowManageClass}
                 />
@@ -280,27 +336,113 @@ class ClassScreen extends Component{
                         <Text>删除班级</Text>
                     </TouchableOpacity>
                 </View>
-                <PublicTab tabItem={tabItem} selectKey={selectKey} onChangeSelectKey={this.onChangeselectKey} />
                 {
-                    selectKey === 1 ?
-                    <View style={styles.main}>
-                        <PublicRefreshList
-                            getRenderItem={this.getRenderItem}
-                            dataArr={classList}
-                            getList={this.getList}
-                            totalPage={1}
-                            ListEmptyComponent={<PublicNoContent tips="暂无创建的班级" />}
-                        />
-                    </View> :
-                    <View style={styles.main}>
-                        <PublicRefreshList
-                            getRenderItem={this.getRenderItem}
-                            dataArr={classList}
-                            getList={this.getList}
-                            totalPage={1}
-                            ListEmptyComponent={<PublicNoContent tips="暂无管理的班级" />}
-                        />
-                    </View>
+                    selectIdentity === 0 ?
+                        <PublicTab tabItem={tabItem} selectKey={selectKey} onChangeSelectKey={this.onChangeselectKey} />
+                        : null
+                }
+                {
+                    selectIdentity === 0 ?
+                        (selectKey === 1 ?
+                            <View style={styles.main}>
+                                <PublicRefreshList
+                                    getRenderItem={this.getRenderItem}
+                                    dataArr={classList}
+                                    getList={this.getList}
+                                    totalPage={1}
+                                    ListEmptyComponent={<PublicNoContent tips="暂无创建的班级" />}
+                                />
+                            </View> :
+                            <View style={styles.main}>
+                                <PublicRefreshList
+                                    getRenderItem={this.getRenderItem}
+                                    dataArr={classList}
+                                    getList={this.getList}
+                                    totalPage={1}
+                                    ListEmptyComponent={<PublicNoContent tips="暂无管理的班级" />}
+                                />
+                            </View>) :
+                            <View style={styles.childContainer}>
+                                <View style={styles.childInfo}>
+                                    <Image
+                                        source={require('../../public/img/test.png')}  //{uri: item.imgSrc}
+                                        style={styles.childImg}
+                                    />
+                                    <View>
+                                        <Text style={styles.childName}>
+                                            {childInfo.name}
+                                        </Text>
+                                        <Text>
+                                            {childInfo['class_grade']}{childInfo['class_name']}
+                                        </Text>
+                                    </View>
+                                    <Text style={styles.childScore}>
+                                        本周得分{childInfo.score}分
+                                    </Text>
+                                </View>
+                                <View style={styles.childRemarkContainer}>
+                                    <Text style={styles.childTips}>最近表现</Text>
+                                    <View style={styles.childRemark}>
+                                        {
+                                            latestRemark && latestRemark.length === 0 ? null :
+                                                <TouchableOpacity
+                                                    style={styles.moreContainer}
+                                                    onPress={this.toGetChildRemark}
+                                                >
+                                                    <Text style={styles.more}>更多</Text>
+                                                </TouchableOpacity>
+
+                                        }
+                                        {
+                                            latestCheck && latestCheck.length === 0 ? <Text>本周暂无点评记录</Text> : latestRemark.map((item) => {
+                                                return(
+                                                    <View style={styles.stuRemarkItem} key={item.id}>
+                                                        <Image
+                                                            source={require('../../public/img/test.png')}
+                                                            style={styles.stuRemarkImg}
+                                                        />
+                                                        <View>
+                                                            <View style={[styles.rightTips, styles.topScore]}>
+                                                                <Text style={styles.rightScore}>{item.score === null ? '无分数' : item['is_praise'] === '0' ? ('+' + item.score + '分'): ('-' + item.score + '分')}</Text>
+                                                                <Text>因为 {item['group_name']} {item['project_name'] === null ? '自定义点评' : item['project_name']} {item['template_name']}</Text>
+                                                            </View>
+                                                            <View style={styles.rightTips}>
+                                                                <Text style={[styles.bottomText, styles.bottomLeftText]}>{moment(item['create_time']).format('YYYY-MM-DD HH:mm:ss')}</Text>
+                                                                <Text style={styles.bottomText}>由{item['teacher_name']}老师点评</Text>
+                                                            </View>
+                                                        </View>
+                                                    </View>
+                                                )
+                                            })
+                                        }
+
+                                    </View>
+                                </View>
+                                <View style={styles.childRemarkContainer}>
+                                    <Text style={styles.childTips}>最近考勤</Text>
+                                    <View style={styles.childRemark}>
+                                        {
+                                            latestCheck && latestCheck.length === 0 ? null :
+                                                <TouchableOpacity
+                                                    style={styles.moreContainer}
+                                                    onPress={this.toGetCheck}
+                                                >
+                                                    <Text style={styles.more}>更多</Text>
+                                                </TouchableOpacity>
+                                        }
+                                        {
+                                            latestCheck && latestCheck.length === 0 ? <Text>本周暂无考勤记录</Text> :
+                                                <PublicImageItem
+                                                    isShowSelectRightName={true}
+                                                    selectRightFrontName='本周全勤'
+                                                    selectRightEndName='次'
+                                                    selectRightKey='state_count'
+                                                    data={latestCheck}
+                                                />
+                                        }
+                                    </View>
+                                </View>
+                            </View>
                 }
             </View>
         );
@@ -369,7 +511,91 @@ const styles = StyleSheet.create({
     },
     checkClass: {
         marginRight: 10
-    }
+    },
+    childContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 20
+    },
+    childImg: {
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        marginHorizontal: 15
+    },
+    childInfo: {
+        width: 340,
+        height: 100,
+        borderRadius: 10,
+        backgroundColor: '#fff',
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    childName: {
+        marginBottom: 10
+    },
+    childScore: {
+        position: 'absolute',
+        right: 15
+    },
+    childRemark: {
+        width: 340,
+        height: 120,
+        borderRadius: 10,
+        backgroundColor: '#fff',
+        flexDirection: 'row',
+        alignItems: 'center',
+        position: 'relative',
+        justifyContent: 'center'
+    },
+    childRemarkContainer: {
+        marginTop: 10
+    },
+    childTips: {
+        marginBottom: 10
+    },
+    more: {
+        color: 'gray',
+        fontSize: 12
+    },
+    moreContainer: {
+        position: 'absolute',
+        right: 15,
+        top: 15,
+    },
+
+    stuRemarkItem: {
+        height: 90,
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderStyle: 'solid',
+        marginLeft: -36
+    },
+    stuRemarkImg: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        marginRight: 10
+    },
+    rightTips: {
+        flexDirection: 'row',
+    },
+    topScore: {
+        marginBottom: 8
+    },
+    rightScore: {
+        color: '#3498db',
+        marginRight: 10
+    },
+    bottomText: {
+        fontSize: 12,
+        color: 'gray'
+    },
+    bottomLeftText: {
+        marginRight: 10
+    },
 });
 const mapStateToProps = (state) => {
     return {

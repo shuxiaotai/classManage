@@ -47,11 +47,13 @@ class CheckStudentDetail extends Component{
     fetchCheckStudentDetailList = (time, state) => {
         const { navigation, currentClassId, setStudentCheckDetailList } = this.props;
         const { navigate } = navigation;
+        const { isParent, studentId } = navigation.state.params;
         checkUser(() => {
             fetchData.postData('/studentCheckDetailList',
                 {
                     time: time,
-                    classId: currentClassId,
+                    classId: isParent === 1 ? '-1' : currentClassId,
+                    studentId: isParent === 1 ? studentId : '-1',
                     checkState: state
                 }
             ).then((val) => {

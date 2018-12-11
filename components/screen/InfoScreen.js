@@ -33,10 +33,16 @@ class InfoScreen extends Component{
     constructor() {
         super();
         this.state = {
-            selectKey: 1
+            selectKey: 1,
+            selectIdentity: -1
         }
     }
     componentDidMount() {
+        getTokenInfo().then((value) => {
+            this.setState({
+                selectIdentity: value.selectIdentity
+            });
+        });
         this.fetchAllInfoList();
         const { navigation } = this.props;
         navigation.setParams({
@@ -70,7 +76,9 @@ class InfoScreen extends Component{
             getTokenInfo().then((value) => {
                 fetchData.postData('/rateList',
                     {
-                        teacherId: value.id,
+                        teacherId: value.selectIdentity === 0 ? value.id : '',
+                        selectIdentity: value.selectIdentity,
+                        parentId: value.selectIdentity === 1 ? value.id : ''
                     }
                 ).then((val) => {
                     setRateInfo(val.rateInfo);
@@ -82,17 +90,27 @@ class InfoScreen extends Component{
         const { navigation, setAllInfoList } = this.props;
         const { navigate } = navigation;
         checkUser(() => {
-            fetchData.postData('/allInfoList').then((val) => {
-                setAllInfoList(val.allInfoList);
-            });
+            getTokenInfo().then((value) => {
+                fetchData.postData('/allInfoList', {
+                    selectIdentity: value.selectIdentity,
+                    parentId: value.selectIdentity === 1 ? value.id : ''
+                }).then((val) => {
+                    setAllInfoList(val.allInfoList);
+                });
+            })
         }, navigate);
     };
     fetchNoticeList = () => {
         const { navigation, setNoticeList } = this.props;
         const { navigate } = navigation;
         checkUser(() => {
-            fetchData.postData('/noticeList').then((val) => {
-                setNoticeList(val.noticeList);
+            getTokenInfo().then((value) => {
+                fetchData.postData('/noticeList', {
+                    selectIdentity: value.selectIdentity,
+                    parentId: value.selectIdentity === 1 ? value.id : ''
+                }).then((val) => {
+                    setNoticeList(val.noticeList);
+                });
             });
         }, navigate);
     };
@@ -100,8 +118,13 @@ class InfoScreen extends Component{
         const { navigation, setHomeworkList } = this.props;
         const { navigate } = navigation;
         checkUser(() => {
-            fetchData.postData('/homeWorkList').then((val) => {
-                setHomeworkList(val.homeworkList);
+            getTokenInfo().then((value) => {
+                fetchData.postData('/homeWorkList', {
+                    selectIdentity: value.selectIdentity,
+                    parentId: value.selectIdentity === 1 ? value.id : ''
+                }).then((val) => {
+                    setHomeworkList(val.homeworkList);
+                });
             });
         }, navigate);
     };
@@ -137,7 +160,7 @@ class InfoScreen extends Component{
         });
     };
     render() {
-        const { selectKey } = this.state;
+        const { selectKey, selectIdentity } = this.state;
         const { navigation, noticeList, homeworkList, allInfoList, setRateInfo, rateInfo } = this.props;
         return(
             <View style={styles.main}>
@@ -178,7 +201,7 @@ class InfoScreen extends Component{
 
                 </View>
                 {
-                    (selectKey === 1 || selectKey === 2 || selectKey === 3 ?
+                    (selectIdentity === 0 && (selectKey === 1 || selectKey === 2 || selectKey === 3) ?
                         <TouchableOpacity
                             style={styles.edit}
                             onPress={this.toSelectVisibleClass}

@@ -18,7 +18,8 @@ class addressBookScreen extends Component{
         this.fetchAddressBookList();
         const { navigation } = this.props;
         navigation.setParams({
-            onLetterSelect: this.onLetterSelect
+            onLetterSelect: this.onLetterSelect,
+            fetchAddressBookList: this.fetchAddressBookList
         });
     }
     fetchAddressBookList = () => {
@@ -28,7 +29,9 @@ class addressBookScreen extends Component{
             getTokenInfo().then((value) => {
                 fetchData.postData('/addressBookList',
                     {
-                        teacherId: value.id,
+                        teacherId: value.selectIdentity === 0 ? value.id : '',
+                        selectIdentity: value.selectIdentity,
+                        parentId: value.selectIdentity === 1 ? value.id : ''
                     }
                 ).then((val) => {
                     this.getSections(val.addressBookList);

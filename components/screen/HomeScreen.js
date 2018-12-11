@@ -24,7 +24,14 @@ const HomeScreen = createBottomTabNavigator({
             tabBarOnPress: (obj) => {
                 const { params } = obj.navigation.state;
                 if (params) {
-                    params.onChangeselectKey(0);
+                    if(params.selectIdentity === 0) {
+                        params.onChangeselectKey(0);
+                        navigation.navigate('Class');
+                    }else {
+                        params.getChildInfo();
+                        navigation.navigate('Class');
+                    }
+                }else {
                     navigation.navigate('Class');
                 }
             },
@@ -68,6 +75,7 @@ const HomeScreen = createBottomTabNavigator({
             tabBarOnPress: (obj) => {
                 const { params } = obj.navigation.state;
                 if (params) {
+                    params.fetchAddressBookList();
                     params.onLetterSelect(0);  //回到顶部
                     navigation.navigate('AddressBook');
                 }else {

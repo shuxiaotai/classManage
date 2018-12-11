@@ -13,6 +13,9 @@ class meScreen extends Component{
         }
     }
     componentDidMount() {
+        this.showUsername();
+    }
+    showUsername() {
         getTokenInfo().then((val) => {
             this.setState({
                 username: val.username
