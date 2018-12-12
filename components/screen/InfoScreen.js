@@ -93,7 +93,8 @@ class InfoScreen extends Component{
             getTokenInfo().then((value) => {
                 fetchData.postData('/allInfoList', {
                     selectIdentity: value.selectIdentity,
-                    parentId: value.selectIdentity === 1 ? value.id : ''
+                    parentId: value.selectIdentity === 1 ? value.id : '',
+                    teacherId: value.id
                 }).then((val) => {
                     setAllInfoList(val.allInfoList);
                 });
@@ -107,7 +108,8 @@ class InfoScreen extends Component{
             getTokenInfo().then((value) => {
                 fetchData.postData('/noticeList', {
                     selectIdentity: value.selectIdentity,
-                    parentId: value.selectIdentity === 1 ? value.id : ''
+                    parentId: value.selectIdentity === 1 ? value.id : '',
+                    teacherId: value.id
                 }).then((val) => {
                     setNoticeList(val.noticeList);
                 });
@@ -121,7 +123,8 @@ class InfoScreen extends Component{
             getTokenInfo().then((value) => {
                 fetchData.postData('/homeWorkList', {
                     selectIdentity: value.selectIdentity,
-                    parentId: value.selectIdentity === 1 ? value.id : ''
+                    parentId: value.selectIdentity === 1 ? value.id : '',
+                    teacherId: value.id
                 }).then((val) => {
                     setHomeworkList(val.homeworkList);
                 });
@@ -141,7 +144,6 @@ class InfoScreen extends Component{
                         <Text>{item['class_grade']}{item['class_name']} | </Text>
                         <Text style={styles.teacher}>{item['teacher_name']}老师发布</Text>
                     </View>
-                    <Text>{moment(item['create_time']).format('YYYY-MM-DD HH:mm:ss')}</Text>
                 </View>
                 <View style={styles.title}>
                     <Icon
@@ -150,6 +152,7 @@ class InfoScreen extends Component{
                     <Text style={styles.titleText}>{item.title}</Text>
                 </View>
                 <Text numberOfLines={1}>{item.content}</Text>
+                <Text style={styles.timeText}>{moment(item['create_time']).format('YYYY-MM-DD HH:mm:ss')}</Text>
             </View>
         );
     };
@@ -271,6 +274,13 @@ const styles = StyleSheet.create({
     },
     titleText: {
         marginLeft: 8
+    },
+    timeText: {
+        color: 'gray',
+        fontSize: 12,
+        position: 'absolute',
+        bottom: 10,
+        right: 10
     }
 });
 const mapStateToProps = (state) => {

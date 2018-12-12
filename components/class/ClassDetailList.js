@@ -255,6 +255,7 @@ class ClassDetailList extends Component{
                                 setCurrentGroup={setCurrentGroup}
                                 updateFun={this.getGroupList}
                                 getGroupList={this.getGroupList}
+                                studentList={studentList}
                             /> : 
                             <CheckList
                                 navigation={navigation}

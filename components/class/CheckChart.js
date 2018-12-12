@@ -52,7 +52,9 @@ class CheckChart extends Component{
     };
     toCheckStudentDetail = () => {
         const { navigate } = this.props.navigation;
-        navigate('CheckStudentDetail');
+        navigate('CheckStudentDetail', {
+            isParent: 0
+        });
     };
     render() {
         const { navigation, studentCheckList } = this.props;

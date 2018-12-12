@@ -25,32 +25,36 @@ class Rate extends Component {
                 contentContainerStyle={styles.rateListContainer}
             >
                 {
-                    rateInfo ? rateInfo.rateList.map((item, index) => (
-                        <View
-                            style={styles.rateContainer}
-                            activeOpacity={0.8}
-                            key={item[index]['class_id']}
-                        >
-                            <View style={styles.rateTitle}>
-                                <Text>{moment(rateInfo.startTime).format('MM-DD')} - {moment(rateInfo.endTime).format('MM-DD')} {item[0]['class_grade']}{item[0]['class_name']}</Text>
-                            </View>
-                            <PublicImageItem
-                                isShowSelectRightName={true}
-                                selectRightFrontName=''
-                                selectRightEndName='分'
-                                selectRightKey='score'
-                                data={rateInfo.rateList[index]}
-                                avatarMarginLeft={50}
-                            />
-                            <TouchableOpacity
-                                onPress={() => this.toRateDetail(item[index]['class_id'])}
-                            >
-                                <Text
-                                    style={styles.detailBtn}
-                                >立即查看</Text>
-                            </TouchableOpacity>
-                        </View>
-                    )) : null
+                    rateInfo ? rateInfo.rateList.map((item, index) => {
+                        if(item.length > 0) {
+                            return(
+                                <View
+                                    style={styles.rateContainer}
+                                    activeOpacity={0.8}
+                                    key={item[index]['class_id']}
+                                >
+                                    <View style={styles.rateTitle}>
+                                        <Text>{moment(rateInfo.startTime).format('MM-DD')} - {moment(rateInfo.endTime).format('MM-DD')} {item[0]['class_grade']}{item[0]['class_name']}</Text>
+                                    </View>
+                                    <PublicImageItem
+                                        isShowSelectRightName={true}
+                                        selectRightFrontName=''
+                                        selectRightEndName='分'
+                                        selectRightKey='score'
+                                        data={rateInfo.rateList[index]}
+                                        avatarMarginLeft={50}
+                                    />
+                                    <TouchableOpacity
+                                        onPress={() => this.toRateDetail(item[index]['class_id'])}
+                                    >
+                                        <Text
+                                            style={styles.detailBtn}
+                                        >立即查看</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            )
+                        }
+                    }) : null
                 }
             </ScrollView>
         );

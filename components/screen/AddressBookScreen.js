@@ -4,6 +4,7 @@ import PublicHeader from "../../public/components/PublicHeader";
 import pinyinUtil from '../../public/utils/pinyinUtil';
 import {checkUser, getTokenInfo} from "../../public/utils/checkUser";
 import fetchData from "../../public/utils/fetchData";
+import PublicNoContent from "../../public/components/PublicNoContent";
 
 class addressBookScreen extends Component{
     constructor() {
@@ -17,6 +18,7 @@ class addressBookScreen extends Component{
     componentDidMount() {
         this.fetchAddressBookList();
         const { navigation } = this.props;
+        const { touchList } = this.state;
         navigation.setParams({
             onLetterSelect: this.onLetterSelect,
             fetchAddressBookList: this.fetchAddressBookList
@@ -82,36 +84,47 @@ class addressBookScreen extends Component{
     };
 
     onLetterSelect = (key) => {
-        this.sectionList.scrollToLocation({sectionIndex: key, itemIndex: 0, viewOffset: 28});
+        const { touchList } = this.state;
+        if (touchList.length > 0) {
+            this.sectionList.scrollToLocation({sectionIndex: key, itemIndex: 0, viewOffset: 28});
+        }
     };
     render() {
         const { sections, touchList } = this.state;
         return(
             <View>
                 <PublicHeader title="通讯录" />
-                <SectionList
-                    ref={(sectionList) => this.sectionList = sectionList}
-                    renderItem={({ item, index, section }) => this.renderAddressBook({ item, index, section })}
-                    renderSectionHeader={({ section: { title } }) => (
-                        <Text style={{ marginVertical: 5, marginLeft: 8 }}>{title}</Text>
-                    )}
-                    sections={sections}
-                    keyExtractor={(item, index) => item + index}
-                />
-                <View style={styles.letterContainer}>
-                    {
-                        touchList.map((item, index) => {
-                            return(
-                                <TouchableOpacity
-                                    onPress={() => this.onLetterSelect(index)}
-                                    key={index}
-                                >
-                                    <Text>{item}</Text>
-                                </TouchableOpacity>
-                            )
-                        })
-                    }
-                </View>
+                {
+                    touchList.length === 0 ?
+                        <PublicNoContent tips="暂无通讯人员" />
+                        :
+                        <View>
+                            <SectionList
+                                ref={(sectionList) => this.sectionList = sectionList}
+                                renderItem={({ item, index, section }) => this.renderAddressBook({ item, index, section })}
+                                renderSectionHeader={({ section: { title } }) => (
+                                    <Text style={{ marginVertical: 5, marginLeft: 8 }}>{title}</Text>
+                                )}
+                                sections={sections}
+                                keyExtractor={(item, index) => item + index}
+                            />
+                            <View style={styles.letterContainer}>
+                                {
+                                    touchList.map((item, index) => {
+                                        return(
+                                            <TouchableOpacity
+                                                onPress={() => this.onLetterSelect(index)}
+                                                key={index}
+                                            >
+                                                <Text>{item}</Text>
+                                            </TouchableOpacity>
+                                        )
+                                    })
+                                }
+                            </View>
+                        </View>
+                }
+
             </View>
         );
     }

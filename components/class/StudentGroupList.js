@@ -20,14 +20,19 @@ class StudentGroupList extends Component{
     };
     toCreateGroup = () => {
         const { navigate } = this.props.navigation;
-        navigate('EditOrCreateName', {
-            title : '小组命名',
-            leftText: '取消',
-            rightText: '下一步',
-            leftName: '',
-            placeholder: '请输入小组名称(16字符内)',
-            rightPressFun: this.toNextStep,
-        })
+        const { studentList } = this.props;
+        if (studentList.length === 0) {
+            alert('当前班级暂无学生，请先添加学生');
+        } else {
+            navigate('EditOrCreateName', {
+                title : '小组命名',
+                leftText: '取消',
+                rightText: '下一步',
+                leftName: '',
+                placeholder: '请输入小组名称(16字符内)',
+                rightPressFun: this.toNextStep,
+            })
+        }
     };
     showStudentOfGroup = (item) => {
         const { handleModal, setCurrentGroup } = this.props;

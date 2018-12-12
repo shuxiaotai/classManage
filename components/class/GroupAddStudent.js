@@ -98,26 +98,26 @@ class GroupAddStudent extends Component{
                     rightPressFun={this.addGroupFun}
                     rightComponent={<Text style={{ color: '#fff' }}>完成</Text>}
                 />
-                <View>
-                    <View style={styles.searchContainer}>
-                        <View>
-                            <Icon
-                                name="search"
-                                color="gray"
-                            />
-                        </View>
-                        <TextInput
-                            placeholder="搜索学生"
-                            onChangeText={(studentName) => {
-                                this.setState({
-                                    studentName: studentName,
-                                    isSearching: true
-                                })
-                            }}
-                            value={studentName}
-                        />
-                    </View>
-                </View>
+                {/*<View>*/}
+                    {/*<View style={styles.searchContainer}>*/}
+                        {/*<View>*/}
+                            {/*<Icon*/}
+                                {/*name="search"*/}
+                                {/*color="gray"*/}
+                            {/*/>*/}
+                        {/*</View>*/}
+                        {/*<TextInput*/}
+                            {/*placeholder="搜索学生"*/}
+                            {/*onChangeText={(studentName) => {*/}
+                                {/*this.setState({*/}
+                                    {/*studentName: studentName,*/}
+                                    {/*isSearching: true*/}
+                                {/*})*/}
+                            {/*}}*/}
+                            {/*value={studentName}*/}
+                        {/*/>*/}
+                    {/*</View>*/}
+                {/*</View>*/}
                 {
                     (studentName === '') ? this.getRenderSelectStudentList() : <Text>暂无学生</Text>
                 }

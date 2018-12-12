@@ -9,13 +9,19 @@ class meScreen extends Component{
     constructor() {
         super();
         this.state = {
-            username: ''
+            username: '',
+            selectIdentity: -1,
         }
     }
     componentDidMount() {
-        this.showUsername();
+        this.showInfo();
+        getTokenInfo().then((value) => {
+            this.setState({
+                selectIdentity: value.selectIdentity
+            });
+        });
     }
-    showUsername() {
+    showInfo() {
         getTokenInfo().then((val) => {
             this.setState({
                 username: val.username
@@ -40,7 +46,7 @@ class meScreen extends Component{
         });
     };
     render() {
-        const { username } = this.state;
+        const { username, selectIdentity } = this.state;
         return(
             <View>
                 <View style={styles.meInfoContainer}>
@@ -51,10 +57,13 @@ class meScreen extends Component{
                     <Text style={styles.userText}>{username}</Text>
                 </View>
                 <View style={styles.meSettingWrapper}>
-                    <PublicHorizontalItem
-                        leftText="我的点评"
-                        marginTop={1}
-                    />
+                    {
+                        selectIdentity === 0 ?
+                            <PublicHorizontalItem
+                                leftText="我的点评"
+                                marginTop={1}
+                            /> : null
+                    }
                     <PublicHorizontalItem
                         leftText="验证消息"
                         marginTop={1}
