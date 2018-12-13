@@ -16,6 +16,10 @@ import CheckStudentDetail from "./components/class/CheckStudentDetail";
 import RateDetail from "./components/info/RateDetail";
 import SelectVisibleClass from "./components/info/SelectVisibleClass";
 import PublishNoticeOrHomeWork from "./components/info/PublishNoticeOrHomeWork";
+import MyRemark from "./components/me/MyRemark";
+import CheckChartDetail from "./components/class/CheckChartDetail";
+import ImportTemplate from "./components/class/ImportTemplate";
+import ImportProject from "./components/class/ImportProject";
 
 const App = createStackNavigator({
     Home: {
@@ -68,6 +72,18 @@ const App = createStackNavigator({
     },
     PublishNoticeOrHomeWork: {
         screen: PublishNoticeOrHomeWork
+    },
+    MyRemark: {
+        screen: MyRemark
+    },
+    CheckChartDetail: {
+        screen: CheckChartDetail
+    },
+    ImportTemplate: {
+        screen: ImportTemplate
+    },
+    ImportProject: {
+        screen: ImportProject
     }
 }, {
     headerMode: 'none',

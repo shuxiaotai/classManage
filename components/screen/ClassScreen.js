@@ -36,7 +36,7 @@ class ClassScreen extends Component{
             selectClassId: -1,
             isFetch: false,
             isTeacher: false,
-            selectIdentity: -1,  //0是老师，1是家长
+            selectIdentity: 0,  //0是老师，1是家长
         };
     }
     componentDidMount() {
@@ -70,12 +70,9 @@ class ClassScreen extends Component{
             }
         }
         if (preProps.navigation.state.params && (preState.selectIdentity !== preProps.navigation.state.params.selectIdentity)) {
-            getTokenInfo().then((value) => {
-                return {
-                    selectIdentity: preProps.navigation.state.params.selectIdentity ? preProps.navigation.state.params.selectIdentity : value.selectIdentity
-                }
-            });
-
+            return {
+                selectIdentity: preProps.navigation.state.params.selectIdentity ? preProps.navigation.state.params.selectIdentity : 0
+            };
         }
         return null;
     }

@@ -110,7 +110,7 @@ class StudentHomePage extends Component{
         return({item}) => (
             <View style={styles.stuRemarkItem}>
                 <Image
-                    source={{uri: getProtocol() + item['img_url']}}
+                    source={item['img_url'] ? {uri: getProtocol() + item['img_url']} : require('../../public/img/teacher.jpg')}
                     style={styles.stuRemarkImg}
                 />
                 <View>

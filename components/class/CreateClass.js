@@ -5,6 +5,8 @@ import PublicHorizontalItem from "../../public/components/PublicHorizontalItem";
 import PublicBtn from "../../public/components/PublicBtn";
 import fetchData from "../../public/utils/fetchData";
 import {checkUser, getTokenInfo} from "../../public/utils/checkUser";
+import { connect } from 'react-redux';
+import * as classActions from './Actions/classAction';
 
 class CreateClass extends Component{
     constructor() {
@@ -56,8 +58,22 @@ class CreateClass extends Component{
             });
         }, navigate);
     };
+    toImportTemplate = () => {
+        const { navigate } = this.props.navigation;
+        const { setTemplateComplete } = this.props;
+        navigate('ImportTemplate', {
+            setTemplateComplete
+        });
+    };
+    toImportProject = () => {
+        const { navigate } = this.props.navigation;
+        const { setProjectComplete } = this.props;
+        navigate('ImportProject', {
+            setProjectComplete
+        });
+    };
     render() {
-        const { navigation } = this.props;
+        const { navigation, templateComplete, projectComplete } = this.props;
         const { gradeName } = this.state;
         return(
             <View>
@@ -79,7 +95,13 @@ class CreateClass extends Component{
                 />
                 <PublicHorizontalItem
                     leftText="导入点评"
-                    rightText="请选择"
+                    rightText={templateComplete ? '已选择' : '请选择'}
+                    toTargetFun={this.toImportTemplate}
+                />
+                <PublicHorizontalItem
+                    leftText="导入项目"
+                    rightText={projectComplete ? '已选择' : '请选择'}
+                    toTargetFun={this.toImportProject}
                 />
                 <PublicBtn
                     tips="创建"
@@ -89,5 +111,20 @@ class CreateClass extends Component{
         )
     }
 }
-
-export default CreateClass;
+const mapStateToProps = (state) => {
+    return {
+        templateComplete: state.classReducer.templateComplete,
+        projectComplete: state.classReducer.projectComplete
+    }
+};
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setTemplateComplete: (templateComplete) => {
+            dispatch(classActions.setTemplateComplete(templateComplete));
+        },
+        setProjectComplete: (projectComplete) => {
+            dispatch(classActions.setProjectComplete(projectComplete));
+        }
+    }
+};
+export default connect(mapStateToProps, mapDispatchToProps)(CreateClass);

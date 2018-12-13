@@ -9,19 +9,19 @@ import {checkUser, getTokenInfo} from "../../public/utils/checkUser";
 
 const checkItem = [
     {
-        id: 0,
+        id: '0',
         name: '出勤'
     },
     {
-        id: 1,
+        id: '1',
         name: '缺勤'
     },
     {
-        id: 2,
+        id: '2',
         name: '迟到'
     },
     {
-        id: 3,
+        id: '3',
         name: '请假'
     },
 ];
@@ -31,7 +31,8 @@ class CheckList extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            changeCheckState: false
+            changeCheckState: false,
+            checkChartDetailList: []
         };
         newStudentList = [];
         props.studentList.forEach((item) => {
@@ -42,6 +43,23 @@ class CheckList extends Component{
             obj.checkTipsId = 0;
             newStudentList.push(obj);
         });
+    }
+    componentDidMount() {
+        const { isDetail, checkId } = this.props;
+        if (isDetail && checkId) {
+            const { navigate } = this.props.navigation;
+            checkUser(() => {
+                fetchData.postData('/checkChartDetailList',
+                    {
+                        checkId: checkId
+                    }
+                ).then((val) => {
+                    this.setState({
+                        checkChartDetailList: val.checkChartDetailList
+                    })
+                });
+            }, navigate);
+        }
     }
     changeCheckTips = (item) => {
         if (item.checkTipsId === 3) {
@@ -112,17 +130,22 @@ class CheckList extends Component{
         );
     };
     render() {
+        const { isDetail } = this.props;
+        const { checkChartDetailList } = this.state;
         return(
             <View>
                 <PublicImageItem
                     checkItem={checkItem}
                     changeCheckTips={this.changeCheckTips}
-                    data={newStudentList}
+                    data={isDetail ? checkChartDetailList : newStudentList}
                 />
-                <PublicBtn
-                    tips="保存考勤记录"
-                    onPress={this.saveCheckRecord}
-                />
+                {
+                    isDetail ? null :
+                        <PublicBtn
+                            tips="保存考勤记录"
+                            onPress={this.saveCheckRecord}
+                        />
+                }
             </View>
         )
     }

@@ -5,7 +5,9 @@ const init = {
     currentClassId: -1,
     childInfo: '',  //下面是家长端
     latestRemark: [],
-    latestCheck: [],
+    latestCheck: [], //上面是家长端
+    templateComplete: false,
+    projectComplete: false
 };
 
 export default classReducer = (state = init, action) => {
@@ -20,6 +22,10 @@ export default classReducer = (state = init, action) => {
             return {...state, latestRemark: action.latestRemark};
         case classTypes.SET_LATEST_CHECK:
             return {...state, latestCheck: action.latestCheck};
+        case classTypes.SET_TEMPLATE_COMPLETE:
+            return {...state, templateComplete: action.templateComplete};
+        case classTypes.SET_PROJECT_COMPLETE:
+            return {...state, projectComplete: action.projectComplete};
         default:
             return state;
     }

@@ -66,6 +66,10 @@ class meScreen extends Component{
             }
         });
     };
+    toMyRemark = () => {
+        const { navigate } = this.props.navigation;
+        navigate('MyRemark');
+    };
     render() {
         const { username, selectIdentity, imgUrl } = this.state;
         return(
@@ -83,6 +87,7 @@ class meScreen extends Component{
                             <PublicHorizontalItem
                                 leftText="我的点评"
                                 marginTop={1}
+                                toTargetFun={this.toMyRemark}
                             /> : null
                     }
                     <PublicHorizontalItem

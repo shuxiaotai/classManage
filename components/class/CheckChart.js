@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {View, Text, StyleSheet, Dimensions} from 'react-native';
+import {View, Text, StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
 import PublicHeader from "../../public/components/PublicHeader";
 import PublicSelectTime from "../../public/components/PublicSelectTime";
 import PublicMask from "../../public/components/PublicMask";
@@ -56,6 +56,12 @@ class CheckChart extends Component{
             isParent: 0
         });
     };
+    toCheckChartDetail = (checkId) => {
+        const { navigate } = this.props.navigation;
+        navigate('CheckChartDetail', {
+            checkId: checkId
+        });
+    };
     render() {
         const { navigation, studentCheckList } = this.props;
         const { showSelectTime, selectTimeKey, selectTimeName } = this.state;
@@ -90,7 +96,12 @@ class CheckChart extends Component{
                     {
                         studentCheckList.map((item) => {
                             return(
-                                <View style={styles.checkChartItem} key={item.id}>
+                                <TouchableOpacity
+                                    style={styles.checkChartItem}
+                                    key={item.id}
+                                    activeOpacity={0.6}
+                                    onPress={() => this.toCheckChartDetail(item.id)}
+                                >
                                     <Text style={styles.checkChartTop}>
                                         {item.name}
                                     </Text>
@@ -107,7 +118,7 @@ class CheckChart extends Component{
                                             出勤率{(item['check_percent'] * 100)}%
                                         </Text>
                                     </View>
-                                </View>
+                                </TouchableOpacity>
                             )
                         })
                     }

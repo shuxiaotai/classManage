@@ -31,3 +31,15 @@ export const setLatestCheck = (latestCheck) => {
     }
 };
 
+export const setTemplateComplete = (templateComplete) => {
+    return {
+        type: classTypes.SET_TEMPLATE_COMPLETE,
+        templateComplete: templateComplete
+    }
+};
+export const setProjectComplete = (projectComplete) => {
+    return {
+        type: classTypes.SET_PROJECT_COMPLETE,
+        projectComplete: projectComplete
+    }
+};

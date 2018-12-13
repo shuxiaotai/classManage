@@ -7,6 +7,7 @@ import {checkUser, getTokenInfo} from "../../public/utils/checkUser";
 import fetchData from "../../public/utils/fetchData";
 import * as infoActions from './Actions/infoAction';
 import { connect } from 'react-redux';
+import getProtocol from "../../public/utils/getProtocol";
 
 class SelectVisibleClass extends Component{
     constructor() {
@@ -90,7 +91,7 @@ class SelectVisibleClass extends Component{
                         </View> : null
                 }
                 <Image
-                    source={require('../../public/img/test.png')}
+                    source={{uri: getProtocol() + item['img_url']}}
                     style={styles.userImg}
                 />
                 <Text>{item.name}</Text>
@@ -167,6 +168,7 @@ class SelectVisibleClass extends Component{
             obj.id = item.id;
             obj.name = item.name;   //头像后面做
             obj.grade = item.grade;
+            obj.img_url = item['img_url'];
             obj.isNotice = 0;
             newMasterClassList.push(obj);
         });
@@ -176,6 +178,7 @@ class SelectVisibleClass extends Component{
             obj.id = item.id;
             obj.name = item.name;   //头像后面做
             obj.grade = item.grade;
+            obj.img_url = item['img_url'];
             obj.isNotice = 1;
             newTeacherClassList.push(obj);
         });

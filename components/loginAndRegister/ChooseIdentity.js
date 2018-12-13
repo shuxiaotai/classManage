@@ -107,7 +107,7 @@ class ChooseIdentity extends Component{
                            onPress={() => this.changeSelectIdentity(0)}
                        >
                            <Image
-                               source={require('../../public/img/test.png')}
+                               source={require('../../public/img/teacher.jpg')}
                                style={styles.chooseImg}
                            />
                            <View style={styles.checkIcon}>
@@ -122,7 +122,7 @@ class ChooseIdentity extends Component{
                            onPress={() => this.changeSelectIdentity(1)}
                        >
                            <Image
-                               source={require('../../public/img/test.png')}
+                               source={require('../../public/img/parent.jpg')}
                                style={styles.chooseImg}
                            />
                            <View style={styles.checkIcon}>
