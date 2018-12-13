@@ -5,6 +5,7 @@ import pinyinUtil from '../../public/utils/pinyinUtil';
 import {checkUser, getTokenInfo} from "../../public/utils/checkUser";
 import fetchData from "../../public/utils/fetchData";
 import PublicNoContent from "../../public/components/PublicNoContent";
+import getProtocol from "../../public/utils/getProtocol";
 
 class addressBookScreen extends Component{
     constructor() {
@@ -73,7 +74,7 @@ class addressBookScreen extends Component{
         return(
             <TouchableOpacity style={styles.bookItem}>
                 <Image
-                    source={require('../../public/img/test.png')}
+                    source={{uri: getProtocol() + item['img_url']}}
                     style={styles.userImg}
                 />
                 <Text style={styles.roleText}>{item['is_parent'] === 1 ? '家长': '老师'}</Text>

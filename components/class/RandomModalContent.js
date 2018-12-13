@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Image, Text, TouchableOpacity } from 'react-native';
+import getProtocol from "../../public/utils/getProtocol";
 
 // let list = [
 //     {
@@ -57,7 +58,7 @@ class RandomModalContent extends Component{
             <View style={styles.randomContainer}>
                 <View style={styles.randomWrapper}>
                     <Image
-                        source={require('../../public/img/test.png')}
+                        source={{uri: getProtocol() + selectStudent['avatar_url']}}
                         style={styles.randomImg}
                     />
                     <Text style={styles.randomText}>{selectStudent ? selectStudent.name : ''}</Text>

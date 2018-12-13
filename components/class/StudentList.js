@@ -4,6 +4,7 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import AddStudent from "./AddStudent";
 import PublicNoContent from "../../public/components/PublicNoContent";
 import PublicScrollView from "../../public/components/PublicScrollView";
+import getProtocol from "../../public/utils/getProtocol";
 
 
 class StudentList extends Component{
@@ -29,7 +30,7 @@ class StudentList extends Component{
         return totalScore;
     };
     getRenderStudent = () => {
-        const { studentList, isMaster } = this.props;
+        const { studentList, isMaster, imgUrl } = this.props;
         return(
             <View>
                 {
@@ -37,12 +38,12 @@ class StudentList extends Component{
                         <View style={styles.detailContainer}>
                             <View style={styles.detailItem}>
                                 <Image
-                                    source={require('../../public/img/test.png')}
+                                    source={{uri: getProtocol() + imgUrl}}
                                     style={styles.stuAvatar}
                                 />
                                 <Badge
                                     value={this.getTotalScore()}    //分数下次再算
-                                    textStyle={{ color: 'orange', fontSize: 13 }}
+                                    textStyle={{ color: '#c1194e', fontSize: 13 }}
                                     containerStyle={styles.badgeText}
                                 />
                                 <Text style={styles.detailText}>
@@ -57,12 +58,12 @@ class StudentList extends Component{
                                         onPress={() => this.getStudentDetail(item)}
                                     >
                                         <Image
-                                            source={require('../../public/img/test.png')}   //uri: item.avatarUrl
+                                            source={{uri: getProtocol() + item['avatar_url']}}
                                             style={styles.stuAvatar}
                                         />
                                         <Badge
                                             value={item.score}
-                                            textStyle={{ color: 'orange', fontSize: 13 }}
+                                            textStyle={{ color: '#c1194e', fontSize: 13 }}
                                             containerStyle={styles.badgeText}
                                         />
                                         <Text style={styles.detailText} numberOfLines={1}>
@@ -127,7 +128,7 @@ class StudentList extends Component{
     render() {
         const { isMaster, studentList, updateFun } = this.props;
         return(
-            <View style={{ height: '100%'}}>
+            <View style={{ height: '100%' }}>
                 <PublicScrollView
                     renderView={this.getRenderStudent()}
                     setMarginBottom={250}
@@ -194,6 +195,7 @@ const styles = StyleSheet.create({
         height: 20,
         position: 'relative',
         top: -7,
+        backgroundColor: '#4db4e7'
     },
     bottomBtns: {
         display: 'flex',

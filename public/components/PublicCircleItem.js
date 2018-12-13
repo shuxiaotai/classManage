@@ -1,5 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Text, Image, StyleSheet } from 'react-native';
+import getProtocol from "../utils/getProtocol";
 
 const PublicCircleItem = (props) => {
     const { item, pressFun, activeOpacity, ImgWidth, ImgHeight, ImgRadius } = props;
@@ -10,7 +11,7 @@ const PublicCircleItem = (props) => {
             activeOpacity={activeOpacity ? activeOpacity : 0.4}
         >
             <Image
-                source={require('../../public/img/test.png')}   //uri: item.avatarUrl
+                source={{uri: getProtocol() + (item['img_url'] ? item['img_url'] : item['avatar_url'])}}
                 style={{
                     width: ImgWidth ? ImgWidth : 50,
                     height: ImgHeight ? ImgHeight : 50,

@@ -12,3 +12,22 @@ export const setCurrentClassId = (currentClassId) => {
         currentClassId: currentClassId
     }
 };
+export const setChildInfo = (childInfo) => {
+    return {
+        type: classTypes.SET_CHILD_INFO,
+        childInfo: childInfo
+    }
+};
+export const setLatestRemark = (latestRemark) => {
+    return {
+        type: classTypes.SET_LATEST_REMARK,
+        latestRemark: latestRemark
+    }
+};
+export const setLatestCheck = (latestCheck) => {
+    return {
+        type: classTypes.SET_LATEST_CHECK,
+        latestCheck: latestCheck
+    }
+};
+

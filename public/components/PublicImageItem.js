@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Image, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import getProtocol from "../utils/getProtocol";
 
 const PublicImageItem = (props) => {
     const { data, changeCheckTips, rightName, checkItem, avatarMarginLeft, isShowSelectRightName, selectRightFrontName, selectRightEndName, selectRightKey} = props;
@@ -15,7 +16,7 @@ const PublicImageItem = (props) => {
                                 </View> : null) : null
                         }
                         <Image
-                            source={require('../../public/img/test.png')}
+                            source={{uri: getProtocol() + (item['img_url'] ? item['img_url'] : item['avatar_url'])}}
                             style={[styles.stuAvatar, {marginLeft: avatarMarginLeft ? avatarMarginLeft : 20}]}
                         />
                         <Text>{item.name}</Text>

@@ -13,6 +13,7 @@ import {checkUser, getTokenInfo} from "../../public/utils/checkUser";
 import fetchData from "../../public/utils/fetchData";
 import * as studentActions from './Actions/studentAction';
 import moment from 'moment';
+import getProtocol from "../../public/utils/getProtocol";
 
 
 class StudentHomePage extends Component{
@@ -109,7 +110,7 @@ class StudentHomePage extends Component{
         return({item}) => (
             <View style={styles.stuRemarkItem}>
                 <Image
-                    source={require('../../public/img/test.png')}
+                    source={{uri: getProtocol() + item['img_url']}}
                     style={styles.stuRemarkImg}
                 />
                 <View>

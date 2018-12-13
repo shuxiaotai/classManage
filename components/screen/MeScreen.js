@@ -4,6 +4,7 @@ import PublicHeader from "../../public/components/PublicHeader";
 import PublicBtn from "../../public/components/PublicBtn";
 import {getTokenInfo} from "../../public/utils/checkUser";
 import PublicHorizontalItem from "../../public/components/PublicHorizontalItem";
+import getProtocol from "../../public/utils/getProtocol";
 
 class meScreen extends Component{
     constructor() {
@@ -11,15 +12,35 @@ class meScreen extends Component{
         this.state = {
             username: '',
             selectIdentity: -1,
+            isFresh: false,
+            imgUrl: '',
         }
     }
     componentDidMount() {
         this.showInfo();
         getTokenInfo().then((value) => {
             this.setState({
-                selectIdentity: value.selectIdentity
+                selectIdentity: value.selectIdentity,
+                imgUrl: value.imgUrl
             });
         });
+        const { navigation } = this.props;
+        navigation.setParams({
+            isFresh: this.state.isFresh
+        });
+    }
+    static getDerivedStateFromProps(preProps, preState) {
+        if (preProps.navigation.state.params && (preState.isFresh !== preProps.navigation.state.params.isFresh)) {
+            return {
+                isFresh: preProps.navigation.state.params.isFresh,
+                username: preProps.navigation.state.params.username,
+                imgUrl: preProps.navigation.state.params.imgUrl
+            }
+        }
+        return null;
+    }
+    componentDidUpdate() {
+        // console.log('update');
     }
     showInfo() {
         getTokenInfo().then((val) => {
@@ -46,12 +67,12 @@ class meScreen extends Component{
         });
     };
     render() {
-        const { username, selectIdentity } = this.state;
+        const { username, selectIdentity, imgUrl } = this.state;
         return(
             <View>
                 <View style={styles.meInfoContainer}>
                     <Image
-                        source={require('../../public/img/test.png')}
+                        source={{uri: getProtocol() + imgUrl}}
                         style={styles.userAvatar}
                     />
                     <Text style={styles.userText}>{username}</Text>

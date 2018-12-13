@@ -94,19 +94,26 @@ class LoginOrRegister extends Component{
                         if (error) {
                             console.log('失败');
                         }else {
-                            Alert.alert(
-                                'Alert',
-                                '登录成功',
-                                [
-                                    {text: 'OK', onPress: () => {
+                            getTokenInfo().then((tokenValue) => {
+                                Alert.alert(
+                                    'Alert',
+                                    '登录成功',
+                                    [
+                                        {text: 'OK', onPress: () => {
+                                                if(tokenValue.selectIdentity === 0) {
+                                                    self.getClassList(0);
+                                                }else {
+                                                    self.getChildInfo();
+                                                }
                                                 navigate('Class', {
-                                                    isTeacher: 0
+                                                    isTeacher: true,   //老师之间切换刷新classScreen
+                                                    selectIdentity: tokenValue.selectIdentity//老师家长之间切换刷新classScreen
                                                 });
-                                                self.getClassList(0);
-                                        }},
-                                ],
-                                { cancelable: false }
-                            );
+                                            }},
+                                    ],
+                                    { cancelable: false }
+                                );
+                            });
                         }
                     });
                 }else {
@@ -114,6 +121,24 @@ class LoginOrRegister extends Component{
                 }
             });
         }
+    };
+    getChildInfo = () => {
+        const { navigate } = this.props.navigation;
+        const { setChildInfo, setLatestRemark, setLatestCheck } = this.props;
+        checkUser(() => {
+            getTokenInfo().then((value) => {
+                fetchData.postData('/childInfo',
+                    {
+                        parentId: value.selectIdentity === 1 ? value.id : '',
+                        selectIdentity: value.selectIdentity
+                    }
+                ).then((val) => {
+                    setChildInfo(val.personInfo.childInfo);
+                    setLatestRemark(val.personInfo.remark);
+                    setLatestCheck(val.personInfo.check);
+                });
+            });
+        }, navigate);
     };
     render() {
         const { hasRegister, username } = this.props;
@@ -212,6 +237,15 @@ const mapDispatchToProps = (dispatch) => {
         },
         setClassList: (classList) => {
             dispatch(classActions.setClassList(classList));
+        },
+        setChildInfo: (childInfo) => {
+            dispatch(classActions.setChildInfo(childInfo));
+        },
+        setLatestRemark: (latestRemark) => {
+            dispatch(classActions.setLatestRemark(latestRemark));
+        },
+        setLatestCheck: (latestCheck) => {
+            dispatch(classActions.setLatestCheck(latestCheck));
         }
     }
 };

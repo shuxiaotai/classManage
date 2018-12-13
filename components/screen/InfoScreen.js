@@ -12,6 +12,7 @@ import * as infoActions from '../info/Actions/infoAction';
 import {checkUser, getTokenInfo} from "../../public/utils/checkUser";
 import fetchData from "../../public/utils/fetchData";
 import moment from "moment/moment";
+import getProtocol from "../../public/utils/getProtocol";
 
 const tabItem = [
     {
@@ -136,8 +137,7 @@ class InfoScreen extends Component{
             <View style={styles.infoItem}>
                 <View style={styles.infoHeader}>
                     <Image
-                        // source={{uri: item.imgSrc}}
-                        source={require('../../public/img/test.png')}
+                        source={{uri: getProtocol() + item['class_img_url']}}
                         style={styles.infoImg}
                     />
                     <View style={styles.infoText}>

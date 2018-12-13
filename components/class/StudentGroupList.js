@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import PublicScrollView from "../../public/components/PublicScrollView";
 import PublicNoContent from "../../public/components/PublicNoContent";
+import getProtocol from "../../public/utils/getProtocol";
 
 class StudentGroupList extends Component{
 
@@ -52,7 +53,7 @@ class StudentGroupList extends Component{
                                 </View>
                                 <TouchableOpacity style={styles.stuGroupContentContainer} onPress={() => this.showStudentOfGroup(item)}>
                                     <Image
-                                        source={require('../../public/img/test.png')}
+                                        source={{uri: getProtocol() + item['img_url']}}
                                         style={styles.stuGroupAvatar}
                                     />
                                     <View style={styles.groupScore}>

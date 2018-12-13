@@ -39,9 +39,11 @@ export const getTokenInfo = async () => {
     let username = jwt_decode(token).username;
     let selectIdentity = jwt_decode(token).selectIdentity;
     let id = jwt_decode(token).id;
+    let imgUrl = jwt_decode(token).imgUrl;
     return {
         username: username,
         selectIdentity: selectIdentity,
-        id: id
+        id: id,
+        imgUrl: imgUrl
     }
 };

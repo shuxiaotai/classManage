@@ -8,6 +8,7 @@ import * as studentActions from "./Actions/studentAction";
 import {connect} from "react-redux";
 import fetchData from "../../public/utils/fetchData";
 import {checkUser} from "../../public/utils/checkUser";
+import getProtocol from "../../public/utils/getProtocol";
 
 class StudentDetailInfo extends Component{
 
@@ -96,7 +97,7 @@ class StudentDetailInfo extends Component{
                 />
                 <View style={styles.stuDetailInfoContainer}>
                     <Image
-                        source={require('../../public/img/test.png')}
+                        source={{uri: getProtocol() + currentStudent['avatar_url']}}
                         style={styles.stuDetailInfo}
                     />
                     <PublicHorizontalItem

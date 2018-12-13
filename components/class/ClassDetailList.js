@@ -167,7 +167,7 @@ class ClassDetailList extends Component{
     render() {
         const { navigation, studentList, parentList, groupList, setCurrentStudent, currentStudent, setCurrentGroup, currentGroup, setStudentOfGroup, studentOfGroup, setIsRemarkGroup, setRemarkGroupStudentIds, isRemarkGroup, remarkGroupStudentIds } = this.props;
         const { navigate } = navigation;
-        const { grade, name, isMaster } = navigation.state.params;   //isMaster：0是任课老师，1是班主任
+        const { grade, name, isMaster, imgUrl } = navigation.state.params;   //isMaster：0是任课老师，1是班主任
         // const isMaster = 1;
         const { selectKey, isStudentVisible, isGroupVisible, isRandomVisible, showRandoming } = this.state;
         return(
@@ -243,6 +243,7 @@ class ClassDetailList extends Component{
                             updateFun={this.getStudentList}
                             setCurrentStudent={setCurrentStudent}
                             getStudentList={this.getStudentList}
+                            imgUrl={imgUrl}
                         /> : null
                 }
                 {

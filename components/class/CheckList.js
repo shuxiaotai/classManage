@@ -38,6 +38,7 @@ class CheckList extends Component{
             let obj = {};
             obj.id = item.id;
             obj.name = item.name;
+            obj.avatar_url = item['avatar_url'];
             obj.checkTipsId = 0;
             newStudentList.push(obj);
         });
@@ -74,6 +75,7 @@ class CheckList extends Component{
                                         let obj = {};
                                         obj.id = item.id;
                                         obj.name = item.name;
+                                        obj.avatar_url = item['avatar_url'];
                                         obj.checkTipsId = 0;
                                         newStudentList.push(obj);
                                     });

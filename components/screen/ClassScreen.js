@@ -13,6 +13,7 @@ import { checkUser, getTokenInfo } from '../../public/utils/checkUser';
 import * as classActions from '../class/Actions/classAction';
 import PublicImageItem from "../../public/components/PublicImageItem";
 import moment from "moment/moment";
+import getProtocol from '../../public/utils/getProtocol';
 
 const tabItem = [
     {
@@ -34,11 +35,8 @@ class ClassScreen extends Component{
             isDeleteClass: false,
             selectClassId: -1,
             isFetch: false,
-            isTeacher: -1,
+            isTeacher: false,
             selectIdentity: -1,  //0是老师，1是家长
-            childInfo: '',
-            latestRemark: [],
-            latestCheck: []
         };
     }
     componentDidMount() {
@@ -53,32 +51,40 @@ class ClassScreen extends Component{
             if (value.selectIdentity === 0) {   //老师
                 this.getClassList(0);
                 navigation.setParams({
-                    selectIdentity: value.selectIdentity,
-                    onChangeselectKey: this.onChangeselectKey
+                    onChangeselectKey: this.onChangeselectKey,
+                    getChildInfo: this.getChildInfo
                 });
             }else {
                 this.getChildInfo();
                 navigation.setParams({
-                    selectIdentity: value.selectIdentity,
-                    getChildInfo: this.getChildInfo
+                    getChildInfo: this.getChildInfo,
+                    onChangeselectKey: this.onChangeselectKey
                 });
             }
         });
     }
-    static getDerivedStateFromProps(preProps, preState) {   //退出登录一次是ok的，两次有问题
-        if ((preState.selectIdentity === 0 || preState.selectIdentity === 1)&& preProps.navigation.state.params && preProps.navigation.state.params.isTeacher === 0 && preState.isTeacher !== -1) {
+    static getDerivedStateFromProps(preProps, preState) {
+        if (preProps.navigation.state.params && (preState.isTeacher !== preProps.navigation.state.params.isTeacher)) {
             return {
-                selectKey: preProps.navigation.state.params.isTeacher,
-                isTeacher: -2
-            };
+                isTeacher: preProps.navigation.state.params.isTeacher
+            }
+        }
+        if (preProps.navigation.state.params && (preState.selectIdentity !== preProps.navigation.state.params.selectIdentity)) {
+            getTokenInfo().then((value) => {
+                return {
+                    selectIdentity: preProps.navigation.state.params.selectIdentity ? preProps.navigation.state.params.selectIdentity : value.selectIdentity
+                }
+            });
+
         }
         return null;
     }
-    // componentDidUpdate() {
-    //     console.log('update');
-    // }
+    componentDidUpdate() {
+        // console.log('update');
+    }
     getChildInfo = () => {
         const { navigate } = this.props.navigation;
+        const { setChildInfo, setLatestRemark, setLatestCheck } = this.props;
         checkUser(() => {
             getTokenInfo().then((value) => {
                 fetchData.postData('/childInfo',
@@ -87,11 +93,9 @@ class ClassScreen extends Component{
                         selectIdentity: value.selectIdentity
                     }
                 ).then((val) => {
-                    this.setState({
-                        childInfo: val.personInfo.childInfo,
-                        latestRemark: val.personInfo.remark,
-                        latestCheck: val.personInfo.check
-                    })
+                    setChildInfo(val.personInfo.childInfo);
+                    setLatestRemark(val.personInfo.remark);
+                    setLatestCheck(val.personInfo.check);
                 });
             });
         }, navigate);
@@ -123,10 +127,10 @@ class ClassScreen extends Component{
             this.getClassList(key)
         }
     };
-    getClassDetail = (id, grade, name, isMaster) => {
+    getClassDetail = (id, grade, name, isMaster, imgUrl) => {
         const { navigate } = this.props.navigation;
         const { setCurrentClassId } = this.props;
-        navigate('ClassDetailList', { grade, name, isMaster });
+        navigate('ClassDetailList', { grade, name, isMaster, imgUrl });
         setCurrentClassId(id);
     };
     touchClass = (item) => {
@@ -134,37 +138,39 @@ class ClassScreen extends Component{
         if(isDeleteClass) {
             this.selectClass(item.id);
         }else {
-            this.getClassDetail(item.id, item.grade, item.name, selectKey)
+            this.getClassDetail(item.id, item.grade, item.name, selectKey, item['img_url'])
         }
     };
     getRenderItem = () => {
         const { isDeleteClass, selectClassId, selectKey } = this.state;
-        return({item}) => (
-            <TouchableOpacity
-                onPress={() => this.touchClass(item)}
-                activeOpacity={isDeleteClass ? 0.5 : 1}
-            >
-                <View style={styles.mainItem}>
-                    {
-                        isDeleteClass && selectKey === 1 ?
-                            <View style={styles.checkClass}>
-                                <Icon
-                                    name="check-circle"
-                                    color={selectClassId === item.id ? '#3498db': 'gray'}
-                                />
-                            </View> : null
-                    }
-                    <Image
-                        source={require('../../public/img/test.png')}  //{uri: item.imgSrc}
-                        style={styles.mainImg}
-                    />
-                    <View style={styles.mainText}>
-                        <Text>{item.grade}{item.name}</Text>
-                        <Text style={styles.stu}>{item['student_count']}个学生</Text>
+        return({item}) => {
+            return(
+                <TouchableOpacity
+                    onPress={() => this.touchClass(item)}
+                    activeOpacity={isDeleteClass ? 0.5 : 1}
+                >
+                    <View style={styles.mainItem}>
+                        {
+                            isDeleteClass && selectKey === 1 ?
+                                <View style={styles.checkClass}>
+                                    <Icon
+                                        name="check-circle"
+                                        color={selectClassId === item.id ? '#3498db': 'gray'}
+                                    />
+                                </View> : null
+                        }
+                        <Image
+                            source={{uri: getProtocol() + item['img_url']}}
+                            style={styles.mainImg}
+                        />
+                        <View style={styles.mainText}>
+                            <Text>{item.grade}{item.name}</Text>
+                            <Text style={styles.stu}>{item['student_count']}个学生</Text>
+                        </View>
                     </View>
-                </View>
-            </TouchableOpacity>
-        );
+                </TouchableOpacity>
+            )
+        };
     };
     //获取模拟数据
     getList = (page) => {
@@ -286,7 +292,7 @@ class ClassScreen extends Component{
     };
     toGetChildRemark = () => {
         const { navigate } = this.props.navigation;
-        const { childInfo } = this.state;
+        const { childInfo } = this.props;
         navigate('StudentHomePage', {
             isMaster: 0,
             isParent: 1,
@@ -295,15 +301,15 @@ class ClassScreen extends Component{
     };
     toGetCheck = () => {
         const { navigate } = this.props.navigation;
-        const { childInfo } = this.state;
+        const { childInfo } = this.props;
         navigate('CheckStudentDetail', {
             isParent: 1,
             studentId: childInfo.id
         });
     };
     render() {
-        const { selectKey, dataArr, showManageClassBtn, isDeleteClass, selectIdentity, childInfo, latestRemark, latestCheck } = this.state;
-        const { classList, navigation } = this.props;
+        const { selectKey, dataArr, showManageClassBtn, isDeleteClass, selectIdentity } = this.state;
+        const { classList, navigation, childInfo, latestRemark, latestCheck } = this.props;
         return(
             <View style={{ position: 'relative' }}>
                 <PublicMask
@@ -342,7 +348,7 @@ class ClassScreen extends Component{
                         : null
                 }
                 {
-                    selectIdentity === 0 ?
+                    selectIdentity === 0 ?    //老师端
                         (selectKey === 1 ?
                             <View style={styles.main}>
                                 <PublicRefreshList
@@ -365,7 +371,7 @@ class ClassScreen extends Component{
                             <View style={styles.childContainer}>
                                 <View style={styles.childInfo}>
                                     <Image
-                                        source={require('../../public/img/test.png')}  //{uri: item.imgSrc}
+                                        source={{uri: getProtocol() + childInfo['avatar_url']}}
                                         style={styles.childImg}
                                     />
                                     <View>
@@ -394,11 +400,11 @@ class ClassScreen extends Component{
 
                                         }
                                         {
-                                            latestCheck && latestCheck.length === 0 ? <Text>本周暂无点评记录</Text> : latestRemark.map((item) => {
+                                            latestRemark && latestRemark.length === 0 ? <Text>本周暂无点评记录</Text> : latestRemark.map((item) => {
                                                 return(
                                                     <View style={styles.stuRemarkItem} key={item.id}>
                                                         <Image
-                                                            source={require('../../public/img/test.png')}
+                                                            source={{uri: getProtocol() + item['img_url']}}
                                                             style={styles.stuRemarkImg}
                                                         />
                                                         <View>
@@ -600,6 +606,9 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
     return {
         classList: state.classReducer.classList,
+        childInfo: state.classReducer.childInfo,
+        latestRemark: state.classReducer.latestRemark,
+        latestCheck: state.classReducer.latestCheck
     }
 };
 const mapDispatchToProps = (dispatch) => {
@@ -609,6 +618,15 @@ const mapDispatchToProps = (dispatch) => {
         },
         setCurrentClassId: (currentClassId) => {
             dispatch(classActions.setCurrentClassId(currentClassId));
+        },
+        setChildInfo: (childInfo) => {
+            dispatch(classActions.setChildInfo(childInfo));
+        },
+        setLatestRemark: (latestRemark) => {
+            dispatch(classActions.setLatestRemark(latestRemark));
+        },
+        setLatestCheck: (latestCheck) => {
+            dispatch(classActions.setLatestCheck(latestCheck));
         }
     }
 };

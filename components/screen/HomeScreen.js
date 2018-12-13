@@ -5,6 +5,7 @@ import InfoScreen from './InfoScreen';
 import AddressBookScreen from "./AddressBookScreen";
 import MeScreen from './MeScreen';
 import ClassScreen from "./ClassScreen";
+import {getTokenInfo} from "../../public/utils/checkUser";
 
 //#3498db
 //MaterialIcons
@@ -23,17 +24,19 @@ const HomeScreen = createBottomTabNavigator({
             },
             tabBarOnPress: (obj) => {
                 const { params } = obj.navigation.state;
-                if (params) {
-                    if(params.selectIdentity === 0) {
-                        params.onChangeselectKey(0);
+                getTokenInfo().then((tokenValue) => {
+                    if(tokenValue.selectIdentity === 0) {
+                        if (params) {
+                            params.onChangeselectKey(0);
+                        }
                         navigation.navigate('Class');
                     }else {
-                        params.getChildInfo();
+                        if (params) {
+                            params.getChildInfo();
+                        }
                         navigation.navigate('Class');
                     }
-                }else {
-                    navigation.navigate('Class');
-                }
+                });
             },
         })
     },
@@ -95,7 +98,23 @@ const HomeScreen = createBottomTabNavigator({
                         color={tintColor}
                     />
                 )
-            }
+            },
+            tabBarOnPress: (obj) => {
+                const { params } = obj.navigation.state;
+                if (params) {
+
+                    getTokenInfo().then((val) => {
+                        obj.navigation.setParams({
+                            isFresh: !params.isFresh,
+                            username: val.username,
+                            imgUrl: val.imgUrl
+                        });
+                    });
+                    navigation.navigate('Me');
+                }else {
+                    navigation.navigate('Me');
+                }
+            },
         })
     },
 }, {

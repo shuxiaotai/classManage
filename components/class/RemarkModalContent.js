@@ -11,6 +11,7 @@ import * as projectActions from './Actions/projectAction';
 import {checkUser, getTokenInfo} from "../../public/utils/checkUser";
 import fetchData from "../../public/utils/fetchData";
 import PublicNoContent from "../../public/components/PublicNoContent";
+import getProtocol from "../../public/utils/getProtocol";
 
 const tabItem = [
     {
@@ -144,7 +145,7 @@ class RemarkModalContent extends Component{
                                     <Text style={styles.scoreText}>{isPraise ? `+${item.score}` : `-${item.score}`}</Text>
                                 </View>
                                 <Image
-                                    source={require('../../public/img/test.png')}   //uri: item.avatarUrl
+                                    source={{uri: getProtocol() + item['img_url']}}
                                     style={styles.remarkImg}
                                 />
                                 <Text style={styles.remark}>

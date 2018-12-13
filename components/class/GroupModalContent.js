@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'rea
 import { Icon } from 'react-native-elements';
 import fetchData from "../../public/utils/fetchData";
 import {checkUser} from "../../public/utils/checkUser";
+import getProtocol from "../../public/utils/getProtocol";
 
 class GroupModalContent extends Component{
 
@@ -67,7 +68,7 @@ class GroupModalContent extends Component{
                                     />
                                 </View>
                                 <Image
-                                    source={require('../../public/img/test.png')}   //uri: item.avatarUrl
+                                    source={{uri: getProtocol() + item['avatar_url']}}
                                     style={styles.remarkImg}
                                 />
                                 <Text style={styles.remark}>
