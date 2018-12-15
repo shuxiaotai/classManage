@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import * as studentActions from './Actions/studentAction';
 import {checkUser} from "../../public/utils/checkUser";
 import fetchData from "../../public/utils/fetchData";
+import getProtocol from "../../public/utils/getProtocol";
 
 class AddStudent extends Component{
     constructor() {
@@ -33,12 +34,12 @@ class AddStudent extends Component{
         }else {
             let student = {
                 name: studentName,  //头像暂时先不做
-                avatar_url: ''
+                avatar_url: `/img/student${Math.floor(Math.random()*(1 - 14) + 14)}.jpg`
             };
             setAddStudentList([...addStudentList, student]);
             this.setState({
                 studentName: ''
-            })
+            });
         }
     };
     toAddStudentList = () => {
@@ -102,17 +103,19 @@ class AddStudent extends Component{
                     contentContainerStyle={styles.stuList}
                 >
                     {
-                        addStudentList.map((item, index) => (
-                            <View style={styles.stuItem} key={index}>
-                                <Image
-                                    source={require('../../public/img/test.png')}   //uri: item.avatarUrl
-                                    style={styles.stuAvatar}
-                                />
-                                <Text style={styles.stuText}>
-                                    {item.name}
-                                </Text>
-                            </View>
-                        ))
+                        addStudentList.map((item, index) => {
+                            return(
+                                <View style={styles.stuItem} key={index}>
+                                    <Image
+                                        source={{uri: getProtocol() + item['avatar_url']}}
+                                        style={styles.stuAvatar}
+                                    />
+                                    <Text style={styles.stuText}>
+                                        {item.name}
+                                    </Text>
+                                </View>
+                            )
+                        })
                     }
                 </ScrollView>
             </View>

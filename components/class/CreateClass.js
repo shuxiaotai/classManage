@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput } from 'react-native';
+import {View, Text, TextInput, Alert} from 'react-native';
 import PublicHeader from "../../public/components/PublicHeader";
 import PublicHorizontalItem from "../../public/components/PublicHorizontalItem";
 import PublicBtn from "../../public/components/PublicBtn";
@@ -13,9 +13,85 @@ class CreateClass extends Component{
         super();
         this.state = {
             classOfName: '',
-            gradeName: ''
+            gradeName: '',
+            //模板
+            defaultPraiseList: [],
+            defaultCriticizeList: [],
+            //项目
+            defaultScheduleList: [],
+            defaultCourseList: [],
+            isFresh: false
         }
     }
+    componentDidMount() {
+        this.fetchDefaultTemplate();
+        this.fetchDefaultProject();
+    }
+    changeClassFresh = () => {
+        this.setState({
+            isFresh: !this.state.isFresh
+        })
+    };
+    fetchDefaultTemplate = () => {
+        const { navigate } = this.props.navigation;
+        checkUser(() => {
+            fetchData.postData('/defaultTemplateList').then((val) => {
+                this.setState({
+                    defaultPraiseList: val.defaultPraiseList,
+                    defaultCriticizeList: val.defaultCriticizeList
+                });
+                this.getId(val.defaultPraiseList, 0);
+                this.getId(val.defaultCriticizeList, 1);
+            });
+        }, navigate);
+    };
+    fetchDefaultProject() {
+        const { navigate } = this.props.navigation;
+        checkUser(() => {
+            fetchData.postData('/defaultProjectList').then((val) => {
+                this.setState({
+                    defaultScheduleList: val.defaultScheduleList,
+                    defaultCourseList: val.defaultCourseList
+                });
+                this.getId(val.defaultScheduleList, 2);
+                this.getId(val.defaultCourseList, 3);
+            });
+        }, navigate);
+    }
+    getId = (list, value) => {
+        const { setDefaultPraiseIds, setDefaultCriticizeIds, setDefaultScheduleIds, setDefaultCourseIds } = this.props;
+        let arr = [];
+        list.forEach((item) => {
+            arr.push(item.id);
+        });
+        if (value === 0) {
+            setDefaultPraiseIds(arr);
+        } else if (value === 1) {
+            setDefaultCriticizeIds(arr);
+        } else if (value === 2){
+            setDefaultScheduleIds(arr);
+        } else if (value === 3) {
+            setDefaultCourseIds(arr);
+        }
+    };
+    changeSelectIds = (id, selectList, selectKey) => {
+        const { setDefaultPraiseIds, setDefaultCriticizeIds, setDefaultScheduleIds, setDefaultCourseIds } = this.props;
+        let index = selectList.indexOf(id);
+        if (index === -1) {
+            selectList.push(id);
+        } else {
+            selectList.splice(index, 1);
+        }
+        if (selectKey === 0) {
+            setDefaultPraiseIds(selectList);
+        } else if (selectKey === 1) {
+            setDefaultCriticizeIds(selectList);
+        } else if (selectKey === 2){
+            setDefaultScheduleIds(selectList);
+        } else if (selectKey === 3) {
+            setDefaultCourseIds(selectList);
+        }
+    };
     getRightComponent = () => {
         return(
             <TextInput
@@ -37,43 +113,68 @@ class CreateClass extends Component{
         })
     };
     toAddClass = () => {
-        const { navigation } = this.props;
+        const { navigation, defaultPraiseIds, defaultCriticizeIds, defaultScheduleIds, defaultCourseIds } = this.props;
         const { navigate } = navigation;
         const { gradeName, classOfName } = this.state;
         const { getClassList } = navigation.state.params;
-        checkUser(() => {
-            getTokenInfo().then((value) => {
-                fetchData.postData('/addClass',
-                    {
-                        teacherId: value.id,
-                        name: classOfName,
-                        grade: gradeName
-                    }
-                ).then((val) => {
-                    if (val.addClassSuccess) {
-                        getClassList(1);
-                        navigate('Home');
-                    }
+        if (gradeName === '') {
+            alert('年级不能为空');
+        }else if (classOfName === '') {
+            alert('班级不能为空');
+        }else {
+            checkUser(() => {
+                getTokenInfo().then((value) => {
+                    fetchData.postData('/addClass',
+                        {
+                            teacherId: value.id,
+                            name: classOfName,
+                            grade: gradeName,
+                            praiseIds: defaultPraiseIds,
+                            criticizeIds: defaultCriticizeIds,
+                            scheduleIds: defaultScheduleIds,
+                            courseIds: defaultCourseIds
+                        }
+                    ).then((val) => {
+                        if (val.addClassSuccess) {
+                            Alert.alert(
+                                'Alert',
+                                '创建班级成功',
+                                [
+                                    {text: 'OK', onPress: () => {
+                                            getClassList(1);
+                                            navigate('Home');
+                                        }},
+                                ],
+                                { cancelable: false }
+                            );
+                        }
+                    });
                 });
-            });
-        }, navigate);
+            }, navigate);
+        }
     };
     toImportTemplate = () => {
         const { navigate } = this.props.navigation;
-        const { setTemplateComplete } = this.props;
+        const { defaultPraiseList, defaultCriticizeList } = this.state;
         navigate('ImportTemplate', {
-            setTemplateComplete
+            defaultPraiseList: defaultPraiseList,
+            defaultCriticizeList: defaultCriticizeList,
+            changeSelectIds: this.changeSelectIds,
+            changeClassFresh: this.changeClassFresh
         });
     };
     toImportProject = () => {
         const { navigate } = this.props.navigation;
-        const { setProjectComplete } = this.props;
+        const { defaultScheduleList, defaultCourseList} = this.state;
         navigate('ImportProject', {
-            setProjectComplete
+            defaultScheduleList: defaultScheduleList,
+            defaultCourseList: defaultCourseList,
+            changeSelectIds: this.changeSelectIds,
+            changeClassFresh: this.changeClassFresh
         });
     };
     render() {
-        const { navigation, templateComplete, projectComplete } = this.props;
+        const { navigation, defaultPraiseIds, defaultCriticizeIds, defaultScheduleIds, defaultCourseIds } = this.props;
         const { gradeName } = this.state;
         return(
             <View>
@@ -95,12 +196,12 @@ class CreateClass extends Component{
                 />
                 <PublicHorizontalItem
                     leftText="导入点评"
-                    rightText={templateComplete ? '已选择' : '请选择'}
+                    rightText={(defaultPraiseIds.length !== 0 || defaultCriticizeIds.length !== 0) ? '已选择' : '请选择'}
                     toTargetFun={this.toImportTemplate}
                 />
                 <PublicHorizontalItem
                     leftText="导入项目"
-                    rightText={projectComplete ? '已选择' : '请选择'}
+                    rightText={(defaultScheduleIds.length !== 0 || defaultCourseIds.length !== 0)? '已选择' : '请选择'}
                     toTargetFun={this.toImportProject}
                 />
                 <PublicBtn
@@ -113,17 +214,25 @@ class CreateClass extends Component{
 }
 const mapStateToProps = (state) => {
     return {
-        templateComplete: state.classReducer.templateComplete,
-        projectComplete: state.classReducer.projectComplete
+        defaultPraiseIds: state.classReducer.defaultPraiseIds,
+        defaultCriticizeIds: state.classReducer.defaultCriticizeIds,
+        defaultScheduleIds: state.classReducer.defaultScheduleIds,
+        defaultCourseIds: state.classReducer.defaultCourseIds,
     }
 };
 const mapDispatchToProps = (dispatch) => {
     return {
-        setTemplateComplete: (templateComplete) => {
-            dispatch(classActions.setTemplateComplete(templateComplete));
+        setDefaultPraiseIds: (defaultPraiseIds) => {
+            dispatch(classActions.setDefaultPraiseIds(defaultPraiseIds));
         },
-        setProjectComplete: (projectComplete) => {
-            dispatch(classActions.setProjectComplete(projectComplete));
+        setDefaultCriticizeIds: (defaultCriticizeIds) => {
+            dispatch(classActions.setDefaultCriticizeIds(defaultCriticizeIds));
+        },
+        setDefaultScheduleIds: (defaultScheduleIds) => {
+            dispatch(classActions.setDefaultScheduleIds(defaultScheduleIds));
+        },
+        setDefaultCourseIds: (defaultCourseIds) => {
+            dispatch(classActions.setDefaultCourseIds(defaultCourseIds));
         }
     }
 };

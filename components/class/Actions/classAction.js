@@ -31,15 +31,27 @@ export const setLatestCheck = (latestCheck) => {
     }
 };
 
-export const setTemplateComplete = (templateComplete) => {
+export const setDefaultPraiseIds = (defaultPraiseIds) => {
     return {
-        type: classTypes.SET_TEMPLATE_COMPLETE,
-        templateComplete: templateComplete
+        type: classTypes.SET_DEFAULT_PRAISE_IDS,
+        defaultPraiseIds: defaultPraiseIds
     }
 };
-export const setProjectComplete = (projectComplete) => {
+export const setDefaultCriticizeIds = (defaultCriticizeIds) => {
     return {
-        type: classTypes.SET_PROJECT_COMPLETE,
-        projectComplete: projectComplete
+        type: classTypes.SET_DEFAULT_CRITICIZE_IDS,
+        defaultCriticizeIds: defaultCriticizeIds
     }
 };
+export const setDefaultScheduleIds = (defaultScheduleIds) => {
+    return {
+        type: classTypes.SET_DEFAULT_SCHEDULE_IDS,
+        defaultScheduleIds: defaultScheduleIds
+    }
+};export const setDefaultCourseIds = (defaultCourseIds) => {
+    return {
+        type: classTypes.SET_DEFAULT_COURSE_IDS,
+        defaultCourseIds: defaultCourseIds
+    }
+};
+

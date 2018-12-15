@@ -1,65 +1,36 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import PublicHeader from "../../public/components/PublicHeader";
-import {checkUser, getTokenInfo} from "../../public/utils/checkUser";
-import fetchData from "../../public/utils/fetchData";
 import PublicCircleItem from "../../public/components/PublicCircleItem";
+import { connect } from 'react-redux';
 
 class ImportTemplate extends Component{
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
-            defaultPraiseList: [],
-            defaultCriticizeList: [],
-            defaultPraiseIds: [],
-            defaultCriticizeIds: []
+            isFresh: false
         }
     }
-    componentDidMount() {
-        const { navigate } = this.props.navigation;
-        checkUser(() => {
-            fetchData.postData('/defaultTemplateList').then((val) => {
-                this.setState({
-                    defaultPraiseList: val.defaultPraiseList,
-                    defaultCriticizeList: val.defaultCriticizeList
-                });
-                this.getId(val.defaultPraiseList, 'defaultPraiseIds');
-                this.getId(val.defaultCriticizeList, 'defaultCriticizeIds');
-            });
-        }, navigate);
-    }
-    getId = (list, valueName) => {
-        let arr = [];
-        list.forEach((item) => {
-            arr.push(item.id);
-        });
+    changeFresh = () => {
         this.setState({
-            [valueName]: arr
+            isFresh: !this.state.isFresh
         })
-    };
-    changeSelectIds = (id, selectList, selectChangeName) => {
-        let index = selectList.indexOf(id);
-        if (index === -1) {
-            selectList.push(id);
-        } else {
-            selectList.splice(index, 1);
-        }
-        this.setState({
-            [selectChangeName]: selectList
-        });
     };
     toComplete = () => {
         const { navigation } = this.props;
-        const { defaultPraiseIds, defaultCriticizeIds } = this.state;
-        const { setTemplateComplete } = this.props.navigation.state.params;
-        if (defaultPraiseIds.length !== 0 || defaultCriticizeIds.length !== 0) {
-            setTemplateComplete(true)
-        }
+        const { changeClassFresh } = this.props.navigation.state.params;
+        changeClassFresh();
         navigation.goBack();
     };
-    render() {
+    toBackAndFresh = () => {
         const { navigation } = this.props;
-        const { defaultPraiseList, defaultCriticizeList, defaultPraiseIds, defaultCriticizeIds } = this.state;
+        const { changeClassFresh } = this.props.navigation.state.params;
+        navigation.goBack();
+        changeClassFresh();
+    };
+    render() {
+        const { navigation, defaultPraiseIds, defaultCriticizeIds } = this.props;
+        const { defaultPraiseList, defaultCriticizeList, changeSelectIds } = this.props.navigation.state.params;
         return(
             <View>
                 <PublicHeader
@@ -69,6 +40,7 @@ class ImportTemplate extends Component{
                     isRight={true}
                     rightComponent={<Text style={{ color: '#fff' }}>完成</Text>}
                     rightPressFun={this.toComplete}
+                    leftPressFun={this.toBackAndFresh}
                 />
                 <View style={styles.tips}>
                     <Text>表扬模板</Text>
@@ -84,8 +56,9 @@ class ImportTemplate extends Component{
                                 ImgRadius={30}
                                 isEnableCheck={true}
                                 selectList={defaultPraiseIds}
-                                pressFun={this.changeSelectIds}
-                                selectChangeName="defaultPraiseIds"
+                                pressFun={changeSelectIds}
+                                selectKey={0}
+                                changeFresh={this.changeFresh}
                             />
                         ))
                     }
@@ -104,8 +77,9 @@ class ImportTemplate extends Component{
                                 ImgRadius={30}
                                 isEnableCheck={true}
                                 selectList={defaultCriticizeIds}
-                                pressFun={this.changeSelectIds}
-                                selectChangeName="defaultCriticizeIds"
+                                pressFun={changeSelectIds}
+                                selectKey={1}
+                                changeFresh={this.changeFresh}
                             />
                         ))
                     }
@@ -130,4 +104,10 @@ const styles = StyleSheet.create({
         paddingLeft: 8
     }
 });
-export default ImportTemplate;
+const mapStateToProps = (state) => {
+    return {
+        defaultPraiseIds: state.classReducer.defaultPraiseIds,
+        defaultCriticizeIds: state.classReducer.defaultCriticizeIds
+    }
+};
+export default connect(mapStateToProps, null)(ImportTemplate);

@@ -4,11 +4,14 @@ import getProtocol from "../utils/getProtocol";
 import { Icon } from 'react-native-elements';
 
 const PublicCircleItem = (props) => {
-    const { item, pressFun, activeOpacity, ImgWidth, ImgHeight, ImgRadius, isEnableCheck, selectList, selectChangeName } = props;
+    const { item, pressFun, activeOpacity, ImgWidth, ImgHeight, ImgRadius, isEnableCheck, selectList, selectKey, changeFresh } = props;
     return(
         <TouchableOpacity
             style={styles.courseItem}
-            onPress={pressFun ? () => pressFun(item.id, selectList, selectChangeName) : null}
+            onPress={pressFun ? () => {
+                pressFun(item.id, selectList, selectKey);
+                changeFresh();
+            } : null}
             activeOpacity={activeOpacity ? activeOpacity : 0.4}
         >
             <Image

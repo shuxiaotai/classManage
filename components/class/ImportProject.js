@@ -1,65 +1,36 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import PublicHeader from "../../public/components/PublicHeader";
-import {checkUser, getTokenInfo} from "../../public/utils/checkUser";
-import fetchData from "../../public/utils/fetchData";
 import PublicCircleItem from "../../public/components/PublicCircleItem";
+import { connect } from 'react-redux';
 
 class ImportProject extends Component{
     constructor() {
         super();
         this.state = {
-            defaultProjectList: [],
-            defaultCourseList: [],
-            defaultProjectIds: [],
-            defaultCourseIds: []
+            isFresh: false
         }
     }
-    componentDidMount() {
-        const { navigate } = this.props.navigation;
-        checkUser(() => {
-            fetchData.postData('/defaultProjectList').then((val) => {
-                this.setState({
-                    defaultProjectList: val.defaultProjectList,
-                    defaultCourseList: val.defaultCourseList
-                });
-                this.getId(val.defaultProjectList, 'defaultProjectIds');
-                this.getId(val.defaultCourseList, 'defaultCourseIds');
-            });
-        }, navigate);
-    }
-    getId = (list, valueName) => {
-        let arr = [];
-        list.forEach((item) => {
-            arr.push(item.id);
-        });
+    changeFresh = () => {
         this.setState({
-            [valueName]: arr
+            isFresh: !this.state.isFresh
         })
-    };
-    changeSelectIds = (id, selectList, selectChangeName) => {
-        let index = selectList.indexOf(id);
-        if (index === -1) {
-            selectList.push(id);
-        } else {
-            selectList.splice(index, 1);
-        }
-        this.setState({
-            [selectChangeName]: selectList
-        });
     };
     toComplete = () => {
         const { navigation } = this.props;
-        const { defaultProjectIds, defaultCourseIds } = this.state;
-        const { setProjectComplete } = this.props.navigation.state.params;
-        if (defaultProjectIds.length !== 0 || defaultCourseIds.length !== 0) {
-            setProjectComplete(true)
-        }
+        const { changeClassFresh } = this.props.navigation.state.params;
+        changeClassFresh();
         navigation.goBack();
     };
-    render() {
+    toBackAndFresh = () => {
         const { navigation } = this.props;
-        const { defaultProjectList, defaultCourseList, defaultProjectIds, defaultCourseIds } = this.state;
+        const { changeClassFresh } = this.props.navigation.state.params;
+        navigation.goBack();
+        changeClassFresh();
+    };
+    render() {
+        const { navigation, defaultScheduleIds, defaultCourseIds } = this.props;
+        const { defaultScheduleList, defaultCourseList, changeSelectIds } = this.props.navigation.state.params;
         return(
             <View>
                 <PublicHeader
@@ -69,13 +40,14 @@ class ImportProject extends Component{
                     isRight={true}
                     rightComponent={<Text style={{ color: '#fff' }}>完成</Text>}
                     rightPressFun={this.toComplete}
+                    leftPressFun={this.toBackAndFresh}
                 />
                 <View style={styles.tips}>
                     <Text>日程模板</Text>
                 </View>
                 <View style={styles.templateList}>
                     {
-                        defaultProjectList.map((item) => (
+                        defaultScheduleList.map((item) => (
                             <PublicCircleItem
                                 item={item}
                                 key={item.id}
@@ -83,9 +55,10 @@ class ImportProject extends Component{
                                 ImgHeight={60}
                                 ImgRadius={30}
                                 isEnableCheck={true}
-                                selectList={defaultProjectIds}
-                                pressFun={this.changeSelectIds}
-                                selectChangeName="defaultProjectIds"
+                                selectList={defaultScheduleIds}
+                                pressFun={changeSelectIds}
+                                selectKey={2}
+                                changeFresh={this.changeFresh}
                             />
                         ))
                     }
@@ -104,8 +77,9 @@ class ImportProject extends Component{
                                 ImgRadius={30}
                                 isEnableCheck={true}
                                 selectList={defaultCourseIds}
-                                pressFun={this.changeSelectIds}
-                                selectChangeName="defaultCourseIds"
+                                pressFun={changeSelectIds}
+                                selectKey={3}
+                                changeFresh={this.changeFresh}
                             />
                         ))
                     }
@@ -130,4 +104,10 @@ const styles = StyleSheet.create({
         paddingLeft: 8
     }
 });
-export default ImportProject;
+const mapStateToProps = (state) => {
+    return {
+        defaultScheduleIds: state.classReducer.defaultScheduleIds,
+        defaultCourseIds: state.classReducer.defaultCourseIds,
+    }
+};
+export default connect(mapStateToProps, null)(ImportProject);
