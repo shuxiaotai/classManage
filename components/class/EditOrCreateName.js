@@ -23,7 +23,7 @@ class EditOrCreateName extends Component{
     };
     render() {
         const { navigation } = this.props;
-        const { title, placeholder, rightPressFun } = navigation.state.params;
+        const { title, placeholder, rightPressFun, key } = navigation.state.params;
         const { LeftName } = this.state;
         return(
             <View>
@@ -34,7 +34,7 @@ class EditOrCreateName extends Component{
                     navigation={navigation}
                     isRight={true}
                     rightComponent={this.getComponent(false)}
-                    rightPressFun={rightPressFun ? () => rightPressFun(LeftName) : null}
+                    rightPressFun={rightPressFun ? ((key !== undefined) ? () => rightPressFun(LeftName, key) : () => rightPressFun(LeftName)) : null}
                 />
                 <TextInput
                     ref={(studentInput) => this.studentInput = studentInput}

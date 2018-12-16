@@ -22,6 +22,7 @@ import ImportTemplate from "./components/class/ImportTemplate";
 import ImportProject from "./components/class/ImportProject";
 import ParentJoinClassInfo from "./components/me/ParentJoinClassInfo";
 import JoinClass from "./components/class/JoinClass";
+import MyInfo from "./components/me/MyInfo";
 
 const App = createStackNavigator({
     Home: {
@@ -92,6 +93,9 @@ const App = createStackNavigator({
     },
     JoinClass: {
         screen: JoinClass
+    },
+    MyInfo: {
+        screen: MyInfo
     }
 }, {
     headerMode: 'none',

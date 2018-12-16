@@ -14,6 +14,7 @@ class meScreen extends Component{
             selectIdentity: -1,
             isFresh: false,
             imgUrl: '',
+            freshToken: false
         }
     }
     componentDidMount() {
@@ -38,10 +39,16 @@ class meScreen extends Component{
                 selectIdentity: preProps.navigation.state.params.selectIdentity,
             }
         }
+        //修改信息后
+        if (preProps.navigation.state.params && (preState.freshToken !== preProps.navigation.state.params.freshToken)) {
+            return {
+                username: preProps.navigation.state.params.username,
+            }
+        }
         return null;
     }
     componentDidUpdate() {
-        // console.log('update');
+        console.log('update');
     }
     showInfo() {
         getTokenInfo().then((val) => {
@@ -75,6 +82,10 @@ class meScreen extends Component{
         const { navigate } = this.props.navigation;
         navigate('ParentJoinClassInfo');
     };
+    toMyInfo = () => {
+        const { navigate } = this.props.navigation;
+        navigate('MyInfo');
+    };
     render() {
         const { username, selectIdentity, imgUrl } = this.state;
         return(
@@ -103,6 +114,7 @@ class meScreen extends Component{
                     <PublicHorizontalItem
                         leftText="个人信息"
                         marginTop={1}
+                        toTargetFun={this.toMyInfo}
                     />
                 </View>
                 <PublicBtn
