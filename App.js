@@ -20,6 +20,8 @@ import MyRemark from "./components/me/MyRemark";
 import CheckChartDetail from "./components/class/CheckChartDetail";
 import ImportTemplate from "./components/class/ImportTemplate";
 import ImportProject from "./components/class/ImportProject";
+import ParentJoinClassInfo from "./components/me/ParentJoinClassInfo";
+import JoinClass from "./components/class/JoinClass";
 
 const App = createStackNavigator({
     Home: {
@@ -84,6 +86,12 @@ const App = createStackNavigator({
     },
     ImportProject: {
         screen: ImportProject
+    },
+    ParentJoinClassInfo: {
+        screen: ParentJoinClassInfo
+    },
+    JoinClass: {
+        screen: JoinClass
     }
 }, {
     headerMode: 'none',

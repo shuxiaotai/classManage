@@ -17,6 +17,7 @@ class ParentList extends Component{
                           ImgWidth={60}
                           ImgHeight={60}
                           ImgRadius={30}
+                          isParent={true}
                       />
                   ))
               }

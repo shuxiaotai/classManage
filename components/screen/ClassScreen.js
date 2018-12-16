@@ -14,6 +14,7 @@ import * as classActions from '../class/Actions/classAction';
 import PublicImageItem from "../../public/components/PublicImageItem";
 import moment from "moment/moment";
 import getProtocol from '../../public/utils/getProtocol';
+import PublicBtn from "../../public/components/PublicBtn";
 
 const tabItem = [
     {
@@ -37,6 +38,8 @@ class ClassScreen extends Component{
             isFetch: false,
             isTeacher: false,
             selectIdentity: 0,  //0是老师，1是家长
+            shouldJoinClass: true,
+            waitMasterCheck: false
         };
     }
     componentDidMount() {
@@ -90,9 +93,13 @@ class ClassScreen extends Component{
                         selectIdentity: value.selectIdentity
                     }
                 ).then((val) => {
-                    setChildInfo(val.personInfo.childInfo);
-                    setLatestRemark(val.personInfo.remark);
-                    setLatestCheck(val.personInfo.check);
+                    setChildInfo(val.personInfo.childInfo ? val.personInfo.childInfo : '');
+                    setLatestRemark((val.personInfo.remark && val.personInfo.remark.length) > 0 ? val.personInfo.remark : []);
+                    setLatestCheck((val.personInfo.check && val.personInfo.check.length > 0) ? val.personInfo.check : []);
+                    this.setState({
+                        waitMasterCheck: val.personInfo.waitMasterCheck,
+                        shouldJoinClass: val.personInfo.shouldJoinClass
+                    })
                 });
             });
         }, navigate);
@@ -304,8 +311,14 @@ class ClassScreen extends Component{
             studentId: childInfo.id
         });
     };
+    toJoinClass = () => {
+        const { navigate } = this.props.navigation;
+        navigate('JoinClass', {
+            getChildInfo: this.getChildInfo
+        });
+    };
     render() {
-        const { selectKey, dataArr, showManageClassBtn, isDeleteClass, selectIdentity } = this.state;
+        const { selectKey, dataArr, showManageClassBtn, isDeleteClass, selectIdentity, shouldJoinClass } = this.state;
         const { classList, navigation, childInfo, latestRemark, latestCheck } = this.props;
         return(
             <View style={{ position: 'relative' }}>
@@ -365,87 +378,107 @@ class ClassScreen extends Component{
                                     ListEmptyComponent={<PublicNoContent tips="暂无管理的班级" />}
                                 />
                             </View>) :
-                            <View style={styles.childContainer}>
-                                <View style={styles.childInfo}>
-                                    <Image
-                                        source={{uri: getProtocol() + childInfo['avatar_url']}}
-                                        style={styles.childImg}
-                                    />
-                                    <View>
-                                        <Text style={styles.childName}>
-                                            {childInfo.name}
-                                        </Text>
-                                        <Text>
-                                            {childInfo['class_grade']}{childInfo['class_name']}
-                                        </Text>
-                                    </View>
-                                    <Text style={styles.childScore}>
-                                        本周得分{childInfo.score}分
-                                    </Text>
-                                </View>
-                                <View style={styles.childRemarkContainer}>
-                                    <Text style={styles.childTips}>最近表现</Text>
-                                    <View style={styles.childRemark}>
-                                        {
-                                            latestRemark && latestRemark.length === 0 ? null :
-                                                <TouchableOpacity
-                                                    style={styles.moreContainer}
-                                                    onPress={this.toGetChildRemark}
-                                                >
-                                                    <Text style={styles.more}>更多</Text>
-                                                </TouchableOpacity>
-
-                                        }
-                                        {
-                                            latestRemark && latestRemark.length === 0 ? <Text>本周暂无点评记录</Text> : latestRemark.map((item) => {
-                                                return(
-                                                    <View style={styles.stuRemarkItem} key={item.id}>
-                                                        <Image
-                                                            source={{uri: getProtocol() + item['img_url']}}
-                                                            style={styles.stuRemarkImg}
-                                                        />
-                                                        <View>
-                                                            <View style={[styles.rightTips, styles.topScore]}>
-                                                                <Text style={styles.rightScore}>{item.score === null ? '无分数' : item['is_praise'] === '0' ? ('+' + item.score + '分'): ('-' + item.score + '分')}</Text>
-                                                                <Text>因为 {item['group_name']} {item['project_name'] === null ? '自定义点评' : item['project_name']} {item['template_name']}</Text>
-                                                            </View>
-                                                            <View style={styles.rightTips}>
-                                                                <Text style={[styles.bottomText, styles.bottomLeftText]}>{moment(item['create_time']).format('YYYY-MM-DD HH:mm:ss')}</Text>
-                                                                <Text style={styles.bottomText}>由{item['teacher_name']}老师点评</Text>
-                                                            </View>
-                                                        </View>
+                            (
+                            <View>
+                                {
+                                    childInfo ?
+                                        (
+                                            <View style={styles.childContainer}>
+                                                <View style={styles.childInfo}>
+                                                    <Image
+                                                        source={{uri: getProtocol() + childInfo['avatar_url']}}
+                                                        style={styles.childImg}
+                                                    />
+                                                    <View>
+                                                        <Text style={styles.childName}>
+                                                            {childInfo.name}
+                                                        </Text>
+                                                        <Text>
+                                                            {childInfo['class_grade']}{childInfo['class_name']}
+                                                        </Text>
                                                     </View>
-                                                )
-                                            })
-                                        }
+                                                    <Text style={styles.childScore}>
+                                                        本周得分{childInfo.score}分
+                                                    </Text>
+                                                </View>
+                                                <View style={styles.childRemarkContainer}>
+                                                    <Text style={styles.childTips}>最近表现</Text>
+                                                    <View style={styles.childRemark}>
+                                                        {
+                                                            latestRemark && latestRemark.length === 0 ? null :
+                                                                <TouchableOpacity
+                                                                    style={styles.moreContainer}
+                                                                    onPress={this.toGetChildRemark}
+                                                                >
+                                                                    <Text style={styles.more}>更多</Text>
+                                                                </TouchableOpacity>
 
-                                    </View>
-                                </View>
-                                <View style={styles.childRemarkContainer}>
-                                    <Text style={styles.childTips}>最近考勤</Text>
-                                    <View style={styles.childRemark}>
-                                        {
-                                            latestCheck && latestCheck.length === 0 ? null :
-                                                <TouchableOpacity
-                                                    style={styles.moreContainer}
-                                                    onPress={this.toGetCheck}
-                                                >
-                                                    <Text style={styles.more}>更多</Text>
-                                                </TouchableOpacity>
-                                        }
-                                        {
-                                            latestCheck && latestCheck.length === 0 ? <Text>本周暂无考勤记录</Text> :
-                                                <PublicImageItem
-                                                    isShowSelectRightName={true}
-                                                    selectRightFrontName='本周全勤'
-                                                    selectRightEndName='次'
-                                                    selectRightKey='state_count'
-                                                    data={latestCheck}
-                                                />
-                                        }
-                                    </View>
-                                </View>
+                                                        }
+                                                        {
+                                                            latestRemark && latestRemark.length === 0 ? <Text>本周暂无点评记录</Text> : latestRemark.map((item) => {
+                                                                return(
+                                                                    <View style={styles.stuRemarkItem} key={item.id}>
+                                                                        <Image
+                                                                            source={{uri: getProtocol() + item['img_url']}}
+                                                                            style={styles.stuRemarkImg}
+                                                                        />
+                                                                        <View>
+                                                                            <View style={[styles.rightTips, styles.topScore]}>
+                                                                                <Text style={styles.rightScore}>{item.score === null ? '无分数' : item['is_praise'] === '0' ? ('+' + item.score + '分'): ('-' + item.score + '分')}</Text>
+                                                                                <Text>因为 {item['group_name']} {item['project_name'] === null ? '自定义点评' : item['project_name']} {item['template_name']}</Text>
+                                                                            </View>
+                                                                            <View style={styles.rightTips}>
+                                                                                <Text style={[styles.bottomText, styles.bottomLeftText]}>{moment(item['create_time']).format('YYYY-MM-DD HH:mm:ss')}</Text>
+                                                                                <Text style={styles.bottomText}>由{item['teacher_name']}老师点评</Text>
+                                                                            </View>
+                                                                        </View>
+                                                                    </View>
+                                                                )
+                                                            })
+                                                        }
+
+                                                    </View>
+                                                </View>
+                                                <View style={styles.childRemarkContainer}>
+                                                    <Text style={styles.childTips}>最近考勤</Text>
+                                                    <View style={styles.childRemark}>
+                                                        {
+                                                            latestCheck && latestCheck.length === 0 ? null :
+                                                                <TouchableOpacity
+                                                                    style={styles.moreContainer}
+                                                                    onPress={this.toGetCheck}
+                                                                >
+                                                                    <Text style={styles.more}>更多</Text>
+                                                                </TouchableOpacity>
+                                                        }
+                                                        {
+                                                            latestCheck && latestCheck.length === 0 ? <Text>本周暂无考勤记录</Text> :
+                                                                <PublicImageItem
+                                                                    isShowSelectRightName={true}
+                                                                    selectRightFrontName='本周全勤'
+                                                                    selectRightEndName='次'
+                                                                    selectRightKey='state_count'
+                                                                    data={latestCheck}
+                                                                />
+                                                        }
+                                                    </View>
+                                                </View>
+                                            </View>
+
+                                        ) :
+                                        <View>
+                                            <PublicNoContent tips={`${shouldJoinClass ? '暂未加入班级' : '等待班主任通过'}`} />
+                                            {
+                                                shouldJoinClass ?
+                                                    <PublicBtn
+                                                        tips="加入班级"
+                                                        onPress={this.toJoinClass}
+                                                    /> : null
+                                            }
+                                        </View>
+                                }
                             </View>
+                            )
                 }
             </View>
         );

@@ -114,7 +114,8 @@ const HomeScreen = createBottomTabNavigator({
                         obj.navigation.setParams({
                             isFresh: !params.isFresh,
                             username: val.username,
-                            imgUrl: val.imgUrl
+                            imgUrl: val.imgUrl,
+                            selectIdentity: val.selectIdentity
                         });
                     });
                     navigation.navigate('Me');

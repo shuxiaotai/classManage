@@ -4,13 +4,15 @@ import getProtocol from "../utils/getProtocol";
 import { Icon } from 'react-native-elements';
 
 const PublicCircleItem = (props) => {
-    const { item, pressFun, activeOpacity, ImgWidth, ImgHeight, ImgRadius, isEnableCheck, selectList, selectKey, changeFresh } = props;
+    const { item, pressFun, activeOpacity, ImgWidth, ImgHeight, ImgRadius, isEnableCheck, selectList, selectKey, changeFresh, isParent } = props;
     return(
         <TouchableOpacity
             style={styles.courseItem}
             onPress={pressFun ? () => {
                 pressFun(item.id, selectList, selectKey);
-                changeFresh();
+                if (changeFresh) {
+                    changeFresh();
+                }
             } : null}
             activeOpacity={activeOpacity ? activeOpacity : 0.4}
         >
@@ -34,6 +36,12 @@ const PublicCircleItem = (props) => {
             }
             <Text style={styles.remark}>
                 {item.name}
+                {
+                    isParent ?
+                        <Text style={styles.parentText}>
+                            ({item['student_name']})
+                        </Text> : null
+                }
             </Text>
         </TouchableOpacity>
     )
@@ -54,6 +62,10 @@ const styles = StyleSheet.create({
         position: 'absolute',
         right: 4,
         zIndex: 100
+    },
+    parentText: {
+        color: 'gray',
+        fontSize: 12
     }
 });
 

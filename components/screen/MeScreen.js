@@ -34,7 +34,8 @@ class meScreen extends Component{
             return {
                 isFresh: preProps.navigation.state.params.isFresh,
                 username: preProps.navigation.state.params.username,
-                imgUrl: preProps.navigation.state.params.imgUrl
+                imgUrl: preProps.navigation.state.params.imgUrl,
+                selectIdentity: preProps.navigation.state.params.selectIdentity,
             }
         }
         return null;
@@ -70,6 +71,10 @@ class meScreen extends Component{
         const { navigate } = this.props.navigation;
         navigate('MyRemark');
     };
+    toParentJoinClassInfo = () => {
+        const { navigate } = this.props.navigation;
+        navigate('ParentJoinClassInfo');
+    };
     render() {
         const { username, selectIdentity, imgUrl } = this.state;
         return(
@@ -93,6 +98,7 @@ class meScreen extends Component{
                     <PublicHorizontalItem
                         leftText="验证消息"
                         marginTop={1}
+                        toTargetFun={this.toParentJoinClassInfo}
                     />
                     <PublicHorizontalItem
                         leftText="个人信息"

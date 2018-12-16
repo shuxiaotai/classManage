@@ -128,7 +128,7 @@ class StudentHomePage extends Component{
     };
     getHeaderComponent = (selectTimeName) => {
         const { studentRemarkInfo } = this.props;
-        const { isParent } = this.props.navigation.state.params;
+        const { isParent, isMaster } = this.props.navigation.state.params;   //isMaster，0是任课老师，1是班主任
         return (
             <View>
                 <View style={styles.scoreCharts}>
@@ -141,7 +141,7 @@ class StudentHomePage extends Component{
                         <Text style={{fontSize: 14}}>{selectTimeName}得{studentRemarkInfo.score}分</Text>
                     </PercentageCircle>
                     {
-                        isParent === 1 ? null :
+                        (isParent === 1 || isMaster === 0 || isMaster === 1)? null :
                             <TouchableOpacity style={styles.inviteParent}>
                                 <Text style={styles.inviteParentText}>邀请家长</Text>
                             </TouchableOpacity>
