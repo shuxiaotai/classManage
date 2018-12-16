@@ -56,6 +56,13 @@ const HomeScreen = createBottomTabNavigator({
                 const { params } = obj.navigation.state;
                 if (params) {
                     params.onChangeSelectKey(1);  //全部公告和作业
+                    getTokenInfo().then((val) => {
+                        obj.navigation.setParams({
+                            isFresh: !params.isFresh,
+                            teacherId: val.id,
+                            selectIdentity: val.selectIdentity
+                        });
+                    });
                     navigation.navigate('Info');
                 }else {
                     navigation.navigate('Info');

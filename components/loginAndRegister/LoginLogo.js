@@ -4,7 +4,7 @@ import { View, StyleSheet, Image, Text } from 'react-native';
 const LoginLogo = () => (
     <View style={styles.loginTop}>
         <Image
-            source={require('../../public/img/test.png')}
+            source={require('../../public/img/classManage.jpg')}
             style={styles.loginImg}
         />
         <Text style={styles.loginText}>小学课堂管理</Text>
