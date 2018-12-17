@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Image } from 'react-native';
-import { Icon } from 'react-native-elements';
 import PublicHeader from "../../public/components/PublicHeader";
 import PercentageCircle from 'react-native-percentage-circle';
 import listData from "../../public/mockData/listData";

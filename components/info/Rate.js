@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, ScrollView } from 'react-native';
 import PublicImageItem from "../../public/components/PublicImageItem";
-import listData from "../../public/mockData/listData";
 import RateDetail from "./RateDetail";
-import {checkUser, getTokenInfo} from "../../public/utils/checkUser";
-import fetchData from "../../public/utils/fetchData";
 import moment from "moment/moment";
 
 class Rate extends Component {

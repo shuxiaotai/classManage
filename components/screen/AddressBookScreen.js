@@ -19,7 +19,6 @@ class addressBookScreen extends Component{
     componentDidMount() {
         this.fetchAddressBookList();
         const { navigation } = this.props;
-        const { touchList } = this.state;
         navigation.setParams({
             onLetterSelect: this.onLetterSelect,
             fetchAddressBookList: this.fetchAddressBookList

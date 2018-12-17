@@ -7,7 +7,7 @@ import CheckStudentDetail from "./CheckStudentDetail";
 import { connect } from 'react-redux';
 import * as checkActions from './Actions/checkAction';
 import fetchData from "../../public/utils/fetchData";
-import {checkUser, getTokenInfo} from "../../public/utils/checkUser";
+import {checkUser} from "../../public/utils/checkUser";
 import moment from "moment/moment";
 import listData from "../../public/mockData/listData";
 

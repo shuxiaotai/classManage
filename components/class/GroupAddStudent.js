@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, TextInput, StyleSheet, Image, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, StyleSheet, Image, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { Icon } from 'react-native-elements';
 import PublicHeader from "../../public/components/PublicHeader";
 import { connect } from 'react-redux';

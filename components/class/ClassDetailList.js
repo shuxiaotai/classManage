@@ -168,7 +168,6 @@ class ClassDetailList extends Component{
         const { navigation, studentList, parentList, groupList, setCurrentStudent, currentStudent, setCurrentGroup, currentGroup, setStudentOfGroup, studentOfGroup, setIsRemarkGroup, setRemarkGroupStudentIds, isRemarkGroup, remarkGroupStudentIds } = this.props;
         const { navigate } = navigation;
         const { grade, name, isMaster, imgUrl } = navigation.state.params;   //isMaster：0是任课老师，1是班主任
-        // const isMaster = 1;
         const { selectKey, isStudentVisible, isGroupVisible, isRandomVisible, showRandoming } = this.state;
         return(
             <View>
@@ -230,7 +229,6 @@ class ClassDetailList extends Component{
                     rightComponent={isMaster === 1 && selectKey === 2 ? <Text style={{ color: '#fff' }}>考勤报表</Text> : null}
                     rightPressFun={() => navigate('CheckChart')}
                 />
-                {/*<PublicHeader title="暂时" isLeft={true} navigation={navigation} />*/}
                 <PublicTab tabItem={isMaster === 1 ? tabItemIsMaster : tabItem} selectKey={selectKey} onChangeSelectKey={this.onChangeSelectKey} />
                 {
                     selectKey === 1 ?

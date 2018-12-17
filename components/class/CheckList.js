@@ -5,7 +5,7 @@ import PublicImageItem from "../../public/components/PublicImageItem";
 import { connect } from 'react-redux';
 import CheckChart from "./CheckChart";
 import fetchData from "../../public/utils/fetchData";
-import {checkUser, getTokenInfo} from "../../public/utils/checkUser";
+import {checkUser} from "../../public/utils/checkUser";
 
 const checkItem = [
     {

@@ -7,8 +7,6 @@ import MeScreen from './MeScreen';
 import ClassScreen from "./ClassScreen";
 import {getTokenInfo} from "../../public/utils/checkUser";
 
-//#3498db
-//MaterialIcons
 const HomeScreen = createBottomTabNavigator({
     Class: {
         screen: ClassScreen,

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {TouchableOpacity, StyleSheet, Dimensions} from 'react-native';
+import {TouchableOpacity, StyleSheet} from 'react-native';
 
 class PublicMask extends Component{
 

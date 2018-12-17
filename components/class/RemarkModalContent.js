@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import PublicTab from "../../public/components/PublicTab";
 import PublicCircleItem from "../../public/components/PublicCircleItem";
 import PublicScrollView from "../../public/components/PublicScrollView";
-import listData from "../../public/mockData/listData";
 import PublicBtn from "../../public/components/PublicBtn";
 import * as templateActions from './Actions/templateAction';
 import * as projectActions from './Actions/projectAction';

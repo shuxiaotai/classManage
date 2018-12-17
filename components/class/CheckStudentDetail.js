@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {View, StyleSheet, Dimensions, Image, Text, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, Dimensions} from 'react-native';
 import PublicHeader from "../../public/components/PublicHeader";
 import PublicSelectTime from "../../public/components/PublicSelectTime";
 import PublicMask from "../../public/components/PublicMask";

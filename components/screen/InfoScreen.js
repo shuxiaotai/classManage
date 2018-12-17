@@ -4,7 +4,6 @@ import { Icon } from 'react-native-elements';
 import PublicHeader from "../../public/components/PublicHeader";
 import PublicTab from "../../public/components/PublicTab";
 import PublicNoContent from "../../public/components/PublicNoContent";
-import listData from "../../public/mockData/listData";
 import Rate from "../info/Rate";
 import SelectVisibleClass from "../info/SelectVisibleClass";
 import { connect } from 'react-redux';
@@ -67,9 +66,6 @@ class InfoScreen extends Component{
         }
         return null;
     }
-    // componentDidUpdate() {
-    //     console.log('update');
-    // }
     onChangeSelectKey = (key) => {
         this.setState({
             selectKey: key

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {View, Text, ScrollView, TextInput, StyleSheet, Image, Alert} from 'react-native';
 import PublicHeader from "../../public/components/PublicHeader";
-import listData from "../../public/mockData/listData";
 import { connect } from 'react-redux';
 import * as studentActions from './Actions/studentAction';
 import {checkUser} from "../../public/utils/checkUser";

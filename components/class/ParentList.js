@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
-import listData from "../../public/mockData/listData";
 import PublicCircleItem from "../../public/components/PublicCircleItem";
-import PublicNoContent from "../../public/components/PublicNoContent";
 
 class ParentList extends Component{
     render() {

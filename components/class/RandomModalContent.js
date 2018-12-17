@@ -2,29 +2,6 @@ import React, { Component } from 'react';
 import { View, StyleSheet, Image, Text, TouchableOpacity } from 'react-native';
 import getProtocol from "../../public/utils/getProtocol";
 
-// let list = [
-//     {
-//         key: 1,
-//         name: 'sxt1'
-//     },
-//     {
-//         key: 2,
-//         name: 'sss2'
-//     },
-//     {
-//         key: 3,
-//         name: '朱叔叔3'
-//     },
-//     {
-//         key: 4,
-//         name: '朱sss4'
-//     },
-//     {
-//         key: 5,
-//         name: '朱sss5'
-//     }
-// ];
-
 class RandomModalContent extends Component{
     constructor(props) {
         super(props);

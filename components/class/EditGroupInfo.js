@@ -4,7 +4,6 @@ import PublicHeader from "../../public/components/PublicHeader";
 import PublicHorizontalItem from "../../public/components/PublicHorizontalItem";
 import EditOrCreateName from "./EditOrCreateName";
 import PublicCircleItem from "../../public/components/PublicCircleItem";
-import listData from "../../public/mockData/listData";
 import PublicBtn from "../../public/components/PublicBtn";
 import { connect } from 'react-redux';
 import fetchData from "../../public/utils/fetchData";

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {Text, View, AsyncStorage, Alert, StyleSheet, Image} from 'react-native';
-import PublicHeader from "../../public/components/PublicHeader";
 import PublicBtn from "../../public/components/PublicBtn";
 import {getTokenInfo} from "../../public/utils/checkUser";
 import PublicHorizontalItem from "../../public/components/PublicHorizontalItem";
@@ -47,9 +46,6 @@ class meScreen extends Component{
             }
         }
         return null;
-    }
-    componentDidUpdate() {
-        // console.log('update');
     }
     showInfo() {
         getTokenInfo().then((val) => {

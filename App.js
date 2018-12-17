@@ -99,7 +99,7 @@ const App = createStackNavigator({
     }
 }, {
     headerMode: 'none',
-    initialRouteName: 'Home'
+    initialRouteName: 'ChooseIdentity'
 });
 
 export default App;

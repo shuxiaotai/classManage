@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import PublicImageItem from "../../public/components/PublicImageItem";
 import PublicHeader from "../../public/components/PublicHeader";
-import listData from "../../public/mockData/listData";
 import { connect } from 'react-redux';
 import {checkUser} from "../../public/utils/checkUser";
 import fetchData from "../../public/utils/fetchData";
@@ -33,7 +32,7 @@ class RateDetail extends Component{
                     isLeft={true}
                     navigation={navigation}
                 />
-                <View style={styles.rateDetailContainer}>
+                <View>
                     <PublicImageItem
                         isShowSelectRightName={true}
                         selectRightFrontName=''
@@ -47,11 +46,6 @@ class RateDetail extends Component{
         )
     }
 }
-const styles = StyleSheet.create({
-    rateDetailContainer: {
-        // marginTop: -10,
-    }
-});
 const mapStateToProps = (state) => {
     return {
         studentList: state.studentReducer.studentList

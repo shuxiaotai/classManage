@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Text, View, StyleSheet, Image, Dimensions, TouchableOpacity, DeviceEventEmitter} from 'react-native';
+import {Text, View, StyleSheet, Image, Dimensions, TouchableOpacity} from 'react-native';
 import { connect } from 'react-redux';
 import { Icon } from 'react-native-elements';
 import PublicHeader from "../../public/components/PublicHeader";
@@ -43,9 +43,7 @@ class ClassScreen extends Component{
         };
     }
     componentDidMount() {
-        //到时候在这边把老师和家长区分
-        // console.log(new Date().toLocaleString());
-        // console.log(+new Date());
+        //这边把老师和家长区分
         const { navigation } = this.props;
         getTokenInfo().then((value) => {
             this.setState({
@@ -79,9 +77,6 @@ class ClassScreen extends Component{
         }
         return null;
     }
-    componentDidUpdate() {
-        // console.log('update');
-    }
     getChildInfo = () => {
         const { navigate } = this.props.navigation;
         const { setChildInfo, setLatestRemark, setLatestCheck } = this.props;
@@ -105,7 +100,6 @@ class ClassScreen extends Component{
         }, navigate);
     };
     getClassList = (key) => {
-        // console.log('===');
         const { navigate } = this.props.navigation;
         const { setClassList } = this.props;
         checkUser(() => {

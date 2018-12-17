@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {View, Text, TextInput, Alert} from 'react-native';
+import {View, TextInput, Alert} from 'react-native';
 import PublicHeader from "../../public/components/PublicHeader";
 import PublicHorizontalItem from "../../public/components/PublicHorizontalItem";
 import PublicBtn from "../../public/components/PublicBtn";
