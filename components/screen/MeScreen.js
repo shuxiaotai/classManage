@@ -22,6 +22,7 @@ class meScreen extends Component{
         getTokenInfo().then((value) => {
             this.setState({
                 selectIdentity: value.selectIdentity,
+                username: value.username,
                 imgUrl: value.imgUrl
             });
         });
@@ -48,7 +49,7 @@ class meScreen extends Component{
         return null;
     }
     componentDidUpdate() {
-        console.log('update');
+        // console.log('update');
     }
     showInfo() {
         getTokenInfo().then((val) => {

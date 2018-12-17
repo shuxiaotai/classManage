@@ -25,7 +25,7 @@ class Rate extends Component {
                 contentContainerStyle={styles.rateListContainer}
             >
                 {
-                    rateInfo ? rateInfo.rateList.map((item, index) => {
+                    (rateInfo && rateInfo.rateList.length > 0) ? (rateInfo.rateList.map((item, index) => {
                         if(item.length > 0) {
                             return(
                                 <View
@@ -54,7 +54,7 @@ class Rate extends Component {
                                 </View>
                             )
                         }
-                    }) : null
+                    })) : null
                 }
             </ScrollView>
         );

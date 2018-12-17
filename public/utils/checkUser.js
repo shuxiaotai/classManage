@@ -40,10 +40,12 @@ export const getTokenInfo = async () => {
     let selectIdentity = jwt_decode(token).selectIdentity;
     let id = jwt_decode(token).id;
     let imgUrl = jwt_decode(token).imgUrl;
+    let parentInClass = jwt_decode(token).parentInClass;
     return {
         username: username,
         selectIdentity: selectIdentity,
         id: id,
-        imgUrl: imgUrl
+        imgUrl: imgUrl,
+        parentInClass: parentInClass
     }
 };

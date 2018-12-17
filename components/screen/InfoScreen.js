@@ -99,7 +99,7 @@ class InfoScreen extends Component{
                         parentId: value.selectIdentity === 1 ? value.id : ''
                     }
                 ).then((val) => {
-                    setRateInfo(val.rateInfo);
+                    setRateInfo(val.rateInfo ? val.rateInfo: '');
                 });
             });
         }, navigate);
@@ -294,7 +294,7 @@ class InfoScreen extends Component{
 
                 </View>
                 {
-                    (selectIdentity === 0 && (selectKey === 1 || selectKey === 2 || selectKey === 3) ?
+                    ((selectIdentity === 0 && (selectKey === 1 || selectKey === 2 || selectKey === 3) && (allInfoList.length > 0 || noticeList.length > 0 || homeworkList.length > 0)) ?
                         <TouchableOpacity
                             style={styles.edit}
                             onPress={this.toSelectVisibleClass}

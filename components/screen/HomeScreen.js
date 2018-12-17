@@ -109,7 +109,6 @@ const HomeScreen = createBottomTabNavigator({
             tabBarOnPress: (obj) => {
                 const { params } = obj.navigation.state;
                 if (params) {
-
                     getTokenInfo().then((val) => {
                         obj.navigation.setParams({
                             isFresh: !params.isFresh,
@@ -120,6 +119,13 @@ const HomeScreen = createBottomTabNavigator({
                     });
                     navigation.navigate('Me');
                 }else {
+                    getTokenInfo().then((val) => {
+                        obj.navigation.setParams({
+                            username: val.username,
+                            imgUrl: val.imgUrl,
+                            selectIdentity: val.selectIdentity
+                        });
+                    });
                     navigation.navigate('Me');
                 }
             },
