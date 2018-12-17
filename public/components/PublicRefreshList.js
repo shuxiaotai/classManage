@@ -19,11 +19,6 @@ class PublicRefreshList extends Component{
             isLoading: true,
         };
     }
-    componentDidMount() {
-        //请求数据
-        const { getList } = this.props;
-        // getList(page);
-    }
     //下拉刷新
     beginHeaderRefresh = () => {
         const { footerState } = this.state;

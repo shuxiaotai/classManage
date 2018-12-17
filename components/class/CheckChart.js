@@ -9,7 +9,28 @@ import * as checkActions from './Actions/checkAction';
 import fetchData from "../../public/utils/fetchData";
 import {checkUser} from "../../public/utils/checkUser";
 import moment from "moment/moment";
-import listData from "../../public/mockData/listData";
+const selectTimeList = [
+    {
+        id: 0,
+        name: '今天'
+    },
+    {
+        id: 1,
+        name: '本周'
+    },
+    {
+        id: 2,
+        name: '上周'
+    },
+    {
+        id: 3,
+        name: '本月'
+    },
+    {
+        id: 4,
+        name: '近一年'
+    }
+];
 
 class CheckChart extends Component{
     constructor() {
@@ -83,7 +104,7 @@ class CheckChart extends Component{
                         selectTimeFun={this.selectTimeFun}
                         selectTimeKey={selectTimeKey}
                         arrowRight={130}
-                        data={listData.selectTimeList}
+                        data={selectTimeList}
                     />
                 </View>
                 <PublicMask

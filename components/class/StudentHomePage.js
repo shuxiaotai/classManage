@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Image } from 'react-native';
 import PublicHeader from "../../public/components/PublicHeader";
 import PercentageCircle from 'react-native-percentage-circle';
-import listData from "../../public/mockData/listData";
 import PublicRefreshList from "../../public/components/PublicRefreshList";
 import PublicNoContent from "../../public/components/PublicNoContent";
 import PublicMask from "../../public/components/PublicMask";
@@ -14,6 +13,28 @@ import * as studentActions from './Actions/studentAction';
 import moment from 'moment';
 import getProtocol from "../../public/utils/getProtocol";
 
+const selectTimeList = [
+    {
+        id: 0,
+        name: '今天'
+    },
+    {
+        id: 1,
+        name: '本周'
+    },
+    {
+        id: 2,
+        name: '上周'
+    },
+    {
+        id: 3,
+        name: '本月'
+    },
+    {
+        id: 4,
+        name: '近一年'
+    }
+];
 
 class StudentHomePage extends Component{
     constructor() {
@@ -23,11 +44,9 @@ class StudentHomePage extends Component{
             onlyMyRemark: false,
             selectTimeKey: 1,
             selectTimeName: '本周',
-            dataArr: []
         }
     }
     componentDidMount() {
-        // this.getList(1);
         this.fetchStudentRemark(1, false);
     }
     fetchStudentRemark = (time, filterTeacher) => {
@@ -83,27 +102,6 @@ class StudentHomePage extends Component{
             selectTimeName: name
         });
         this.fetchStudentRemark(id, false);
-    };
-    //获取模拟数据
-    getList = (page) => {
-        switch (page) {
-            case 1:
-                this.setState({
-                    dataArr: listData.studentRemarkList1
-                });
-                break;
-            case 2:
-                this.setState({
-                    dataArr: listData.studentRemarkList1.concat(listData.studentRemarkList2)
-                });
-                break;
-            case 3:
-                this.setState({
-                    dataArr: listData.studentRemarkList1.concat(listData.studentRemarkList2.concat(listData.studentRemarkList3))
-                });
-                break;
-
-        }
     };
     getRenderStuRemark = () => {
         return({item}) => (
@@ -174,9 +172,8 @@ class StudentHomePage extends Component{
     };
     render() {
         const { navigation, currentStudent, studentRemarkList } = this.props;
-        const { showSelectTime, onlyMyRemark, selectTimeKey, selectTimeName, dataArr } = this.state;
+        const { showSelectTime, onlyMyRemark, selectTimeKey, selectTimeName } = this.state;
         const { isMaster, isParent } = this.props.navigation.state.params;
-        // const isMaster = 1;   //暂时注释
         return(
             <View style={{ position: 'relative' }}>
                 <PublicHeader
@@ -195,7 +192,7 @@ class StudentHomePage extends Component{
                         handleShowSelectTime={this.handleShowSelectTime}
                         selectTimeKey={selectTimeKey}
                         selectTimeFun={this.selectTimeFun}
-                        data={listData.selectTimeList}
+                        data={selectTimeList}
                         top={27}
                         arrowRight={isParent === 1 ? 130 : ''}
                     />

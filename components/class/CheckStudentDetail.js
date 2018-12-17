@@ -3,13 +3,34 @@ import {View, StyleSheet, Dimensions} from 'react-native';
 import PublicHeader from "../../public/components/PublicHeader";
 import PublicSelectTime from "../../public/components/PublicSelectTime";
 import PublicMask from "../../public/components/PublicMask";
-import listData from "../../public/mockData/listData";
 import PublicImageItem from "../../public/components/PublicImageItem";
 import fetchData from "../../public/utils/fetchData";
 import {checkUser} from "../../public/utils/checkUser";
 import { connect } from 'react-redux';
 import * as checkActions from "./Actions/checkAction";
 
+const selectTimeList = [
+    {
+        id: 0,
+        name: '今天'
+    },
+    {
+        id: 1,
+        name: '本周'
+    },
+    {
+        id: 2,
+        name: '上周'
+    },
+    {
+        id: 3,
+        name: '本月'
+    },
+    {
+        id: 4,
+        name: '近一年'
+    }
+];
 
 const selectCheckCountList = [
     {
@@ -101,7 +122,7 @@ class CheckStudentDetail extends Component{
                         showSelectTime={selectTabKey === 0 ? showSelectTime : false}
                         selectTimeKey={selectTimeKey}
                         top={27}
-                        data={listData.selectTimeList}
+                        data={selectTimeList}
                         handleShowSelectTime={() => this.handleShowSelectTime(0)}
                         selectTimeFun={this.selectTimeFun}
                     />

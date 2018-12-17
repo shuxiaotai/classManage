@@ -5,7 +5,6 @@ import { Icon } from 'react-native-elements';
 import PublicHeader from "../../public/components/PublicHeader";
 import PublicTab from "../../public/components/PublicTab";
 import PublicNoContent from "../../public/components/PublicNoContent";
-import listData from '../../public/mockData/listData';
 import PublicRefreshList from "../../public/components/PublicRefreshList";
 import PublicMask from "../../public/components/PublicMask";
 import fetchData from "../../public/utils/fetchData";
@@ -31,7 +30,6 @@ class ClassScreen extends Component{
         super(props);
         this.state = {
             selectKey: 0,
-            dataArr: [],
             showManageClassBtn: false,
             isDeleteClass: false,
             selectClassId: -1,
@@ -170,27 +168,6 @@ class ClassScreen extends Component{
             )
         };
     };
-    //获取模拟数据
-    getList = (page) => {
-        switch (page) {
-            case 1:
-                this.setState({
-                    dataArr: listData.classList1
-                });
-                break;
-            case 2:
-                this.setState({
-                    dataArr: listData.classList1.concat(listData.classList2)
-                });
-                break;
-            case 3:
-                this.setState({
-                    dataArr: listData.classList1.concat(listData.classList2.concat(listData.classList3))
-                });
-                break;
-
-        }
-    };
     getRightComponent = () => {
         const { isDeleteClass } = this.state;
         return(
@@ -312,7 +289,7 @@ class ClassScreen extends Component{
         });
     };
     render() {
-        const { selectKey, dataArr, showManageClassBtn, isDeleteClass, selectIdentity, shouldJoinClass } = this.state;
+        const { selectKey, showManageClassBtn, isDeleteClass, selectIdentity, shouldJoinClass } = this.state;
         const { classList, navigation, childInfo, latestRemark, latestCheck } = this.props;
         return(
             <View style={{ position: 'relative' }}>
@@ -358,7 +335,6 @@ class ClassScreen extends Component{
                                 <PublicRefreshList
                                     getRenderItem={this.getRenderItem}
                                     dataArr={classList}
-                                    getList={this.getList}
                                     totalPage={1}
                                     ListEmptyComponent={<PublicNoContent tips="暂无创建的班级" />}
                                 />
@@ -367,7 +343,6 @@ class ClassScreen extends Component{
                                 <PublicRefreshList
                                     getRenderItem={this.getRenderItem}
                                     dataArr={classList}
-                                    getList={this.getList}
                                     totalPage={1}
                                     ListEmptyComponent={<PublicNoContent tips="暂无管理的班级" />}
                                 />

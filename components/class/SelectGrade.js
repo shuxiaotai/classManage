@@ -2,8 +2,33 @@ import React, { Component } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import PublicHeader from "../../public/components/PublicHeader";
-import listData from "../../public/mockData/listData";
 
+const gradeList = [
+    {
+        id: 1,
+        name: '一年级'
+    },
+    {
+        id: 2,
+        name: '二年级'
+    },
+    {
+        id: 3,
+        name: '三年级'
+    },
+    {
+        id: 4,
+        name: '四年级'
+    },
+    {
+        id: 5,
+        name: '五年级'
+    },
+    {
+        id: 6,
+        name: '六年级'
+    }
+];
 class SelectGrade extends Component{
     constructor() {
         super();
@@ -32,7 +57,7 @@ class SelectGrade extends Component{
                 />
                 <View style={styles.selectGradeContainer}>
                     {
-                        listData.gradeList.map((item) => (
+                        gradeList.map((item) => (
                             <TouchableOpacity
                                 style={styles.selectGradeItem}
                                 key={item.id}
