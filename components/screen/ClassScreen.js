@@ -339,7 +339,7 @@ class ClassScreen extends Component{
                                 <PublicRefreshList
                                     getRenderItem={this.getRenderItem}
                                     dataArr={classList}
-                                    totalPage={1}
+                                    totalPage={0}
                                     ListEmptyComponent={<PublicNoContent tips="暂无创建的班级" />}
                                 />
                             </View> :
@@ -347,7 +347,7 @@ class ClassScreen extends Component{
                                 <PublicRefreshList
                                     getRenderItem={this.getRenderItem}
                                     dataArr={classList}
-                                    totalPage={1}
+                                    totalPage={0}
                                     ListEmptyComponent={<PublicNoContent tips="暂无管理的班级" />}
                                 />
                             </View>) :

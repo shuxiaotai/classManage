@@ -40,7 +40,7 @@ class PublicRefreshList extends Component{
     //上拉加载
     beginFooterRefresh = () => {
         const { getList, totalPage } = this.props;
-        if ((page !== 1) && (page > totalPage)) {
+        if ((page !== 1) && (page > totalPage + 1)) {
             this.setState({ footerState: refreshState.NoMoreData });
             return;
         } else {
@@ -81,7 +81,7 @@ class PublicRefreshList extends Component{
         return(
             <View>
                 {
-                    totalPage < 8 ?
+                    totalPage < 1 ?
                         <FlatList
                             data={dataArr}
                             renderItem={getRenderItem()}
