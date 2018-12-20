@@ -8,7 +8,7 @@
  
  3.登录后的界面发的请求都检测了token是否过期，过期需要重新登录
  
- <img src='../readme/login/chooseIdentity.png' width="250px" />
+ <img src='https://github.com/shuxiaotai/classManage/blob/master/readme/login/chooseIdentity.png' width="250px" />
  <img src='../readme/login/login.png' width="250px" />
  <img src='../readme/login/register.png' width="250px" />
  
