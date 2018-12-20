@@ -1,12 +1,25 @@
 import React, { Component } from 'react';
 import { Icon, Badge } from 'react-native-elements';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions, Platform } from 'react-native';
 import AddStudent from "./AddStudent";
 import PublicNoContent from "../../public/components/PublicNoContent";
 import PublicScrollView from "../../public/components/PublicScrollView";
 import getProtocol from "../../public/utils/getProtocol";
 
 
+let screenW = Dimensions.get('window').width;
+let screenH = Dimensions.get('window').height;
+// iPhoneX
+const X_WIDTH = 375;
+const X_HEIGHT = 812;
+
+function isIphoneX() {
+    return (
+        Platform.OS === 'ios' &&
+        ((screenH === X_HEIGHT && screenW === X_WIDTH) ||
+            (screenH === X_WIDTH && screenW === X_HEIGHT))
+    )
+}
 class StudentList extends Component{
 
     handleAddStu = () => {
@@ -204,7 +217,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         position: 'absolute',
         paddingVertical: 10,
-        bottom: 208
+        bottom: isIphoneX() ? 300 : 208
     },
     bottomBtn: {
         flex: 1,

@@ -245,25 +245,29 @@ class ClassScreen extends Component{
     };
     toPostDeleteClass = () => {
         //发删除班级请求
+        const { selectClassId } = this.state;
+        const { navigate } = this.props.navigation;
+        if (selectClassId === -1) {
+            alert('请先选择班级');
+        } else {
+            checkUser(() => {
+                fetchData.postData('/deleteClass',
+                    {
+                        classId: selectClassId
+                    }
+                ).then((val) => {
+                    if(val.deleteClassSuccess){
+                        this.getClassList(1);
+                        alert('删除成功')
+                    }else {
+                        alert('删除失败')
+                    }
+                });
+            }, navigate);
+        }
         this.setState({
             isDeleteClass: false,
         });
-        const { selectClassId } = this.state;
-        const { navigate } = this.props.navigation;
-        checkUser(() => {
-            fetchData.postData('/deleteClass',
-                {
-                    classId: selectClassId
-                }
-            ).then((val) => {
-                if(val.deleteClassSuccess){
-                    this.getClassList(1);
-                    alert('删除成功')
-                }else {
-                    alert('删除失败')
-                }
-            });
-        }, navigate);
     };
     toGetChildRemark = () => {
         const { navigate } = this.props.navigation;

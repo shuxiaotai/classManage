@@ -51,7 +51,7 @@
 		8E2DC4B46B36476499E48C32 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 24FE3447F8654B63B7117BA0 /* libRNVectorIcons.a */; };
 		A31A8B05DB85452DAF990AF4 /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CB1E0A9DAF5440CBBF447284 /* FontAwesome5_Solid.ttf */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
-		BE2C3A0E21BBDEDD0021AC27 /* bundle in Resources */ = {isa = PBXBuildFile; fileRef = BE2C39E621BBDEDD0021AC27 /* bundle */; };
+		BED3788021C7798000A9AAA7 /* bundle in Resources */ = {isa = PBXBuildFile; fileRef = BED3785821C7797F00A9AAA7 /* bundle */; };
 		D394F9D0F1B4417F8CE55B88 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B3CB2CA4A3FB4B7D8625A051 /* FontAwesome.ttf */; };
 		DBF150B3E4BB4285BE25A284 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45407D2AA7C14BB6916795E4 /* Feather.ttf */; };
 		F2E13249DE0A4999BCE28809 /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 64A1AF36A6EF43BC840E504D /* FontAwesome5_Regular.ttf */; };
@@ -389,7 +389,7 @@
 		B1821F8178D5460AAA5B5BED /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		B3370F50D44040939A735C2D /* libRNVectorIcons-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNVectorIcons-tvOS.a"; sourceTree = "<group>"; };
 		B3CB2CA4A3FB4B7D8625A051 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
-		BE2C39E621BBDEDD0021AC27 /* bundle */ = {isa = PBXFileReference; lastKnownFileType = folder; path = bundle; sourceTree = "<group>"; };
+		BED3785821C7797F00A9AAA7 /* bundle */ = {isa = PBXFileReference; lastKnownFileType = folder; path = bundle; sourceTree = "<group>"; };
 		CB1E0A9DAF5440CBBF447284 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		D410B9FA9E31407297B20338 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		ECF70F4F70E04DD4915B3431 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
@@ -648,7 +648,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				BE2C39E621BBDEDD0021AC27 /* bundle */,
+				BED3785821C7797F00A9AAA7 /* bundle */,
 				13B07FAE1A68108700A75B9A /* classManage */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* classManageTests */,
@@ -1175,7 +1175,7 @@
 				709BCE825F2B4BD9AD8FF29E /* FontAwesome5_Brands.ttf in Resources */,
 				F2E13249DE0A4999BCE28809 /* FontAwesome5_Regular.ttf in Resources */,
 				A31A8B05DB85452DAF990AF4 /* FontAwesome5_Solid.ttf in Resources */,
-				BE2C3A0E21BBDEDD0021AC27 /* bundle in Resources */,
+				BED3788021C7798000A9AAA7 /* bundle in Resources */,
 				51286AC8B5CD49308C933634 /* Foundation.ttf in Resources */,
 				0B88C686FEF04372B758C5AB /* Ionicons.ttf in Resources */,
 				05F8F930665E41CDA6E26E9C /* MaterialCommunityIcons.ttf in Resources */,
@@ -1635,6 +1635,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
