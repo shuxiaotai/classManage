@@ -222,8 +222,7 @@ class StudentHomePage extends Component{
                             <PublicRefreshList
                                 dataArr={studentRemarkList}
                                 getRenderItem={this.getRenderStuRemark}
-                                getList={this.getList}
-                                totalPage={3}
+                                totalPage={0}
                                 ListHeaderComponent={this.getHeaderComponent(selectTimeName)}
                             />
                         </View> :

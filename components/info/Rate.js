@@ -15,6 +15,13 @@ class Rate extends Component {
             classId
         });
     };
+    getChildItemClassId = (item) => {
+        let childClassId = '';
+        item.forEach((childItem) => {
+            childClassId = childItem['class_id'];
+        });
+        return childClassId;
+    };
     render() {
         const { rateInfo } = this.props;
         return(
@@ -28,7 +35,7 @@ class Rate extends Component {
                                 <View
                                     style={styles.rateContainer}
                                     activeOpacity={0.8}
-                                    key={item[index]['class_id']}
+                                    key={index}
                                 >
                                     <View style={styles.rateTitle}>
                                         <Text>{moment(rateInfo.startTime).format('MM-DD')} - {moment(rateInfo.endTime).format('MM-DD')} {item[0]['class_grade']}{item[0]['class_name']}</Text>
@@ -42,7 +49,7 @@ class Rate extends Component {
                                         avatarMarginLeft={50}
                                     />
                                     <TouchableOpacity
-                                        onPress={() => this.toRateDetail(item[index]['class_id'])}
+                                        onPress={() => this.toRateDetail(this.getChildItemClassId(item))}
                                     >
                                         <Text
                                             style={styles.detailBtn}

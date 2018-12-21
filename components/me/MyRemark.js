@@ -20,6 +20,9 @@ class MyRemark extends Component{
     componentDidMount() {
         this.fetchMyRemark(1);
     }
+    componentWillUnmount() {
+        this.fetchMyRemark = null;
+    }
     fetchMyRemark = (start, func = '') => {
         let realFunc = func;
         const { navigate } = this.props.navigation;

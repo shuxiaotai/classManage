@@ -71,7 +71,7 @@ class addressBookScreen extends Component{
     };
     renderAddressBook = ({ item, index }) => {
         return(
-            <TouchableOpacity style={styles.bookItem}>
+            <View style={styles.bookItem}>
                 <Image
                     source={{uri: getProtocol() + item['img_url']}}
                     style={styles.userImg}
@@ -79,7 +79,7 @@ class addressBookScreen extends Component{
                 <Text style={styles.roleText}>{item['is_parent'] === 1 ? '家长': '老师'}</Text>
                 <Text style={styles.phoneText}>{item.phone}</Text>
                 <Text>{item.username}</Text>
-            </TouchableOpacity>
+            </View>
         )
     };
 
@@ -116,7 +116,7 @@ class addressBookScreen extends Component{
                                                 onPress={() => this.onLetterSelect(index)}
                                                 key={index}
                                             >
-                                                <Text>{item}</Text>
+                                                <Text style={styles.touchListText}>{item}</Text>
                                             </TouchableOpacity>
                                         )
                                     })
@@ -132,7 +132,7 @@ class addressBookScreen extends Component{
 const styles = StyleSheet.create({
     letterContainer: {
         position: 'absolute',
-        right: 5,
+        right: 10,
         top: 100
     },
     userImg: {
@@ -155,6 +155,9 @@ const styles = StyleSheet.create({
     },
     phoneText: {
         marginHorizontal: 10
+    },
+    touchListText: {
+        fontSize: 17
     }
 });
 export default addressBookScreen;

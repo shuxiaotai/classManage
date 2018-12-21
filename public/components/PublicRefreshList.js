@@ -40,21 +40,23 @@ class PublicRefreshList extends Component{
     //上拉加载
     beginFooterRefresh = () => {
         const { getList, totalPage } = this.props;
-        if ((page !== 1) && (page > totalPage + 1)) {
-            this.setState({ footerState: refreshState.NoMoreData });
-            return;
-        } else {
-            if(this.state.isLoading && (this.state.footerState === refreshState.Init || this.state.footerState === refreshState.CanLoadMore)) {
-                page++;
-                this.setState({ footerState: refreshState.Refreshing });
-                this.setState({ isLoading: false });
+        if (getList !== null) {
+            if ((page !== 1) && (page > totalPage + 1)) {
+                this.setState({ footerState: refreshState.NoMoreData });
+                return;
+            } else {
+                if(this.state.isLoading && (this.state.footerState === refreshState.Init || this.state.footerState === refreshState.CanLoadMore)) {
+                    page++;
+                    this.setState({ footerState: refreshState.Refreshing });
+                    this.setState({ isLoading: false });
+                }
             }
+            setTimeout(() => {
+                getList(page);
+                this.setState({ footerState: refreshState.CanLoadMore });
+                this.setState({ isLoading: true });
+            }, 3000)
         }
-        setTimeout(() => {
-            getList(page);
-            this.setState({ footerState: refreshState.CanLoadMore });
-            this.setState({ isLoading: true });
-        }, 3000)
     };
 
     //底部文字
