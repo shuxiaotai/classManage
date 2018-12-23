@@ -62,8 +62,11 @@ class ClassScreen extends Component{
                 });
             }
         });
+        console.log('mount');
     }
     static getDerivedStateFromProps(preProps, preState) {
+        console.log('derived');
+        console.log(preState.selectIdentity);
         if (preProps.navigation.state.params && (preState.isTeacher !== preProps.navigation.state.params.isTeacher)) {
             return {
                 isTeacher: preProps.navigation.state.params.isTeacher
@@ -71,10 +74,13 @@ class ClassScreen extends Component{
         }
         if (preProps.navigation.state.params && (preState.selectIdentity !== preProps.navigation.state.params.selectIdentity)) {
             return {
-                selectIdentity: preProps.navigation.state.params.selectIdentity ? preProps.navigation.state.params.selectIdentity : 0
+                selectIdentity: preProps.navigation.state.params.selectIdentity ? preProps.navigation.state.params.selectIdentity : preState.selectIdentity
             };
         }
         return null;
+    }
+    componentDidUpdate() {
+        console.log('update');
     }
     getChildInfo = () => {
         const { navigate } = this.props.navigation;
