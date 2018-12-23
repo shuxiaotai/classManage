@@ -5,21 +5,9 @@ import AddStudent from "./AddStudent";
 import PublicNoContent from "../../public/components/PublicNoContent";
 import PublicScrollView from "../../public/components/PublicScrollView";
 import getProtocol from "../../public/utils/getProtocol";
+import {isIphoneX, isIphonePlus} from '../../public/utils/getDevice';
 
 
-let screenW = Dimensions.get('window').width;
-let screenH = Dimensions.get('window').height;
-// iPhoneX
-const X_WIDTH = 375;
-const X_HEIGHT = 812;
-
-function isIphoneX() {
-    return (
-        Platform.OS === 'ios' &&
-        ((screenH === X_HEIGHT && screenW === X_WIDTH) ||
-            (screenH === X_WIDTH && screenW === X_HEIGHT))
-    )
-}
 class StudentList extends Component{
 
     handleAddStu = () => {
@@ -48,61 +36,63 @@ class StudentList extends Component{
             <View>
                 {
                     studentList.length !== 0 ?
-                        <View style={styles.detailContainer}>
-                            <View style={styles.detailItem}>
-                                <Image
-                                    source={{uri: getProtocol() + imgUrl}}
-                                    style={styles.stuAvatar}
-                                />
-                                <Badge
-                                    value={this.getTotalScore()}    //分数下次再算
-                                    textStyle={{ color: '#c1194e', fontSize: 13 }}
-                                    containerStyle={styles.badgeText}
-                                />
-                                <Text style={styles.detailText}>
-                                    全班
-                                </Text>
-                            </View>
-                            {
-                                studentList.map((item) => (
-                                    <TouchableOpacity
-                                        style={styles.detailItem}
-                                        key={item.id}
-                                        onPress={() => this.getStudentDetail(item)}
-                                    >
-                                        <Image
-                                            source={{uri: getProtocol() + item['avatar_url']}}
-                                            style={styles.stuAvatar}
-                                        />
-                                        <Badge
-                                            value={item.score}
-                                            textStyle={{ color: '#c1194e', fontSize: 13 }}
-                                            containerStyle={styles.badgeText}
-                                        />
-                                        <Text style={styles.detailText} numberOfLines={1}>
-                                            {item.name}
-                                        </Text>
-                                    </TouchableOpacity>
-                                ))
-                            }
-                            <View>
-                                {   //班主任才可以添加学生
-                                    isMaster === 1 ?
-                                        <TouchableOpacity onPress={this.handleAddStu} style={styles.detailItem}>
-                                            <View
-                                                style={[styles.stuAvatar, styles.addStu]}
-                                            >
-                                                <Icon
-                                                    name="add"
-                                                    color="#00aced"
-                                                    size={34}
-                                                />
-                                            </View>
-                                            <Text style={styles.detailText}>
-                                                添加学生
+                        <View style={{ display: 'flex', alignItems: 'center'}}>
+                            <View style={styles.detailContainer}>
+                                <View style={styles.detailItem}>
+                                    <Image
+                                        source={{uri: getProtocol() + imgUrl}}
+                                        style={styles.stuAvatar}
+                                    />
+                                    <Badge
+                                        value={this.getTotalScore()}    //分数下次再算
+                                        textStyle={{ color: '#c1194e', fontSize: 13 }}
+                                        containerStyle={styles.badgeText}
+                                    />
+                                    <Text style={styles.detailText}>
+                                        全班
+                                    </Text>
+                                </View>
+                                {
+                                    studentList.map((item) => (
+                                        <TouchableOpacity
+                                            style={styles.detailItem}
+                                            key={item.id}
+                                            onPress={() => this.getStudentDetail(item)}
+                                        >
+                                            <Image
+                                                source={{uri: getProtocol() + item['avatar_url']}}
+                                                style={styles.stuAvatar}
+                                            />
+                                            <Badge
+                                                value={item.score}
+                                                textStyle={{ color: '#c1194e', fontSize: 13 }}
+                                                containerStyle={styles.badgeText}
+                                            />
+                                            <Text style={styles.detailText} numberOfLines={1}>
+                                                {item.name}
                                             </Text>
-                                        </TouchableOpacity> : null
+                                        </TouchableOpacity>
+                                    ))
                                 }
+                                <View>
+                                    {   //班主任才可以添加学生
+                                        isMaster === 1 ?
+                                            <TouchableOpacity onPress={this.handleAddStu} style={styles.detailItem}>
+                                                <View
+                                                    style={[styles.stuAvatar, styles.addStu]}
+                                                >
+                                                    <Icon
+                                                        name="add"
+                                                        color="#00aced"
+                                                        size={34}
+                                                    />
+                                                </View>
+                                                <Text style={styles.detailText}>
+                                                    添加学生
+                                                </Text>
+                                            </TouchableOpacity> : null
+                                    }
+                                </View>
                             </View>
                         </View>
                         :
@@ -177,8 +167,10 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
         justifyContent: 'flex-start',
         marginTop: 15,
-        marginLeft: 6,
-        paddingBottom: 10
+        marginLeft: isIphonePlus() ? 0 : 10,
+        paddingLeft: isIphonePlus() ? 14 : 0,
+        paddingBottom: 10,
+        width: '100%',
     },
     stuAvatar: {
         width: 60,
@@ -188,8 +180,8 @@ const styles = StyleSheet.create({
     detailItem: {
         display: 'flex',
         alignItems: 'center',
-        marginLeft: 15,
-        marginRight: 15,
+        marginLeft: isIphonePlus() ? 18 : 15,
+        marginRight: isIphonePlus() ? 18 : 15,
         marginBottom: 10,
         maxWidth: 60
     },

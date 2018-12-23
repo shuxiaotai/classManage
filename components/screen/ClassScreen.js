@@ -14,6 +14,7 @@ import PublicImageItem from "../../public/components/PublicImageItem";
 import moment from "moment/moment";
 import getProtocol from '../../public/utils/getProtocol';
 import PublicBtn from "../../public/components/PublicBtn";
+import {isIphonePlus} from "../../public/utils/getDevice";
 
 const tabItem = [
     {
@@ -535,7 +536,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 15
     },
     childInfo: {
-        width: 340,
+        width: isIphonePlus() ? 370 : 340,
         height: 100,
         borderRadius: 10,
         backgroundColor: '#fff',
@@ -550,7 +551,7 @@ const styles = StyleSheet.create({
         right: 15
     },
     childRemark: {
-        width: 340,
+        width: isIphonePlus() ? 370 : 340,
         height: 120,
         borderRadius: 10,
         backgroundColor: '#fff',
