@@ -94,7 +94,7 @@ class SelectVisibleClass extends Component{
                     source={{uri: getProtocol() + item['img_url']}}
                     style={styles.userImg}
                 />
-                <Text>{item.name}</Text>
+                <Text>{item.grade}{item.name}</Text>
             </TouchableOpacity>
         )
     };
@@ -172,6 +172,7 @@ class SelectVisibleClass extends Component{
             obj.isNotice = 0;
             newMasterClassList.push(obj);
         });
+        console.log(newMasterClassList);
         let newTeacherClassList = [];
         teacherClassList.forEach((item) => {
             let obj = {};

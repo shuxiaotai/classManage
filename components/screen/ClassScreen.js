@@ -62,10 +62,8 @@ class ClassScreen extends Component{
                 });
             }
         });
-        console.log('mount');
     }
     static getDerivedStateFromProps(preProps, preState) {
-        console.log('derived');
         console.log(preState.selectIdentity);
         if (preProps.navigation.state.params && (preState.isTeacher !== preProps.navigation.state.params.isTeacher)) {
             return {
@@ -78,9 +76,6 @@ class ClassScreen extends Component{
             };
         }
         return null;
-    }
-    componentDidUpdate() {
-        console.log('update');
     }
     getChildInfo = () => {
         const { navigate } = this.props.navigation;
