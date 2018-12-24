@@ -283,7 +283,8 @@ class ClassScreen extends Component{
         navigate('StudentHomePage', {
             isMaster: 0,
             isParent: 1,
-            myChildId: childInfo.id
+            myChildId: childInfo.id,
+            myChildName: childInfo.name
         });
     };
     toGetCheck = () => {
@@ -291,7 +292,8 @@ class ClassScreen extends Component{
         const { childInfo } = this.props;
         navigate('CheckStudentDetail', {
             isParent: 1,
-            studentId: childInfo.id
+            studentId: childInfo.id,
+            myChildName: childInfo.name
         });
     };
     toJoinClass = () => {

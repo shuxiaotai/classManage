@@ -18,7 +18,7 @@ class MyRemark extends Component{
         }
     }
     componentDidMount() {
-        this.fetchMyRemark(1);
+        this.fetchMyRemark();
     }
     componentWillUnmount() {
         this.fetchMyRemark = null;
@@ -79,7 +79,7 @@ class MyRemark extends Component{
                 <PublicRefreshList
                     getRenderItem={this.getRenderMyRemarkItem}
                     dataArr={teacherRemarkList}
-                    totalPage={count}
+                    totalPage={0}
                     getList={this.fetchMyRemark}
                     ListEmptyComponent={<PublicNoContent tips="暂无点评" />}
                 />

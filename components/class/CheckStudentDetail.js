@@ -109,10 +109,11 @@ class CheckStudentDetail extends Component{
     render() {
         const { navigation, studentCheckDetailList } = this.props;
         const { showSelectTime, selectTabKey, selectTimeKey, selectTimeName, selectCheckCountKey, selectCheckCountName } = this.state;
+        const { isParent, myChildName } = this.props.navigation.state.params;
         return(
             <View>
                 <PublicHeader
-                    title="考勤学生详情"
+                    title={isParent ? myChildName : '考勤学生详情'}
                     isLeft={true}
                     navigation={navigation}
                 />

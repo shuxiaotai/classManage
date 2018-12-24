@@ -173,11 +173,11 @@ class StudentHomePage extends Component{
     render() {
         const { navigation, currentStudent, studentRemarkList } = this.props;
         const { showSelectTime, onlyMyRemark, selectTimeKey, selectTimeName } = this.state;
-        const { isMaster, isParent } = this.props.navigation.state.params;
+        const { isMaster, isParent, myChildName } = this.props.navigation.state.params;
         return(
             <View style={{ position: 'relative' }}>
                 <PublicHeader
-                    title={currentStudent.name}
+                    title={isParent ? myChildName : currentStudent.name}
                     isLeft={true}
                     leftPressFun={this.toLastPage}
                     navigation={navigation}
