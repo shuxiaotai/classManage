@@ -1,6 +1,6 @@
 {
   "name": "classManage",
   "displayName": "classManage",
-  "host": "http://47.94.110.198:",
+  "host": "http://localhost:",
   "port": "3389"
 }

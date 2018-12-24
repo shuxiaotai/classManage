@@ -8,6 +8,8 @@ import fetchData from "../../public/utils/fetchData";
 import * as infoActions from './Actions/infoAction';
 import { connect } from 'react-redux';
 import getProtocol from "../../public/utils/getProtocol";
+import {isIphoneX} from "../../public/utils/getDevice";
+import PublicNoContent from "../../public/components/PublicNoContent";
 
 class SelectVisibleClass extends Component{
     constructor() {
@@ -172,7 +174,6 @@ class SelectVisibleClass extends Component{
             obj.isNotice = 0;
             newMasterClassList.push(obj);
         });
-        console.log(newMasterClassList);
         let newTeacherClassList = [];
         teacherClassList.forEach((item) => {
             let obj = {};
@@ -192,11 +193,12 @@ class SelectVisibleClass extends Component{
                     isRight={true}
                     navigation={navigation}
                     rightComponent={
-                        postNotice === -1 ?
+                        (masterClassList.length === 0 && teacherClassList.length === 0) ? null :
+                        (postNotice === -1 ?
                         <Icon
                             name="add"
                             color="#fff"
-                        /> : <Text style={{ color: '#fff' }}>取消</Text>
+                        /> : <Text style={{ color: '#fff' }}>取消</Text>)
                     }
                     rightPressFun={postNotice === -1 ? this.handleShowVisibleClass : this.cancelSelect}
                 />
@@ -223,18 +225,25 @@ class SelectVisibleClass extends Component{
                         <Text>发布作业</Text>
                     </TouchableOpacity>
                 </View>
-                <SectionList
-                    ref={(sectionList) => this.sectionList = sectionList}
-                    renderItem={({ item, index, section }) => this.renderVisibleClassList({ item, index, section })}
-                    renderSectionHeader={({ section: { title } }) => (
-                        <Text style={{ marginVertical: 10, marginLeft: 8, fontSize: 14 }}>{title}</Text>
-                    )}
-                    sections={[
-                        { title: "创建的班级", data: newMasterClassList },
-                        { title: "管理的班级", data: newTeacherClassList },
-                    ]}
-                    keyExtractor={(item, index) => item + index}
-                />
+                {
+                    (masterClassList.length === 0 && teacherClassList.length === 0) ?
+                        <PublicNoContent tips="暂无可以发布的班级，请先创建"/>
+                        :
+                        <SectionList
+                            ref={(sectionList) => this.sectionList = sectionList}
+                            renderItem={({ item, index, section }) => this.renderVisibleClassList({ item, index, section })}
+                            renderSectionHeader={({ section: { title } }) => (
+                                <Text style={{ marginVertical: 10, marginLeft: 8, fontSize: 14 }}>{title}</Text>
+                            )}
+                            sections={[
+                                { title: "创建的班级", data: newMasterClassList },
+                                { title: "管理的班级", data: newTeacherClassList },
+                            ]}
+                            keyExtractor={(item, index) => item + index}
+                        />
+
+                }
+
                 {
                     postNotice !== -1 ?
                         <View style={styles.assignContainer}>
@@ -289,7 +298,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         backgroundColor: '#fff',
         position: 'absolute',
-        bottom: 0
+        bottom: isIphoneX() ? 7 : 0
     },
     assignBtn: {
         width: 100,
@@ -314,7 +323,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(255, 255, 255, 1)',
         position: 'absolute',
         right: 5,
-        top: 70,
+        top: isIphoneX() ? 90 : 70,
         zIndex: 20
     },
     manageClassItem: {

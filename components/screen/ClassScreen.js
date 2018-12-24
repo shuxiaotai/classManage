@@ -14,7 +14,7 @@ import PublicImageItem from "../../public/components/PublicImageItem";
 import moment from "moment/moment";
 import getProtocol from '../../public/utils/getProtocol';
 import PublicBtn from "../../public/components/PublicBtn";
-import {isIphonePlus} from "../../public/utils/getDevice";
+import {isIphonePlus, isIphoneX} from "../../public/utils/getDevice";
 
 const tabItem = [
     {
@@ -64,7 +64,6 @@ class ClassScreen extends Component{
         });
     }
     static getDerivedStateFromProps(preProps, preState) {
-        console.log(preState.selectIdentity);
         if (preProps.navigation.state.params && (preState.isTeacher !== preProps.navigation.state.params.isTeacher)) {
             return {
                 isTeacher: preProps.navigation.state.params.isTeacher
@@ -171,7 +170,7 @@ class ClassScreen extends Component{
         };
     };
     getRightComponent = () => {
-        const { isDeleteClass } = this.state;
+        const { isDeleteClass, selectClassId } = this.state;
         return(
             <View>
                 {
@@ -180,7 +179,7 @@ class ClassScreen extends Component{
                             name="add"
                             color="#fff"
                         /> :
-                        <Text style={{ color: '#fff' }}>完成</Text>
+                        <Text style={{ color: '#fff' }}>{selectClassId === -1 ? '取消' : '完成'}</Text>
                 }
             </View>
         )
@@ -241,9 +240,16 @@ class ClassScreen extends Component{
         }
     };
     selectClass = (id) => {
-        this.setState({
-            selectClassId: id
-        })
+        const { selectClassId } = this.state;
+        if (selectClassId === -1) {
+            this.setState({
+                selectClassId: id
+            })
+        }else {
+            this.setState({
+                selectClassId: -1
+            })
+        }
     };
     toPostDeleteClass = () => {
         //发删除班级请求
@@ -294,8 +300,13 @@ class ClassScreen extends Component{
             getChildInfo: this.getChildInfo
         });
     };
+    cancelDeleteClass = () => {
+        this.setState({
+            isDeleteClass: false,
+        });
+    };
     render() {
-        const { selectKey, showManageClassBtn, isDeleteClass, selectIdentity, shouldJoinClass } = this.state;
+        const { selectKey, showManageClassBtn, isDeleteClass, selectIdentity, shouldJoinClass, selectClassId } = this.state;
         const { classList, navigation, childInfo, latestRemark, latestCheck } = this.props;
         return(
             <View style={{ position: 'relative' }}>
@@ -309,9 +320,9 @@ class ClassScreen extends Component{
                 <PublicHeader
                     title="课堂"
                     isRight={true}
-                    rightComponent={selectIdentity === 0 ? this.getRightComponent() : null}
+                    rightComponent={(selectIdentity === 0 && selectKey === 1) ? this.getRightComponent() : null}
                     navigation={navigation}
-                    rightPressFun={isDeleteClass ? this.toPostDeleteClass : this.handleShowManageClass}
+                    rightPressFun={isDeleteClass ? (selectClassId === -1 ? this.cancelDeleteClass : this.toPostDeleteClass) : this.handleShowManageClass}
                 />
                 <View style={showManageClassBtn ? styles.manageClass : styles.hidden}>
                     <View style={styles.triangleView}>
@@ -496,7 +507,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(255, 255, 255, 1)',
         position: 'absolute',
         right: 5,
-        top: 70,
+        top: isIphoneX() ? 90 : 70,
         zIndex: 20
     },
     manageClassItem: {

@@ -28,7 +28,7 @@ class ChooseIdentity extends Component{
                         token: result
                     }
                 ).then((val) => {
-                    if(val.checkResult) {
+                    if(val && val.checkResult) {
                         that.setState({
                             showAutoLoginTips: true
                         });

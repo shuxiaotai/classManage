@@ -141,7 +141,7 @@ class CheckList extends Component{
                 />
                 {
                     isDetail ? null :
-                        (checkChartDetailList.length === 0 ? null :
+                        (newStudentList.length === 0 ? null :
                                 <PublicBtn
                                     tips="保存考勤记录"
                                     onPress={this.saveCheckRecord}

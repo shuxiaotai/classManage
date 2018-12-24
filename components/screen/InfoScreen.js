@@ -245,7 +245,7 @@ class InfoScreen extends Component{
     toSelectVisibleClass = () => {
         const { navigate } = this.props.navigation;
         navigate('SelectVisibleClass', {
-            fetchAllInfoList: this.fetchAllInfoList
+            fetchAllInfoList: this.fetchAllInfoList,
         });
     };
     render() {
@@ -290,7 +290,7 @@ class InfoScreen extends Component{
 
                 </View>
                 {
-                    ((selectIdentity === 0 && (selectKey === 1 || selectKey === 2 || selectKey === 3) && (allInfoList.length > 0 || noticeList.length > 0 || homeworkList.length > 0)) ?
+                    ((selectIdentity === 0 && (selectKey === 1 || selectKey === 2 || selectKey === 3)) ?
                         <TouchableOpacity
                             style={styles.edit}
                             onPress={this.toSelectVisibleClass}
