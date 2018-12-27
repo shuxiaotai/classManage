@@ -6,7 +6,7 @@ import PublicNoContent from "../../public/components/PublicNoContent";
 import PublicScrollView from "../../public/components/PublicScrollView";
 import getProtocol from "../../public/utils/getProtocol";
 import {isIphoneX, isIphonePlus} from '../../public/utils/getDevice';
-
+import {getLocalImgIndex} from "../../public/utils/getLocalImg";
 
 class StudentList extends Component{
 
@@ -60,7 +60,7 @@ class StudentList extends Component{
                                             onPress={() => this.getStudentDetail(item)}
                                         >
                                             <Image
-                                                source={{uri: getProtocol() + item['avatar_url']}}
+                                                source={getLocalImgIndex('student', item['avatar_url'])}
                                                 style={styles.stuAvatar}
                                             />
                                             <Badge
