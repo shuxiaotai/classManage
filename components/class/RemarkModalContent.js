@@ -225,33 +225,37 @@ class RemarkModalContent extends Component{
         const { navigate } = this.props.navigation;
         const { customRemark } = this.state;
         const { currentStudent, isRemarkGroup, currentGroup, remarkGroupStudentIds, handleStudentAndGroupListModal } = this.props;
-        checkUser(() => {
-            getTokenInfo().then((value) => {
-                fetchData.postData('/addCustomRemark',
-                    {
-                        teacherId: value.id,
-                        studentIds: isRemarkGroup ? remarkGroupStudentIds : currentStudent.id,
-                        customRemark: customRemark,
-                        groupId: isRemarkGroup ? currentGroup.id : 0
-                    }
-                ).then((val) => {
-                    if (val.addCustomRemarkSuccess) {
-                        Alert.alert(
-                            'Alert',
-                            `点评成功`,
-                            [
-                                {text: 'OK', onPress: () => {
-                                    handleStudentAndGroupListModal(false)
-                                }},
-                            ],
-                            { cancelable: false }
-                        );
-                    }else {
-                        alert('点评失败');
-                    }
+        if (customRemark === '') {
+            alert('自定义点评内容不能为空');
+        } else {
+            checkUser(() => {
+                getTokenInfo().then((value) => {
+                    fetchData.postData('/addCustomRemark',
+                        {
+                            teacherId: value.id,
+                            studentIds: isRemarkGroup ? remarkGroupStudentIds : currentStudent.id,
+                            customRemark: customRemark,
+                            groupId: isRemarkGroup ? currentGroup.id : 0
+                        }
+                    ).then((val) => {
+                        if (val.addCustomRemarkSuccess) {
+                            Alert.alert(
+                                'Alert',
+                                `点评成功`,
+                                [
+                                    {text: 'OK', onPress: () => {
+                                            handleStudentAndGroupListModal(false)
+                                        }},
+                                ],
+                                { cancelable: false }
+                            );
+                        }else {
+                            alert('点评失败');
+                        }
+                    });
                 });
-            });
-        }, navigate);
+            }, navigate);
+        }
     };
     render() {
         const { selectKey, showSelectCourse } = this.state;

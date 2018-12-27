@@ -26,7 +26,7 @@ class JoinClass extends Component{
         return(
             <TextInput
                 style={{ width: 200, textAlign: 'right', marginRight: 10 }}
-                placeholder="请输入学生名称"
+                placeholder="请输入学生姓名"
                 onChangeText={(studentName) => this.setState({studentName})}
             />
         )
@@ -36,29 +36,35 @@ class JoinClass extends Component{
         const { navigate } = navigation;
         const { classNum, studentName } = this.state;
         const { getChildInfo } = navigation.state.params;
-        checkUser(() => {
-            getTokenInfo().then((value) => {
-                fetchData.postData('/joinClass', {
-                    studentName: studentName,
-                    parentId: value.selectIdentity === 1 ? value.id : '-1',
-                    classId: classNum,
-                }).then((val) => {
-                    if (val.joinClassSuccess) {
-                        Alert.alert(
-                            'Alert',
-                            `已发送请求，等待班主任审核`,
-                            [
-                                {text: 'OK', onPress: () => {
-                                        getChildInfo();
-                                        navigation.goBack();
-                                    }},
-                            ],
-                            { cancelable: false }
-                        );
-                    }
+        if (classNum === '') {
+            alert('班级号不能为空');
+        } else if (studentName === '') {
+            alert('学生姓名不能为空');
+        } else {
+            checkUser(() => {
+                getTokenInfo().then((value) => {
+                    fetchData.postData('/joinClass', {
+                        studentName: studentName,
+                        parentId: value.selectIdentity === 1 ? value.id : '-1',
+                        classId: classNum,
+                    }).then((val) => {
+                        if (val.joinClassSuccess) {
+                            Alert.alert(
+                                'Alert',
+                                `已发送请求，等待班主任审核`,
+                                [
+                                    {text: 'OK', onPress: () => {
+                                            getChildInfo();
+                                            navigation.goBack();
+                                        }},
+                                ],
+                                { cancelable: false }
+                            );
+                        }
+                    });
                 });
-            });
-        }, navigate);
+            }, navigate);
+        }
     };
     render(){
         const { navigation } = this.props;

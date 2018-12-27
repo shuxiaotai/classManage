@@ -74,43 +74,46 @@ class CheckList extends Component{
     toCheckChart = (val) => {
         const { navigate } = this.props.navigation;
         const { currentClassId, studentList } = this.props;
-        checkUser(() => {
-            fetchData.postData('/addCheck',
-                {
-                    checkName: val,
-                    checkStudentList: newStudentList,
-                    classId: currentClassId
-                }
-            ).then((value) => {
-                if (value.addCheckSuccess) {
-                    Alert.alert(
-                        'Alert',
-                        `创建考勤成功`,
-                        [
-                            {text: 'OK', onPress: () => {
-                                    newStudentList = [];
-                                    studentList.forEach((item) => {
-                                        let obj = {};
-                                        obj.id = item.id;
-                                        obj.name = item.name;
-                                        obj.avatar_url = item['avatar_url'];
-                                        obj.checkTipsId = 0;
-                                        newStudentList.push(obj);
-                                    });
-                                    this.setState({
-                                        changeCheckState: !this.state.changeCheckState
-                                    });
-                                    navigate('CheckChart');
-                            }},
-                        ],
-                        { cancelable: false }
-                    );
-                } else {
-                    alert('创建考勤失败');
-                }
-            });
-        }, navigate);
-
+        if (val === '') {
+            alert('考勤名称不能为空');
+        }else {
+            checkUser(() => {
+                fetchData.postData('/addCheck',
+                    {
+                        checkName: val,
+                        checkStudentList: newStudentList,
+                        classId: currentClassId
+                    }
+                ).then((value) => {
+                    if (value.addCheckSuccess) {
+                        Alert.alert(
+                            'Alert',
+                            `创建考勤成功`,
+                            [
+                                {text: 'OK', onPress: () => {
+                                        newStudentList = [];
+                                        studentList.forEach((item) => {
+                                            let obj = {};
+                                            obj.id = item.id;
+                                            obj.name = item.name;
+                                            obj.avatar_url = item['avatar_url'];
+                                            obj.checkTipsId = 0;
+                                            newStudentList.push(obj);
+                                        });
+                                        this.setState({
+                                            changeCheckState: !this.state.changeCheckState
+                                        });
+                                        navigate('CheckChart');
+                                    }},
+                            ],
+                            { cancelable: false }
+                        );
+                    } else {
+                        alert('创建考勤失败');
+                    }
+                });
+            }, navigate);
+        }
     };
     saveCheckRecord = () => {
         AlertIOS.prompt(

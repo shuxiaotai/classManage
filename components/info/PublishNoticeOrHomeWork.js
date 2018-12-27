@@ -18,70 +18,82 @@ class PublishNoticeOrHomeWork extends Component{
         const { navigation } = this.props;
         const { navigate } = navigation;
         const { postNotice, masterClassId, fetchAllInfoList } = navigation.state.params;
-        checkUser(() => {
-            getTokenInfo().then((value) => {
-                fetchData.postData('/publishNotice',
-                    {
-                        classId: masterClassId,
-                        title: title,
-                        content: content,
-                        isNotice: postNotice,
-                        teacherId: value.id
-                    }
-                ).then((val) => {
-                    if (val.publishNoticeSuccess) {
-                        Alert.alert(
-                            'Alert',
-                            `发布公告成功`,
-                            [
-                                {text: 'OK', onPress: () => {
-                                        fetchAllInfoList();
-                                        navigate('Info');
-                                    }},
-                            ],
-                            { cancelable: false }
-                        );
-                    } else {
-                        alert('发布公告失败');
-                    }
+        if (title === '') {
+            alert('标题不能为空');
+        } else if (content === '') {
+            alert('内容不能为空');
+        } else {
+            checkUser(() => {
+                getTokenInfo().then((value) => {
+                    fetchData.postData('/publishNotice',
+                        {
+                            classId: masterClassId,
+                            title: title,
+                            content: content,
+                            isNotice: postNotice,
+                            teacherId: value.id
+                        }
+                    ).then((val) => {
+                        if (val.publishNoticeSuccess) {
+                            Alert.alert(
+                                'Alert',
+                                `发布公告成功`,
+                                [
+                                    {text: 'OK', onPress: () => {
+                                            fetchAllInfoList();
+                                            navigate('Info');
+                                        }},
+                                ],
+                                { cancelable: false }
+                            );
+                        } else {
+                            alert('发布公告失败');
+                        }
+                    });
                 });
-            });
-        }, navigate);
+            }, navigate);
+        }
     };
     toPublishHomework = () => {
         const { title, content } = this.state;
         const { navigation } = this.props;
         const { navigate } = navigation;
         const { postNotice, teacherClassIdArr, fetchAllInfoList } = navigation.state.params;
-        checkUser(() => {
-            getTokenInfo().then((value) => {
-                fetchData.postData('/publishHomeWork',
-                    {
-                        classIdArr: teacherClassIdArr,
-                        title: title,
-                        content: content,
-                        isNotice: postNotice,
-                        teacherId: value.id
-                    }
-                ).then((val) => {
-                    if (val.publishHomeworkSuccess) {
-                        Alert.alert(
-                            'Alert',
-                            `发布作业成功`,
-                            [
-                                {text: 'OK', onPress: () => {
-                                        fetchAllInfoList();
-                                        navigate('Info');
-                                    }},
-                            ],
-                            { cancelable: false }
-                        );
-                    } else {
-                        alert('发布作业失败');
-                    }
+        if (title === '') {
+            alert('标题不能为空');
+        } else if (content === '') {
+            alert('内容不能为空');
+        } else {
+            checkUser(() => {
+                getTokenInfo().then((value) => {
+                    fetchData.postData('/publishHomeWork',
+                        {
+                            classIdArr: teacherClassIdArr,
+                            title: title,
+                            content: content,
+                            isNotice: postNotice,
+                            teacherId: value.id
+                        }
+                    ).then((val) => {
+                        if (val.publishHomeworkSuccess) {
+                            Alert.alert(
+                                'Alert',
+                                `发布作业成功`,
+                                [
+                                    {text: 'OK', onPress: () => {
+                                            fetchAllInfoList();
+                                            navigate('Info');
+                                        }},
+                                ],
+                                { cancelable: false }
+                            );
+                        } else {
+                            alert('发布作业失败');
+                        }
+                    });
                 });
-            });
-        }, navigate);
+            }, navigate);
+        }
     };
     render() {
         const { navigation } = this.props;

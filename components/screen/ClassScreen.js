@@ -403,7 +403,7 @@ class ClassScreen extends Component{
 
                                                         }
                                                         {
-                                                            latestRemark && latestRemark.length === 0 ? <Text>本周暂无点评记录</Text> : latestRemark.map((item) => {
+                                                            latestRemark && latestRemark.length === 0 ? <Text>本周暂无点评记录</Text> : (latestRemark.length > 0 ? latestRemark.map((item) => {
                                                                 return(
                                                                     <View style={styles.stuRemarkItem} key={item.id}>
                                                                         <Image
@@ -422,7 +422,7 @@ class ClassScreen extends Component{
                                                                         </View>
                                                                     </View>
                                                                 )
-                                                            })
+                                                            }) :  <Text>本周暂无点评记录</Text>)
                                                         }
 
                                                     </View>

@@ -46,30 +46,34 @@ class AddStudent extends Component{
         const { navigate } = navigation;
         const { currentClassId, addStudentList } = this.props;
         const { getStudentList } = navigation.state.params;
-        checkUser(() => {
-            fetchData.postData('/addStudentList',
-                {
-                    currentClassId: currentClassId,
-                    addStudentList: addStudentList
-                }
-            ).then((val) => {
-                if(val.addStudentListSuccess) {
-                    Alert.alert(
-                        'Alert',
-                        '添加成功',
-                        [
-                            {text: 'OK', onPress: () => {
-                                    getStudentList();
-                                    navigation.goBack();
-                                }},
-                        ],
-                        { cancelable: false }
-                    );
-                }else {
-                    alert('添加失败');
-                }
-            });
-        }, navigate);
+        if (addStudentList.length === 0) {
+            alert('请先添加学生');
+        } else {
+            checkUser(() => {
+                fetchData.postData('/addStudentList',
+                    {
+                        currentClassId: currentClassId,
+                        addStudentList: addStudentList
+                    }
+                ).then((val) => {
+                    if(val.addStudentListSuccess) {
+                        Alert.alert(
+                            'Alert',
+                            '添加成功',
+                            [
+                                {text: 'OK', onPress: () => {
+                                        getStudentList();
+                                        navigation.goBack();
+                                    }},
+                            ],
+                            { cancelable: false }
+                        );
+                    }else {
+                        alert('添加失败');
+                    }
+                });
+            }, navigate);
+        }
     };
     render() {
         const { navigation, addStudentList } = this.props;
