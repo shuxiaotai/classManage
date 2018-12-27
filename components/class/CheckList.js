@@ -63,7 +63,7 @@ class CheckList extends Component{
     }
     changeCheckTips = (item) => {
         if (item.checkTipsId === 3) {
-            item.checkTipsId = 1;
+            item.checkTipsId = 0;
         }else {
             item.checkTipsId++;
         }

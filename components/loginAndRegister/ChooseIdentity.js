@@ -42,7 +42,6 @@ class ChooseIdentity extends Component{
                 });
             }
         });
-
     }
     changeSelectIdentity = (id) => {
         this.setState({

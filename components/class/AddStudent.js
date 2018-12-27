@@ -32,7 +32,7 @@ class AddStudent extends Component{
             alert('学生姓名不能为空');
         }else {
             let student = {
-                name: studentName,  //头像暂时先不做
+                name: studentName,
                 avatar_url: `/img/student${Math.floor(Math.random()*(1 - 14) + 14)}.jpg`
             };
             setAddStudentList([...addStudentList, student]);
