@@ -60,7 +60,7 @@ class StudentList extends Component{
                                             onPress={() => this.getStudentDetail(item)}
                                         >
                                             <Image
-                                                source={getLocalImgIndex('student', item['avatar_url'])}
+                                                source={(item['avatar_url'].indexOf('img') === -1) ? { uri: getProtocol() + item['avatar_url'] } : getLocalImgIndex('student', item['avatar_url'])}
                                                 style={styles.stuAvatar}
                                             />
                                             <Badge

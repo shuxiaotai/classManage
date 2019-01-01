@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Image, Text, TouchableOpacity } from 'react-native';
 import {getLocalImgIndex} from "../../public/utils/getLocalImg";
+import getProtocol from "../../public/utils/getProtocol";
 
 class RandomModalContent extends Component{
     constructor(props) {
@@ -35,7 +36,7 @@ class RandomModalContent extends Component{
             <View style={styles.randomContainer}>
                 <View style={styles.randomWrapper}>
                     <Image
-                        source={getLocalImgIndex('student', selectStudent['avatar_url'])}
+                        source={(selectStudent['avatar_url'].indexOf('img') === -1) ? { uri: getProtocol() + selectStudent['avatar_url'] } : getLocalImgIndex('student', selectStudent['avatar_url'])}
                         style={styles.randomImg}
                     />
                     <Text style={styles.randomText}>{selectStudent ? selectStudent.name : ''}</Text>
